@@ -1,4 +1,4 @@
-# NewsApp_FinamTest
+# NewsApp
 So this was a job interview task and i made it in summer not so nice as now ) 
 DRY KISS YAGNI -> i did my best. For now 
 Changes:
