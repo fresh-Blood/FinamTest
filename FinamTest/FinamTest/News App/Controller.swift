@@ -15,7 +15,7 @@ final class Controller: UserController {
     var view: UserView?
     var newsArray: [Articles] = []
     
-    func getData() {
+    internal func getData() {
         
         if let url = URL(string: CustomURL.url.rawValue) {
             URLSession.shared.dataTask(with: url) { [weak self] data, response, error in

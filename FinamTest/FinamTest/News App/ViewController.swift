@@ -16,13 +16,13 @@ final class ViewController: UIViewController, UserView {
     
     var controller: UserController?
     
-    var commonTable: UITableView = {
+    private let commonTable: UITableView = {
         let tbl = UITableView()
         tbl.register(MyTableViewCell.self, forCellReuseIdentifier: MyTableViewCell.id)
         return tbl
     }()
     
-    func reload() {
+    internal func reload() {
         commonTable.reloadData()
     }
     
