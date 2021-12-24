@@ -6,7 +6,7 @@ Changes:
 2) architecture built
 3) embed in NavigationVC
 4) fully programmatically
-5) pictures now loading on background queue - so no freezes on main UI is smooth 
+5) pictures now loading onlu when we see them - on background queue - so no freezes on main UI is smooth 
 6) cache added to minimize memory usage
 7) nice small and not annoying animations in some places added
 8) moreInfo button added to help user learn more about -> in safari - link opens - amazing - AND so simple i didn't expect ))) just 1 line of code 
