@@ -37,7 +37,7 @@
 		849674B22774BD4700504D9D /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		849674B52774BE2700504D9D /* Controller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Controller.swift; sourceTree = "<group>"; };
 		849674B72774C8F100504D9D /* Assemblyer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assemblyer.swift; sourceTree = "<group>"; };
-		84FA0F7426C6350900FB1C34 /* FinamTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FinamTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		84FA0F7426C6350900FB1C34 /* News.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = News.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84FA0F7726C6350900FB1C34 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		84FA0F7926C6350900FB1C34 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		84FA0F7B26C6350900FB1C34 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -85,7 +85,7 @@
 		84FA0F7526C6350900FB1C34 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				84FA0F7426C6350900FB1C34 /* FinamTest.app */,
+				84FA0F7426C6350900FB1C34 /* News.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -114,9 +114,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		84FA0F7326C6350900FB1C34 /* FinamTest */ = {
+		84FA0F7326C6350900FB1C34 /* News */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 84FA0F8B26C6350D00FB1C34 /* Build configuration list for PBXNativeTarget "FinamTest" */;
+			buildConfigurationList = 84FA0F8B26C6350D00FB1C34 /* Build configuration list for PBXNativeTarget "News" */;
 			buildPhases = (
 				84FA0F7026C6350900FB1C34 /* Sources */,
 				84FA0F7126C6350900FB1C34 /* Frameworks */,
@@ -127,9 +127,9 @@
 			);
 			dependencies = (
 			);
-			name = FinamTest;
+			name = News;
 			productName = FinamTest;
-			productReference = 84FA0F7426C6350900FB1C34 /* FinamTest.app */;
+			productReference = 84FA0F7426C6350900FB1C34 /* News.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -146,7 +146,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 84FA0F6F26C6350900FB1C34 /* Build configuration list for PBXProject "FinamTest" */;
+			buildConfigurationList = 84FA0F6F26C6350900FB1C34 /* Build configuration list for PBXProject "News" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -159,7 +159,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				84FA0F7326C6350900FB1C34 /* FinamTest */,
+				84FA0F7326C6350900FB1C34 /* News */,
 			);
 		};
 /* End PBXProject section */
@@ -364,7 +364,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		84FA0F6F26C6350900FB1C34 /* Build configuration list for PBXProject "FinamTest" */ = {
+		84FA0F6F26C6350900FB1C34 /* Build configuration list for PBXProject "News" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				84FA0F8926C6350D00FB1C34 /* Debug */,
@@ -373,7 +373,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		84FA0F8B26C6350D00FB1C34 /* Build configuration list for PBXNativeTarget "FinamTest" */ = {
+		84FA0F8B26C6350D00FB1C34 /* Build configuration list for PBXNativeTarget "News" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				84FA0F8C26C6350D00FB1C34 /* Debug */,
