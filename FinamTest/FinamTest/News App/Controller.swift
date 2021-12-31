@@ -9,7 +9,7 @@ protocol UserController {
     var view: UserView? { get set }
     var newsArray: [Articles] { get set }
 }
-
+// MARK: если представить, что мы бы использовали VIPER, то это как интернет сервис интерактора - ходит в инет, забирает данные, можно было бы красиво сделать в замыкании сразу их возврат в @escaping, но вью не должен хранить данные, поэтому решил сделать хранилице - массив тут.
 final class Controller: UserController {
     
     var view: UserView?
