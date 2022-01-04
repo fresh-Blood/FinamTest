@@ -3,7 +3,7 @@ import UIKit
 
 
 
-@available(iOS 15.0, *)
+
 final class MyTableViewCell: UITableViewCell {
     
     static let id = "MyTableViewCell"

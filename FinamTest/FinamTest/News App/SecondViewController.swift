@@ -4,9 +4,9 @@ import UIKit
 
 
 
-@available(iOS 15.0, *)
+
 let loading = UIActivityIndicatorView(style: .large)
-@available(iOS 15.0, *)
+
 final class SecondViewController: UIViewController {
     
     var moreInfo = "" 
@@ -66,12 +66,12 @@ final class SecondViewController: UIViewController {
                                  y: view.bounds.height/4 - inset1,
                                  width: 30,
                                  height: 30)
-        topicLabel.frame = CGRect(x: view.bounds.minX + inset,
+        topicLabel.frame = CGRect(x: view.bounds.minX + inset + view.safeAreaInsets.left,
                                   y: newsImage.bounds.maxY + inset,
-                                  width: view.bounds.width - inset*2,
+                                  width: view.bounds.width - inset*2 - view.safeAreaInsets.right,
                                   height: view.bounds.height/8*3)
         moreInfoButton.frame = CGRect(x: view.bounds.minX + inset,
-                                      y: newsImage.bounds.maxY + topicLabel.bounds.maxY + inset,
+                                      y: newsImage.bounds.maxY + topicLabel.bounds.maxY + inset - view.safeAreaInsets.bottom,
                                       width: view.bounds.width - inset*2,
                                       height: view.bounds.height/8)
         topicLabel.sizeToFit()
@@ -90,7 +90,6 @@ extension UIButton {
 }
 
 
-@available(iOS 15.0, *)
 // MARK: no freezing: images are loading when we see them not on main queue, if the image is huge and loading takes much time - we will see default image immideately 
 
 extension UIImageView {

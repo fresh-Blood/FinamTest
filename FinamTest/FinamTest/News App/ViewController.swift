@@ -10,7 +10,7 @@ protocol UserView {
     func reload()
 }
 
-@available(iOS 15.0, *)
+
 final class ViewController: UIViewController, UserView {
     
     
@@ -29,7 +29,6 @@ final class ViewController: UIViewController, UserView {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureRefreshControl()
-        view.backgroundColor = .systemBlue
         navigationItem.title = "News ಠ_ಠ"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.backButtonTitle = ""
@@ -40,6 +39,7 @@ final class ViewController: UIViewController, UserView {
         ]
         navigationController?.navigationBar.backgroundColor = .clear
         navigationController?.navigationBar.tintColor = .white
+        navigationController?.navigationBar.barStyle = .default
         
         view.addSubview(commonTable)
         commonTable.delegate = self
@@ -57,7 +57,7 @@ final class ViewController: UIViewController, UserView {
     }
 }
 
-@available(iOS 15.0, *)
+
 extension ViewController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -88,7 +88,7 @@ extension ViewController : UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-@available(iOS 15.0, *)
+
 extension ViewController {
     func configureRefreshControl () {
         commonTable.refreshControl = UIRefreshControl()
