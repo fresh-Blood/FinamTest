@@ -26,6 +26,12 @@ final class ViewController: UIViewController, UserView {
         commonTable.reloadData()
     }
     
+    var value: UIColor {
+        get {
+           return UITraitCollection.current.userInterfaceStyle == .dark ? .white : .black
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureRefreshControl()
@@ -35,11 +41,10 @@ final class ViewController: UIViewController, UserView {
         navigationController?.navigationBar.largeTitleTextAttributes = [
             .font: UIFont.systemFont(ofSize: 40,
                                      weight: .heavy),
-            .foregroundColor: UIColor.black
+            .foregroundColor: value
         ]
         navigationController?.navigationBar.backgroundColor = .clear
         navigationController?.navigationBar.tintColor = .white
-        navigationController?.navigationBar.barStyle = .default
         
         view.addSubview(commonTable)
         commonTable.delegate = self

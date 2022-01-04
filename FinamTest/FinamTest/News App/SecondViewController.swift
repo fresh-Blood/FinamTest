@@ -52,7 +52,7 @@ final class SecondViewController: UIViewController {
         loading.hidesWhenStopped = true
         loading.color = .white
         loading.startAnimating()
-        view.backgroundColor = .white
+        view.backgroundColor = .systemGroupedBackground
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
