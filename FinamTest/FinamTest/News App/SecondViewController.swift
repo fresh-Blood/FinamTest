@@ -3,13 +3,14 @@ import UIKit
 
 
 
+struct Loading {
+    static let loading = UIActivityIndicatorView(style: .large)
+}
 
-
-let loading = UIActivityIndicatorView(style: .large)
 
 final class SecondViewController: UIViewController {
     
-    var moreInfo = "" 
+    var moreInfo = ""
     
     let newsImage: UIImageView = {
         let img = UIImageView()
@@ -26,10 +27,16 @@ final class SecondViewController: UIViewController {
         lbl.adjustsFontSizeToFitWidth = true
         return lbl
     }()
+    
+    var value: UIColor {
+        get {
+            return UITraitCollection.current.userInterfaceStyle == .dark ? .white : .black
+        }
+    }
+    
     let moreInfoButton: UIButton = {
         let btn = UIButton()
         btn.setTitle("Подробнее ಠ_ಠ", for: .normal)
-        btn.setTitleColor(.black, for: .normal)
         btn.addTarget(self,
                       action: #selector(showMoreInfo),
                       for: .touchUpInside)
@@ -48,10 +55,11 @@ final class SecondViewController: UIViewController {
         view.addSubview(topicLabel)
         view.addSubview(newsImage)
         view.addSubview(moreInfoButton)
-        view.addSubview(loading)
-        loading.hidesWhenStopped = true
-        loading.color = .white
-        loading.startAnimating()
+        view.addSubview(Loading.loading)
+        moreInfoButton.setTitleColor(value, for: .normal)
+        Loading.loading.hidesWhenStopped = true
+        Loading.loading.color = .white
+        Loading.loading.startAnimating()
         view.backgroundColor = .systemGroupedBackground
     }
     override func viewDidLayoutSubviews() {
@@ -62,10 +70,10 @@ final class SecondViewController: UIViewController {
                                  y: view.bounds.minY,
                                  width: view.bounds.width,
                                  height: view.bounds.height/2)
-        loading.frame = CGRect(x: view.bounds.width/2 - inset1,
-                                 y: view.bounds.height/4 - inset1,
-                                 width: 30,
-                                 height: 30)
+        Loading.loading.frame = CGRect(x: view.bounds.width/2 - inset1,
+                               y: view.bounds.height/4 - inset1,
+                               width: 30,
+                               height: 30)
         topicLabel.frame = CGRect(x: view.bounds.minX + inset + view.safeAreaInsets.left,
                                   y: newsImage.bounds.maxY + inset,
                                   width: view.bounds.width - inset*2 - view.safeAreaInsets.right,
@@ -97,7 +105,7 @@ extension UIImageView {
         if let cachedImage = Cashe.imageCache.object(forKey: from as AnyObject) {
             print("image loaded from cashe")
             DispatchQueue.main.async {
-                loading.stopAnimating()
+                Loading.loading.stopAnimating()
             }
             self.image = cachedImage
             return
@@ -111,7 +119,7 @@ extension UIImageView {
                         Cashe.imageCache.setObject(unwrappedImage, forKey: from as AnyObject)
                         print("image loaded from internet")
                         self.image = unwrappedImage
-                        loading.stopAnimating()
+                        Loading.loading.stopAnimating()
                     }
                 }
             }).resume()
