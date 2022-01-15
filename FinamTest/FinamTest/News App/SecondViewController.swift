@@ -1,8 +1,6 @@
 import UIKit
 
 
-
-
 struct Loading {
     static let loading = UIActivityIndicatorView(style: .large)
 }

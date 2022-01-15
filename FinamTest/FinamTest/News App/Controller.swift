@@ -2,8 +2,6 @@ import Foundation
 import UIKit
 
 
-
-
 protocol UserController {
     func getData()
     var view: UserView? { get set }

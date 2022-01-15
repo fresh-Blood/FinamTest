@@ -2,9 +2,6 @@ import Foundation
 import UIKit
 
 
-
-
-
 typealias EntryPoint = UserView & UIViewController
 
 protocol Assemblyer {
@@ -12,7 +9,6 @@ protocol Assemblyer {
     static func start() -> Assemblyer
 }
 
-@available(iOS 15.0, *)
 final class UserAssemblyer: Assemblyer {
     var entry: EntryPoint?
     

@@ -1,18 +1,12 @@
 import UIKit
 
 
-
-
-
-
 protocol UserView {
     var controller: UserController? { get set }
     func reload()
 }
 
-
 final class ViewController: UIViewController, UserView {
-    
     
     var controller: UserController?
     

@@ -2,8 +2,6 @@ import UIKit
 
 
 
-
-
 final class MyTableViewCell: UITableViewCell {
     
     static let id = "MyTableViewCell"
