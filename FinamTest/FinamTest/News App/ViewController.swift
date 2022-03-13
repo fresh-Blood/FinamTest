@@ -23,6 +23,11 @@ final class ViewController: UIViewController, UserView {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureRefreshControl()
+        configureNavigationBar()
+        configureTableView()
+    }
+    
+    private func configureNavigationBar() {
         navigationItem.title = "News ಠ_ಠ"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.backButtonTitle = ""
@@ -33,15 +38,15 @@ final class ViewController: UIViewController, UserView {
         ]
         navigationController?.navigationBar.backgroundColor = .clear
         navigationController?.navigationBar.tintColor = .white
-        
-        view.addSubview(commonTable)
-        commonTable.delegate = self
-        commonTable.dataSource = self
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    private func configureTableView() {
+        commonTable.delegate = self
+        commonTable.dataSource = self
         commonTable.frame = view.bounds
+        commonTable.estimatedRowHeight = 44
+        commonTable.rowHeight = UITableView.automaticDimension
+        view.addSubview(commonTable)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -64,10 +69,6 @@ extension ViewController : UITableViewDelegate, UITableViewDataSource {
         cell.newsDate.text = model?.publishedAt
         cell.newsSource.text = model?.source?.name
         return cell
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 150
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

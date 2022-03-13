@@ -10,45 +10,52 @@ final class MyTableViewCell: UITableViewCell {
         let lbl = UILabel()
         lbl.numberOfLines = 0
         lbl.font = .systemFont(ofSize: 15, weight: .medium)
+        lbl.translatesAutoresizingMaskIntoConstraints = false
         return lbl
     }()
+    
     let newsSource: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 0
         lbl.textAlignment = .center
         lbl.font = .systemFont(ofSize: 15, weight: .medium)
+        lbl.translatesAutoresizingMaskIntoConstraints = false
         return lbl
     }()
+    
     let titleLabel: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 0
         lbl.font = .systemFont(ofSize: 20, weight: .medium)
         lbl.adjustsFontSizeToFitWidth = true
+        lbl.translatesAutoresizingMaskIntoConstraints = false
         return lbl
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupUI()
+    }
+    
+    private func setupUI() {
         contentView.addSubview(newsDate)
         contentView.addSubview(titleLabel)
         contentView.addSubview(newsSource)
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        lazy var inset: CGFloat = 8
-        titleLabel.frame = CGRect(x: contentView.bounds.minX + inset,
-                                  y: contentView.bounds.minY + inset,
-                                  width: contentView.bounds.width - inset * 2,
-                                  height: contentView.bounds.height/3*2)
-        newsDate.frame = CGRect(x: contentView.bounds.minX + inset,
-                                y: titleLabel.bounds.maxY + inset,
-                                width: contentView.bounds.width/3*2 - inset,
-                                height: (contentView.bounds.height - titleLabel.bounds.height) - inset)
-        newsSource.frame = CGRect(x: newsDate.bounds.maxX + inset,
-                                  y: titleLabel.bounds.maxY + inset,
-                                  width: contentView.bounds.width/3 - inset,
-                                  height: (contentView.bounds.height - titleLabel.bounds.height) - inset)
+        
+        NSLayoutConstraint.activate([
+            
+            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
+            titleLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 10),
+            titleLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -5),
+            
+            newsDate.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 30),
+            newsDate.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
+            newsDate.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 10),
+            
+            newsSource.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 30),
+            newsSource.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -10),
+            newsSource.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
+        ])
     }
     
     required init?(coder: NSCoder) {

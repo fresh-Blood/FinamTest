@@ -2,9 +2,8 @@ import UIKit
 
 
 struct Loading {
-    static let loading = UIActivityIndicatorView(style: .large)
+    static let loading = UIActivityIndicatorView(style: .medium)
 }
-
 
 final class SecondViewController: UIViewController {
     
@@ -26,13 +25,11 @@ final class SecondViewController: UIViewController {
         return lbl
     }()
     
-    var value: UIColor {
-        get {
-            return UITraitCollection.current.userInterfaceStyle == .dark ? .white : .black
-        }
+    private var valueForColor: UIColor {
+        UITraitCollection.current.userInterfaceStyle == .dark ? .white : .black
     }
     
-    let moreInfoButton: UIButton = {
+    private let moreInfoButton: UIButton = {
         let btn = UIButton()
         btn.setTitle("Подробнее ಠ_ಠ", for: .normal)
         btn.addTarget(self,
@@ -43,25 +40,27 @@ final class SecondViewController: UIViewController {
     
     @objc private func showMoreInfo() {
         moreInfoButton.pulsate()
-        guard
-            let url = URL(string: moreInfo) else { return }
+        guard let url = URL(string: moreInfo) else { return }
         UIApplication.shared.open(url)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupUI()
+    }
+    
+    private func setupUI() {
         view.addSubview(topicLabel)
         view.addSubview(newsImage)
         view.addSubview(moreInfoButton)
         view.addSubview(Loading.loading)
-        moreInfoButton.setTitleColor(value, for: .normal)
+        view.backgroundColor = .systemGroupedBackground
+        
+        moreInfoButton.setTitleColor(valueForColor, for: .normal)
         Loading.loading.hidesWhenStopped = true
         Loading.loading.color = .white
         Loading.loading.startAnimating()
-        view.backgroundColor = .systemGroupedBackground
-    }
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+        
         let inset: CGFloat = 8
         let inset1: CGFloat = 15
         newsImage.frame = CGRect(x: view.bounds.minX,
@@ -95,13 +94,11 @@ extension UIButton {
     }
 }
 
-
-// MARK: no freezing: images are loading when we see them not on main queue, if the image is huge and loading takes much time - we will see default image immideately 
+// MARK: images are loading when we see them not on main queue, if the image is huge and loading takes much time - UI doesn't freeze: we can go back and choose another topic
 
 extension UIImageView {
     func downLoadImage(from:String) {
         if let cachedImage = Cashe.imageCache.object(forKey: from as AnyObject) {
-            print("image loaded from cashe")
             DispatchQueue.main.async {
                 Loading.loading.stopAnimating()
             }
@@ -115,7 +112,6 @@ extension UIImageView {
                         guard
                             let unwrappedImage = UIImage(data: data) else { return }
                         Cashe.imageCache.setObject(unwrappedImage, forKey: from as AnyObject)
-                        print("image loaded from internet")
                         self.image = unwrappedImage
                         Loading.loading.stopAnimating()
                     }

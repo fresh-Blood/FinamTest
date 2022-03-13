@@ -15,7 +15,7 @@ final class Controller: UserController {
     
     internal func getData() {
         
-        if let url = URL(string: CustomURL.url.rawValue) {
+        if let url = URL(string: URLs.topHeadLinesTechnology.rawValue) {
             URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
                 if let data = data {
                     do {

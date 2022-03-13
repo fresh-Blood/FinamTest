@@ -6,6 +6,7 @@ struct CommonInfo : Decodable {
     var totalResults : Int?
     var articles : [Articles]?
 }
+
 struct Articles : Decodable {
     var source : Source?
     var author : String?
@@ -16,13 +17,13 @@ struct Articles : Decodable {
     var publishedAt : String?
     var content : String?
 }
+
 struct Source : Decodable {
     var id : String?
     var name : String?
 }
 
-enum CustomURL: String {
-    case url = "https://newsapi.org/v2/top-headlines?country=ru&category=technology&apiKey=8f825354e7354c71829cfb4cb15c4893"
+enum URLs: String {
+    case topHeadLinesTechnology = "https://newsapi.org/v2/top-headlines?country=ru&category=technology&pageSize=100&apiKey=8f825354e7354c71829cfb4cb15c4893"
+    case everythingQWithParameters = "https://newsapi.org/v2/everything?q=apple&pageSize=100&language=ru&apiKey=8f825354e7354c71829cfb4cb15c4893"
 }
-
-
