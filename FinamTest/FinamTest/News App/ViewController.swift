@@ -95,14 +95,12 @@ final class ViewController: UIViewController, UserView {
         commonTable.estimatedRowHeight = 44
         commonTable.rowHeight = UITableView.automaticDimension
         view.addSubview(commonTable)
-        view.addSubview(responseErrorNotificationLabel)
-        
         for number in 1...10 {
             stackViewForGhostLoadingViews
                 .addArrangedSubview(makeNewGhostView(with: "loadingGhostView\(number)"))
         }
-        
         view.addSubview(stackViewForGhostLoadingViews)
+        view.addSubview(responseErrorNotificationLabel)
         guard let navBarHeight = self.navigationController?
                 .navigationBar
                 .frame.height else { return }
