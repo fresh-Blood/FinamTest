@@ -1,19 +1,28 @@
 import UIKit
 
 
-struct Loading {
-    static let loading = UIActivityIndicatorView(style: .medium)
-}
-
 final class SecondViewController: UIViewController {
     
     var moreInfo = ""
     
+    var counter = 0 {
+        didSet {
+            stopAnimatingGhostLoadingViewAndHide()
+        }
+    }
+    
     let newsImage: UIImageView = {
         let img = UIImageView()
         img.contentMode = .scaleAspectFit
-        img.backgroundColor = .black
         return img
+    }()
+    
+    private let ghostNewsView: UIView = {
+        let loadingGhostView = UIView()
+        loadingGhostView.backgroundColor = Colors.valueForLoading
+        loadingGhostView.alpha = 0
+        loadingGhostView.layer.cornerRadius = 8
+        return loadingGhostView
     }()
     
     let topicLabel: UILabel = {
@@ -24,10 +33,6 @@ final class SecondViewController: UIViewController {
         lbl.adjustsFontSizeToFitWidth = true
         return lbl
     }()
-    
-    private var valueForColor: UIColor {
-        UITraitCollection.current.userInterfaceStyle == .dark ? .white : .black
-    }
     
     private let moreInfoButton: UIButton = {
         let btn = UIButton()
@@ -47,38 +52,69 @@ final class SecondViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        animateGhostLoadingView()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if topicLabel.text == Errors.topicLabelNoInfo.rawValue {
+            UINotificationFeedbackGenerator().notificationOccurred(.warning)
+            UIView.animate(withDuration: 1.0,
+                           animations: { [self] in
+                moreInfoButton.layer.borderColor = Colors.valueForButtonColor.cgColor
+                moreInfoButton.layer.borderWidth = 3
+                moreInfoButton.layer.cornerRadius = 8
+                moreInfoButton.layer.shadowOffset = CGSize(width: 2, height: 3)
+                moreInfoButton.layer.shadowOpacity = 10
+                moreInfoButton.layer.shadowColor = Colors.valueForButtonColor.cgColor
+                moreInfoButton.layer.shadowRadius = 7
+            })
+        }
+    }
+    
+    private func animateGhostLoadingView() {
+        UIView.animate(withDuration: 1.0,
+                       delay: 0,
+                       options: [.autoreverse,.repeat,.curveEaseIn],
+                       animations: { [self] in
+            ghostNewsView.alpha = 1
+        }, completion: { finished in
+            self.ghostNewsView.alpha = 0
+        })
+    }
+    
+    private func stopAnimatingGhostLoadingViewAndHide() {
+        ghostNewsView.layer.removeAllAnimations()
+        ghostNewsView.isHidden = true
     }
     
     private func setupUI() {
         view.addSubview(topicLabel)
+        newsImage.addSubview(ghostNewsView)
         view.addSubview(newsImage)
         view.addSubview(moreInfoButton)
-        view.addSubview(Loading.loading)
         view.backgroundColor = .systemGroupedBackground
-        
-        moreInfoButton.setTitleColor(valueForColor, for: .normal)
-        Loading.loading.hidesWhenStopped = true
-        Loading.loading.color = .white
-        Loading.loading.startAnimating()
+        newsImage.backgroundColor = Colors.reversedValueForColor
+        moreInfoButton.setTitleColor(Colors.valueForColor, for: .normal)
         
         let inset: CGFloat = 8
-        let inset1: CGFloat = 15
+        let insetForLoadingView: CGFloat = 50
         newsImage.frame = CGRect(x: view.bounds.minX,
                                  y: view.bounds.minY,
                                  width: view.bounds.width,
                                  height: view.bounds.height/2)
-        Loading.loading.frame = CGRect(x: view.bounds.width/2 - inset1,
-                               y: view.bounds.height/4 - inset1,
-                               width: 30,
-                               height: 30)
+        ghostNewsView.frame = CGRect(x: newsImage.bounds.minX + insetForLoadingView/2,
+                                     y: newsImage.bounds.minY + insetForLoadingView*2,
+                                     width: newsImage.bounds.width - insetForLoadingView,
+                                     height: newsImage.bounds.height - insetForLoadingView*2.5)
         topicLabel.frame = CGRect(x: view.bounds.minX + inset + view.safeAreaInsets.left,
                                   y: newsImage.bounds.maxY + inset,
                                   width: view.bounds.width - inset*2 - view.safeAreaInsets.right,
                                   height: view.bounds.height/8*3)
-        moreInfoButton.frame = CGRect(x: view.bounds.minX + inset,
+        moreInfoButton.frame = CGRect(x: view.bounds.midX - 125,
                                       y: newsImage.bounds.maxY + topicLabel.bounds.maxY + inset - view.safeAreaInsets.bottom,
-                                      width: view.bounds.width - inset*2,
-                                      height: view.bounds.height/8)
+                                      width: 250,
+                                      height: 70)
         topicLabel.sizeToFit()
     }
 }
@@ -97,10 +133,10 @@ extension UIButton {
 // MARK: images are loading when we see them not on main queue, if the image is huge and loading takes much time - UI doesn't freeze: we can go back and choose another topic
 
 extension UIImageView {
-    func downLoadImage(from:String) {
+    func downLoadImage(from:String, completion: @escaping () -> Void) {
         if let cachedImage = Cashe.imageCache.object(forKey: from as AnyObject) {
             DispatchQueue.main.async {
-                Loading.loading.stopAnimating()
+                completion()
             }
             self.image = cachedImage
             return
@@ -113,12 +149,36 @@ extension UIImageView {
                             let unwrappedImage = UIImage(data: data) else { return }
                         Cashe.imageCache.setObject(unwrappedImage, forKey: from as AnyObject)
                         self.image = unwrappedImage
-                        Loading.loading.stopAnimating()
+                        completion()
                     }
                 }
             }).resume()
         }
     }
 }
+
+struct Colors {
+    static var valueForColor: UIColor {
+        UITraitCollection.current.userInterfaceStyle == .dark ? .white : .black
+    }
+    
+    static var reversedValueForColor: UIColor {
+        UITraitCollection.current.userInterfaceStyle == .dark ? .black : .white
+    }
+    
+    static var valueForButtonColor: UIColor {
+        UITraitCollection.current.userInterfaceStyle == .dark ? .systemGreen : .systemBlue
+    }
+    
+    static var valueForLoading: UIColor {
+        UITraitCollection.current.userInterfaceStyle == .dark ? .darkGray : .systemGray4
+    }
+}
+    
+    
+        
+    
+    
+
 
 
