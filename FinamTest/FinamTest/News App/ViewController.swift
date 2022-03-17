@@ -94,20 +94,15 @@ final class ViewController: UIViewController, UserView {
         commonTable.frame = view.bounds
         commonTable.estimatedRowHeight = 44
         commonTable.rowHeight = UITableView.automaticDimension
-        view.addSubview(commonTable)
-        for number in 1...10 {
+        for number in 1...7 {
             stackViewForGhostLoadingViews
                 .addArrangedSubview(makeNewGhostView(with: "loadingGhostView\(number)"))
         }
-        view.addSubview(stackViewForGhostLoadingViews)
+        commonTable.addSubview(stackViewForGhostLoadingViews)
+        view.addSubview(commonTable)
         view.addSubview(responseErrorNotificationLabel)
-        guard let navBarHeight = self.navigationController?
-                .navigationBar
-                .frame.height else { return }
-        stackViewForGhostLoadingViews.frame = CGRect(x: view.safeAreaInsets.left,
-                                                     y: view.safeAreaInsets.top + navBarHeight*2,
-                                                     width: view.frame.width,
-                                                     height: view.frame.height)
+        
+        stackViewForGhostLoadingViews.frame = commonTable.bounds
         
         NSLayoutConstraint.activate([
             responseErrorNotificationLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10),
@@ -227,5 +222,12 @@ extension ViewController {
             self.view.layoutIfNeeded()
             UINotificationFeedbackGenerator().notificationOccurred(.error)
         })
+    }
+}
+
+extension UIStackView {
+    open override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        super.point(inside: point, with: event)
+        return false 
     }
 }

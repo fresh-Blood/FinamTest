@@ -60,6 +60,10 @@ final class SecondViewController: UIViewController {
         if topicLabel.text == Errors.topicLabelNoInfo.rawValue {
             UINotificationFeedbackGenerator().notificationOccurred(.warning)
             UIView.animate(withDuration: 1.0,
+                           delay: 0,
+                           usingSpringWithDamping: 0.1,
+                           initialSpringVelocity: 0.1,
+                           options: .curveLinear,
                            animations: { [self] in
                 moreInfoButton.layer.borderColor = Colors.valueForButtonColor.cgColor
                 moreInfoButton.layer.borderWidth = 3
@@ -68,7 +72,10 @@ final class SecondViewController: UIViewController {
                 moreInfoButton.layer.shadowOpacity = 10
                 moreInfoButton.layer.shadowColor = Colors.valueForButtonColor.cgColor
                 moreInfoButton.layer.shadowRadius = 7
+                view.layoutIfNeeded()
             })
+            stopAnimatingGhostLoadingViewAndHide()
+            showPowerOffImage()
         }
     }
     
@@ -83,6 +90,29 @@ final class SecondViewController: UIViewController {
         })
     }
     
+    private func showPowerOffImage() {
+        let powerOffImage = UIImageView(image: UIImage(systemName: "power.dotted"))
+        powerOffImage.tintColor = Colors.valueForButtonColor
+        powerOffImage.frame.size = CGSize(width: 50, height: 50)
+        powerOffImage.center = self.newsImage.center
+        powerOffImage.alpha = 0
+        self.newsImage.addSubview(powerOffImage)
+        
+        UIView.animate(withDuration: 1.0,
+                       delay: 0,
+                       usingSpringWithDamping: 0.1,
+                       initialSpringVelocity: 0.1,
+                       options: .curveLinear,
+                       animations: {
+            powerOffImage.alpha = 1
+            powerOffImage.layer.shadowOffset = CGSize(width: 2, height: 3)
+            powerOffImage.layer.shadowOpacity = 10
+            powerOffImage.layer.shadowColor = Colors.valueForButtonColor.cgColor
+            powerOffImage.layer.shadowRadius = powerOffImage.frame.size.height/2
+            self.view.layoutIfNeeded()
+        })
+    }
+    
     private func stopAnimatingGhostLoadingViewAndHide() {
         ghostNewsView.layer.removeAllAnimations()
         ghostNewsView.isHidden = true
@@ -93,7 +123,7 @@ final class SecondViewController: UIViewController {
         newsImage.addSubview(ghostNewsView)
         view.addSubview(newsImage)
         view.addSubview(moreInfoButton)
-        view.backgroundColor = .systemGroupedBackground
+        view.backgroundColor = .systemBackground
         newsImage.backgroundColor = Colors.reversedValueForColor
         moreInfoButton.setTitleColor(Colors.valueForColor, for: .normal)
         
@@ -174,11 +204,5 @@ struct Colors {
         UITraitCollection.current.userInterfaceStyle == .dark ? .darkGray : .systemGray4
     }
 }
-    
-    
-        
-    
-    
-
 
 
