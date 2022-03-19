@@ -86,6 +86,10 @@ final class ViewController: UIViewController, UserView {
         ]
         navigationController?.navigationBar.backgroundColor = .clear
         navigationController?.navigationBar.tintColor = Colors.valueForColor
+        let searchVC = UISearchController()
+        navigationItem.searchController = searchVC
+        searchVC.searchBar.keyboardType = .asciiCapable
+        searchVC.searchBar.delegate = self
     }
     
     private func setupUI() {
@@ -126,6 +130,7 @@ final class ViewController: UIViewController, UserView {
     }
     
     private func animateLoading() {
+        stackViewForGhostLoadingViews.isHidden = false
         UIView.animate(withDuration: 1.0,
                        delay: 0,
                        options: [.autoreverse,.repeat,.curveEaseIn],
@@ -144,7 +149,7 @@ final class ViewController: UIViewController, UserView {
         _ = stackViewForGhostLoadingViews.arrangedSubviews.map{
             $0.layer.removeAllAnimations()
         }
-        stackViewForGhostLoadingViews.isHidden = true
+        stackViewForGhostLoadingViews.isHidden.toggle()
     }
 }
 
@@ -186,9 +191,15 @@ extension ViewController {
     }
     
     @objc func handleRefreshControl() {
-        controller?.getData(completion: {})
-        self.commonTable.refreshControl?.endRefreshing()
-        self.reload()
+        controller?.newsArray.removeAll()
+        reload()
+        animateLoading()
+        controller?.getData(completion: {
+            DispatchQueue.main.async {
+                self.commonTable.refreshControl?.endRefreshing()
+                self.stopAnimatingAndHide()
+            }
+        })
     }
 }
 
@@ -228,6 +239,22 @@ extension ViewController {
 extension UIStackView {
     open override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         super.point(inside: point, with: event)
-        return false 
+        return false
+    }
+}
+
+extension ViewController: UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        controller?.newsArray.removeAll()
+        reload()
+        animateLoading()
+        controller?.getQData(completion: {
+            DispatchQueue.main.async {
+                self.stopAnimatingAndHide()
+            }
+        }, with: searchBar.text)
+        searchBar.text?.removeAll()
+        view.endEditing(true)
     }
 }
