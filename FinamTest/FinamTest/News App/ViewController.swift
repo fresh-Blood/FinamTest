@@ -70,15 +70,52 @@ final class ViewController: UIViewController, UserView {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setKostylgesture()
         configureRefreshControl()
         configureNavigationBar()
         setupUI()
+    }
+    
+    // I don't know why - my bar item buttons are not clickable wtf (sure i did everything right and for now deleted action for it and set nil - look down) ... If u know - let me know please, but for now - i'll do this not elegant thing
+    private let kostylForRightBarButtonItem: UIButton = {
+        let btn = UIButton()
+        btn.backgroundColor = .clear
+        return btn
+    }()
+    
+    private func setKostylgesture() {
+        let gesture = UILongPressGestureRecognizer(
+            target: self,
+            action: #selector(searchAction))
+        gesture.minimumPressDuration = 0
+        kostylForRightBarButtonItem.addGestureRecognizer(gesture)
+    }
+    
+    @objc private func searchAction(gesture: UILongPressGestureRecognizer) {
+        if gesture.state == .began {
+            UIView.animate(withDuration: 0.5,
+                           delay: 0,
+                           usingSpringWithDamping: 0.5,
+                           initialSpringVelocity: 0.1,
+                           options: .curveEaseIn,
+                           animations: { [self] in
+                if navigationItem.searchController != nil {
+                    navigationItem.searchController = nil
+                } else {
+                    setSearchVC()
+                    navigationItem.hidesSearchBarWhenScrolling = false
+                }
+            })
+        }
     }
     
     private func configureNavigationBar() {
         navigationItem.title = "News ಠ_ಠ"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.backButtonTitle = ""
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search,
+                                                           target: self,
+                                                           action: nil) // yep
         navigationController?.navigationBar.largeTitleTextAttributes = [
             .font: UIFont.systemFont(ofSize: 40,
                                      weight: .heavy),
@@ -86,10 +123,15 @@ final class ViewController: UIViewController, UserView {
         ]
         navigationController?.navigationBar.backgroundColor = .clear
         navigationController?.navigationBar.tintColor = Colors.valueForColor
+        setSearchVC()
+    }
+    
+    private func setSearchVC() {
         let searchVC = UISearchController()
         navigationItem.searchController = searchVC
         searchVC.searchBar.keyboardType = .asciiCapable
         searchVC.searchBar.delegate = self
+        searchVC.searchBar.placeholder = "Keyword?"
     }
     
     private func setupUI() {
@@ -105,9 +147,12 @@ final class ViewController: UIViewController, UserView {
         commonTable.addSubview(stackViewForGhostLoadingViews)
         view.addSubview(commonTable)
         view.addSubview(responseErrorNotificationLabel)
-        
+        navigationController?.navigationBar.addSubview(kostylForRightBarButtonItem)
+        kostylForRightBarButtonItem.frame = CGRect(x: view.bounds.maxX - 60,
+                                                   y: 0,
+                                                   width: 60,
+                                                   height: 50)
         stackViewForGhostLoadingViews.frame = commonTable.bounds
-        
         NSLayoutConstraint.activate([
             responseErrorNotificationLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10),
             responseErrorNotificationLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10),
@@ -256,5 +301,17 @@ extension ViewController: UISearchBarDelegate {
         }, with: searchBar.text)
         searchBar.text?.removeAll()
         view.endEditing(true)
+    }
+    
+    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        guard let text = searchBar.text else { return false }
+        if text.isEmpty {
+            kostylForRightBarButtonItem.isHidden = true
+        }
+        return true
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        kostylForRightBarButtonItem.isHidden.toggle()
     }
 }
