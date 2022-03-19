@@ -123,7 +123,6 @@ final class ViewController: UIViewController, UserView {
         ]
         navigationController?.navigationBar.backgroundColor = .clear
         navigationController?.navigationBar.tintColor = Colors.valueForColor
-        setSearchVC()
     }
     
     private func setSearchVC() {

@@ -141,10 +141,10 @@ final class SecondViewController: UIViewController {
                                   y: newsImage.bounds.maxY + inset,
                                   width: view.bounds.width - inset*2 - view.safeAreaInsets.right,
                                   height: view.bounds.height/8*3)
-        moreInfoButton.frame = CGRect(x: view.bounds.midX - 125,
+        moreInfoButton.frame = CGRect(x: view.bounds.midX - 100,
                                       y: newsImage.bounds.maxY + topicLabel.bounds.maxY + inset - view.safeAreaInsets.bottom,
-                                      width: 250,
-                                      height: 70)
+                                      width: 200,
+                                      height: 50)
         topicLabel.sizeToFit()
     }
 }
