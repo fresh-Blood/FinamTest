@@ -237,10 +237,10 @@ extension ViewController {
     @objc func handleRefreshControl() {
         controller?.newsArray.removeAll()
         reload()
+        self.commonTable.refreshControl?.endRefreshing()
         animateLoading()
         controller?.getData(completion: {
             DispatchQueue.main.async {
-                self.commonTable.refreshControl?.endRefreshing()
                 self.stopAnimatingAndHide()
             }
         })
