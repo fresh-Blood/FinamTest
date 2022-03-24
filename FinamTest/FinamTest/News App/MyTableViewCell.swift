@@ -9,7 +9,7 @@ final class MyTableViewCell: UITableViewCell {
     let newsDate: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 0
-        lbl.font = .systemFont(ofSize: 15, weight: .medium)
+        lbl.font = .systemFont(ofSize: 17, weight: .light)
         lbl.translatesAutoresizingMaskIntoConstraints = false
         return lbl
     }()
@@ -18,7 +18,7 @@ final class MyTableViewCell: UITableViewCell {
         let lbl = UILabel()
         lbl.numberOfLines = 0
         lbl.textAlignment = .center
-        lbl.font = .systemFont(ofSize: 15, weight: .medium)
+        lbl.font = .systemFont(ofSize: 17, weight: .light)
         lbl.translatesAutoresizingMaskIntoConstraints = false
         return lbl
     }()
@@ -26,7 +26,7 @@ final class MyTableViewCell: UITableViewCell {
     let titleLabel: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 0
-        lbl.font = .systemFont(ofSize: 20, weight: .medium)
+        lbl.font = .systemFont(ofSize: 17, weight: .regular)
         lbl.adjustsFontSizeToFitWidth = true
         lbl.translatesAutoresizingMaskIntoConstraints = false
         return lbl

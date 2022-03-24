@@ -36,6 +36,7 @@ final class ViewController: UIViewController, UserView {
         responseErrorView.font = .systemFont(ofSize: 20, weight: .heavy)
         responseErrorView.layer.masksToBounds = true
         responseErrorView.adjustsFontSizeToFitWidth = true
+        responseErrorView.textColor = .white
         return responseErrorView
     }()
     
@@ -117,7 +118,7 @@ final class ViewController: UIViewController, UserView {
                                                            target: self,
                                                            action: nil) // yep
         navigationController?.navigationBar.largeTitleTextAttributes = [
-            .font: UIFont.systemFont(ofSize: 40,
+            .font: UIFont.systemFont(ofSize: 35,
                                      weight: .heavy),
             .foregroundColor: UIColor.label
         ]

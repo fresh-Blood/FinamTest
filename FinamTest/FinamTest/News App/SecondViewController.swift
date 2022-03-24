@@ -29,7 +29,7 @@ final class SecondViewController: UIViewController {
         let lbl = UILabel()
         lbl.textAlignment = .natural
         lbl.numberOfLines = 0
-        lbl.font = .systemFont(ofSize: 18, weight: .medium)
+        lbl.font = .systemFont(ofSize: 17, weight: .regular)
         lbl.adjustsFontSizeToFitWidth = true
         return lbl
     }()
