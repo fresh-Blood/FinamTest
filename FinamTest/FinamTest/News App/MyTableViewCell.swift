@@ -26,8 +26,7 @@ final class MyTableViewCell: UITableViewCell {
     let titleLabel: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 0
-        lbl.font = .systemFont(ofSize: 17, weight: .regular)
-        lbl.adjustsFontSizeToFitWidth = true
+        lbl.font = .systemFont(ofSize: 18, weight: .regular)
         lbl.translatesAutoresizingMaskIntoConstraints = false
         return lbl
     }()
