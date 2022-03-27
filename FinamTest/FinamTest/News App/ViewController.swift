@@ -259,6 +259,7 @@ extension ViewController {
                            options: .curveEaseIn,
                            animations: {
                 self?.view.layoutIfNeeded()
+                UINotificationFeedbackGenerator().notificationOccurred(.error)
             }, completion: { finished in
                 self?.animateChanges()
             })
@@ -283,7 +284,6 @@ extension ViewController {
                        options: .curveLinear,
                        animations: {
             self.view.layoutIfNeeded()
-            UINotificationFeedbackGenerator().notificationOccurred(.error)
         })
     }
 }
