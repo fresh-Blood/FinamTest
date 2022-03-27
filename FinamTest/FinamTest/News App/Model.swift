@@ -32,3 +32,12 @@ enum ProductKeys: String {
     case forTestFirst = "8f825354e7354c71829cfb4cb15c4893"
     case forTestSecond = "" // Hide
 }
+
+enum Errors: String {
+    case topicLabelNoInfo = "Тут должно быть описание, но его нет - это не ошибка, попробуйте прочитать подробнее по кнопке ниже."
+    case badRequest = "Error 400 - Чёто с интернетом, попробуйте позже"
+    case unauthorized = "Error 401 - Чёто с авторизацией запроса, попробуйте позже"
+    case tooManyRequests = "Error 429 - Превышено кол-во запросов в сутки, возвращайтесь завтра"
+    case serverError = "Error 500 - Ошибка сервера, пойду посплю тогда, мб позже заработает"
+    case error = "Error"
+}

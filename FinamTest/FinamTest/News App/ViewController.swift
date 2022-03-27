@@ -11,6 +11,8 @@ final class ViewController: UIViewController, UserView {
     
     var controller: UserController?
     
+    private var timer = Timer()
+    
     private let commonTable: UITableView = {
         let tbl = UITableView()
         tbl.register(MyTableViewCell.self, forCellReuseIdentifier: MyTableViewCell.id)
@@ -48,23 +50,6 @@ final class ViewController: UIViewController, UserView {
         return name
     }
     
-    func animateResponseError(with error: String) {
-        DispatchQueue.main.async { [weak self] in
-            self?.responseErrorNotificationLabel.text = error
-            self?.setErrorResponseLabelHeightConstraint(to: 100, from: 0)
-            UIView.animate(withDuration: 2.0,
-                           delay: 0,
-                           usingSpringWithDamping: 0.1,
-                           initialSpringVelocity: 0.1,
-                           options: .curveEaseIn,
-                           animations: {
-                self?.view.layoutIfNeeded()
-            }, completion: { finished in
-                self?.animateChanges()
-            })
-        }
-    }
-    
     internal func reload() {
         commonTable.reloadData()
     }
@@ -75,8 +60,18 @@ final class ViewController: UIViewController, UserView {
         configureRefreshControl()
         configureNavigationBar()
         setupUI()
+        timer = Timer.scheduledTimer(withTimeInterval: 15.0,
+                                     repeats: false,
+                                     block: { [weak self] _ in
+            guard let newsArray = self?.controller?.newsArray else { return }
+            if newsArray.isEmpty {
+                self?.animateResponseError(with: Errors.badRequest.rawValue)
+            }
+            self?.timer.invalidate()
+        })
     }
     
+    // MARK: Configure navigation bar
     // I don't know why - my bar item buttons are not clickable wtf (sure i did everything right and for now deleted action for it and set nil - look down) ... If u know - let me know please, but for now - i'll do this not elegant thing
     private let kostylForRightBarButtonItem: UIButton = {
         let btn = UIButton()
@@ -115,10 +110,10 @@ final class ViewController: UIViewController, UserView {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.backButtonTitle = ""
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search,
-                                                           target: self,
-                                                           action: nil) // yep
+                                                            target: self,
+                                                            action: nil) // yep
         navigationController?.navigationBar.largeTitleTextAttributes = [
-            .font: UIFont.systemFont(ofSize: 35,
+            .font: UIFont.systemFont(ofSize: 40,
                                      weight: .heavy),
             .foregroundColor: UIColor.label
         ]
@@ -134,6 +129,7 @@ final class ViewController: UIViewController, UserView {
         searchVC.searchBar.placeholder = "Keyword?"
     }
     
+    // MARK: Setup UI
     private func setupUI() {
         commonTable.delegate = self
         commonTable.dataSource = self
@@ -174,6 +170,7 @@ final class ViewController: UIViewController, UserView {
         }
     }
     
+    // MARK: Skeletons animations
     private func animateLoading() {
         stackViewForGhostLoadingViews.isHidden = false
         UIView.animate(withDuration: 1.0,
@@ -197,7 +194,7 @@ final class ViewController: UIViewController, UserView {
         stackViewForGhostLoadingViews.isHidden.toggle()
     }
 }
-
+// MARK: TableView settings
 extension ViewController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -226,7 +223,7 @@ extension ViewController : UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-
+// MARK: Refresh control settings
 extension ViewController {
     func configureRefreshControl () {
         commonTable.refreshControl = UIRefreshControl()
@@ -248,29 +245,39 @@ extension ViewController {
     }
 }
 
-enum Errors: String {
-    case topicLabelNoInfo = "Тут должно быть описание, но его нет - это не ошибка, попробуйте прочитать подробнее по кнопке ниже."
-    case badRequest = "Error 400 - Чёто с интернетом, попробуйте позже"
-    case unauthorized = "Error 401 - Чёто с авторизацией запроса, попробуйте позже"
-    case tooManyRequests = "Error 429 - Превышено кол-во запросов в сутки, возвращайтесь завтра"
-    case serverError = "Error 500 - Ошибка сервера, пойду посплю тогда, мб позже заработает"
-    case error = "Error"
-}
-
+// MARK: Animate errors
 extension ViewController {
+    
+    func animateResponseError(with error: String) {
+        DispatchQueue.main.async { [weak self] in
+            self?.responseErrorNotificationLabel.text = error
+            self?.setErrorResponseLabelHeightConstraint(to: 100, from: 0)
+            UIView.animate(withDuration: 2.0,
+                           delay: 0,
+                           usingSpringWithDamping: 0.1,
+                           initialSpringVelocity: 0.1,
+                           options: .curveEaseIn,
+                           animations: {
+                self?.view.layoutIfNeeded()
+            }, completion: { finished in
+                self?.animateChanges()
+            })
+        }
+    }
+    
     func setErrorResponseLabelHeightConstraint(to oneValue: CGFloat, from anotherValue: CGFloat) {
         _ = self.responseErrorNotificationLabel.constraints.map{
-            if $0.constant == oneValue {
+            if $0.constant == anotherValue {
                 self.responseErrorNotificationLabel.removeConstraint($0)
             }
         }
-        self.responseErrorNotificationLabel.heightAnchor.constraint(equalToConstant: anotherValue).isActive = true
+        self.responseErrorNotificationLabel.heightAnchor.constraint(equalToConstant: oneValue).isActive = true
     }
     
     func animateChanges() {
         self.setErrorResponseLabelHeightConstraint(to: 0, from: 100)
         UIView.animate(withDuration: 2.0,
-                       delay: 1.0,
+                       delay: 5.0,
                        usingSpringWithDamping: 0.1,
                        initialSpringVelocity: 0.1,
                        options: .curveLinear,
@@ -288,6 +295,7 @@ extension UIStackView {
     }
 }
 
+// MARK: Search bar delegate settings
 extension ViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -314,4 +322,9 @@ extension ViewController: UISearchBarDelegate {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         kostylForRightBarButtonItem.isHidden.toggle()
     }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        searchBar.text = searchBar.text?.filter{ $0.isLetter && $0 != " " }
+    }
 }
+
