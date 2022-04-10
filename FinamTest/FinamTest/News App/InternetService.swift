@@ -4,17 +4,18 @@ import UIKit
 typealias Completion = () -> Void
 
 protocol UserInternetService {
-    func getData(completion: @escaping Completion, with keyWord: String?)
+    func getData(completion: @escaping Completion, with keyWord: String?) async throws
     var view: UserView? { get set }
     var newsArray: [Articles] { get set }
 }
 
 final class InternetService: UserInternetService {
     
+    private var timer = Timer()
     var view: UserView?
     var newsArray: [Articles] = []
     
-    func getData(completion: @escaping Completion, with keyWord: String?) {
+    func getData(completion: @escaping Completion, with keyWord: String?) async throws {
         
         var urlString: String {
             keyWord != nil ?
@@ -22,40 +23,45 @@ final class InternetService: UserInternetService {
             :
             URLs.topHeadLinesTechnology.rawValue
         }
+        timer = Timer.scheduledTimer(withTimeInterval: 7, repeats: false, block: { [weak self] _ in
+            guard let newsArray = self?.newsArray else { return }
+            if newsArray.isEmpty {
+                self?.view?.animateResponseError(with: Errors.error.rawValue)
+                completion()
+                self?.timer.invalidate()
+            }
+        })
+        guard let url = URL(string: urlString) else { return }
+        let (data,response) = try await URLSession.shared.data(from: url)
         
-        if let url = URL(string: urlString) {
-            URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-                if let data = data {
-                    do {
-                        let parsedJson = try JSONDecoder().decode(CommonInfo.self, from: data)
-                        self?.newsArray = parsedJson.articles ?? []
-                        DispatchQueue.main.async {
-                            self?.view?.reload()
-                            UINotificationFeedbackGenerator().notificationOccurred(.success)
-                            completion()
-                        }
-                    } catch let error{
-                        print(error)
-                    }
-                    if let HTTPResponse = response as? HTTPURLResponse {
-                        completion()
-                        switch HTTPResponse.statusCode {
-                        case 429:
-                            self?.view?.animateResponseError(with: Errors.tooManyRequests.rawValue)
-                        case 500:
-                            self?.view?.animateResponseError(with: Errors.serverError.rawValue)
-                        case 401:
-                            self?.view?.animateResponseError(with: Errors.unauthorized.rawValue)
-                        case 400:
-                            self?.view?.animateResponseError(with: Errors.badRequest.rawValue)
-                        case 200:
-                            fallthrough
-                        default:
-                            break
-                        }
-                    }
-                }
-            }.resume()
+        guard let newsArray = try JSONDecoder().decode(CommonInfo.self, from: data).articles else { return }
+        self.newsArray = newsArray
+        
+        guard let httpResponse = response as? HTTPURLResponse else { return }
+        completion()
+        handleResponse(httpResponseStatusCode: httpResponse.statusCode)
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.view?.reload()
+            UINotificationFeedbackGenerator().notificationOccurred(.success)
+            completion()
+        }
+    }
+    
+    private func handleResponse(httpResponseStatusCode: Int) {
+        switch httpResponseStatusCode {
+        case 429:
+            view?.animateResponseError(with: Errors.tooManyRequests.rawValue)
+        case 500:
+            view?.animateResponseError(with: Errors.serverError.rawValue)
+        case 401:
+            view?.animateResponseError(with: Errors.unauthorized.rawValue)
+        case 400:
+            view?.animateResponseError(with: Errors.badRequest.rawValue)
+        case 200:
+            view?.animateGoodConnection()
+        default:
+            break
         }
     }
 }

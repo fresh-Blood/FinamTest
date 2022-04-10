@@ -5,13 +5,12 @@ protocol UserView {
     var internetService: UserInternetService? { get set }
     func reload()
     func animateResponseError(with error: String)
+    func animateGoodConnection()
 }
 
 final class ViewController: UIViewController, UserView {
     
     var internetService: UserInternetService?
-    
-    private var timer = Timer()
     
     private let commonTable: UITableView = {
         let tbl = UITableView()
@@ -50,7 +49,7 @@ final class ViewController: UIViewController, UserView {
         return name
     }
     
-    internal func reload() {
+    func reload() {
         commonTable.reloadData()
     }
     
@@ -60,15 +59,6 @@ final class ViewController: UIViewController, UserView {
         configureRefreshControl()
         configureNavigationBar()
         setupUI()
-        timer = Timer.scheduledTimer(withTimeInterval: 15.0,
-                                     repeats: false,
-                                     block: { [weak self] _ in
-            guard let newsArray = self?.internetService?.newsArray else { return }
-            if newsArray.isEmpty {
-                self?.animateResponseError(with: Errors.badRequest.rawValue)
-            }
-            self?.timer.invalidate()
-        })
     }
     
     // MARK: Configure navigation bar
@@ -162,11 +152,35 @@ final class ViewController: UIViewController, UserView {
         guard let newsArray = internetService?.newsArray else { return }
         if newsArray.isEmpty {
             animateLoading()
-            internetService?.getData(completion: {
-                DispatchQueue.main.async {
-                    self.stopAnimatingAndHide()
-                }
-            }, with: nil)
+            Task {
+                try await internetService?.getData(completion: {
+                    DispatchQueue.main.async {
+                        self.stopAnimatingAndHide()
+                    }
+                }, with: nil)
+            }
+        }
+    }
+    
+    func animateGoodConnection() {
+        DispatchQueue.main.async { [weak self] in
+            UIView.animate(withDuration: 1.0,
+                           delay: 0,
+                           usingSpringWithDamping: 0.1,
+                           initialSpringVelocity: 0.1,
+                           options: .curveEaseIn,
+                           animations: {
+                self?.navigationController?.navigationBar.backgroundColor = .systemGreen
+            }, completion: { finished in
+                UIView.animate(withDuration: 1.0,
+                               delay: 0,
+                               usingSpringWithDamping: 0.1,
+                               initialSpringVelocity: 0.1,
+                               options: .curveEaseIn,
+                               animations: {
+                    self?.navigationController?.navigationBar.backgroundColor = .clear
+                })
+            })
         }
     }
     
@@ -177,18 +191,18 @@ final class ViewController: UIViewController, UserView {
                        delay: 0,
                        options: [.autoreverse,.repeat,.curveEaseIn],
                        animations: {
-            _ = self.stackViewForGhostLoadingViews.arrangedSubviews.map {
+            self.stackViewForGhostLoadingViews.arrangedSubviews.forEach {
                 $0.alpha = 1
             }
         }, completion: { finished in
-            _ = self.stackViewForGhostLoadingViews.arrangedSubviews.map {
+            self.stackViewForGhostLoadingViews.arrangedSubviews.forEach {
                 $0.alpha = 0
             }
         })
     }
     
     private func stopAnimatingAndHide() {
-        _ = stackViewForGhostLoadingViews.arrangedSubviews.map{
+        stackViewForGhostLoadingViews.arrangedSubviews.forEach {
             $0.layer.removeAllAnimations()
         }
         stackViewForGhostLoadingViews.isHidden.toggle()
@@ -235,13 +249,15 @@ extension ViewController {
     @objc func handleRefreshControl() {
         internetService?.newsArray.removeAll()
         reload()
-        self.commonTable.refreshControl?.endRefreshing()
+        commonTable.refreshControl?.endRefreshing()
         animateLoading()
-        internetService?.getData(completion: {
-            DispatchQueue.main.async {
-                self.stopAnimatingAndHide()
-            }
-        }, with: nil)
+        Task {
+            try await internetService?.getData(completion: {
+                DispatchQueue.main.async {
+                    self.stopAnimatingAndHide()
+                }
+            }, with: nil)
+        }
     }
 }
 
@@ -267,16 +283,16 @@ extension ViewController {
     }
     
     func setErrorResponseLabelHeightConstraint(to oneValue: CGFloat, from anotherValue: CGFloat) {
-        _ = self.responseErrorNotificationLabel.constraints.map{
+        responseErrorNotificationLabel.constraints.forEach {
             if $0.constant == anotherValue {
-                self.responseErrorNotificationLabel.removeConstraint($0)
+                responseErrorNotificationLabel.removeConstraint($0)
             }
         }
-        self.responseErrorNotificationLabel.heightAnchor.constraint(equalToConstant: oneValue).isActive = true
+        responseErrorNotificationLabel.heightAnchor.constraint(equalToConstant: oneValue).isActive = true
     }
     
     func animateChanges() {
-        self.setErrorResponseLabelHeightConstraint(to: 0, from: 100)
+        setErrorResponseLabelHeightConstraint(to: 0, from: 100)
         UIView.animate(withDuration: 2.0,
                        delay: 5.0,
                        usingSpringWithDamping: 0.1,
@@ -302,13 +318,15 @@ extension ViewController: UISearchBarDelegate {
         internetService?.newsArray.removeAll()
         reload()
         animateLoading()
-        internetService?.getData(completion: {
-            DispatchQueue.main.async {
-                self.stopAnimatingAndHide()
-            }
-        }, with: searchBar.text)
-        searchBar.text?.removeAll()
-        view.endEditing(true)
+        Task {
+            try await internetService?.getData(completion: {
+                DispatchQueue.main.async {
+                    self.stopAnimatingAndHide()
+                    searchBar.text?.removeAll()
+                    self.view.endEditing(true)
+                }
+            }, with: searchBar.text)
+        }
     }
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
