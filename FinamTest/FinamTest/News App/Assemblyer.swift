@@ -14,9 +14,9 @@ final class UserAssemblyer: Assemblyer {
     static func start() -> Assemblyer {
         let assemblyer = UserAssemblyer()
         let view = ViewController()
-        let controller = Controller()
-        view.controller = controller
-        controller.view = view
+        let internetService = InternetService()
+        view.internetService = internetService
+        internetService.view = view
         assemblyer.entry = view as EntryPoint
         return assemblyer
     }

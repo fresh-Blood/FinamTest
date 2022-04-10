@@ -2,14 +2,14 @@ import UIKit
 
 
 protocol UserView {
-    var controller: UserController? { get set }
+    var internetService: UserInternetService? { get set }
     func reload()
     func animateResponseError(with error: String)
 }
 
 final class ViewController: UIViewController, UserView {
     
-    var controller: UserController?
+    var internetService: UserInternetService?
     
     private var timer = Timer()
     
@@ -63,7 +63,7 @@ final class ViewController: UIViewController, UserView {
         timer = Timer.scheduledTimer(withTimeInterval: 15.0,
                                      repeats: false,
                                      block: { [weak self] _ in
-            guard let newsArray = self?.controller?.newsArray else { return }
+            guard let newsArray = self?.internetService?.newsArray else { return }
             if newsArray.isEmpty {
                 self?.animateResponseError(with: Errors.badRequest.rawValue)
             }
@@ -159,14 +159,14 @@ final class ViewController: UIViewController, UserView {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        guard let newsArray = controller?.newsArray else { return }
+        guard let newsArray = internetService?.newsArray else { return }
         if newsArray.isEmpty {
             animateLoading()
-            controller?.getData(completion: {
+            internetService?.getData(completion: {
                 DispatchQueue.main.async {
                     self.stopAnimatingAndHide()
                 }
-            })
+            }, with: nil)
         }
     }
     
@@ -198,12 +198,12 @@ final class ViewController: UIViewController, UserView {
 extension ViewController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return controller?.newsArray.count ?? 0
+        return internetService?.newsArray.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: MyTableViewCell.id, for: indexPath) as! MyTableViewCell
-        let model = controller?.newsArray[indexPath.row]
+        let model = internetService?.newsArray[indexPath.row]
         cell.titleLabel.text = model?.title
         cell.newsDate.text = model?.publishedAt
         cell.newsSource.text = model?.source?.name
@@ -211,7 +211,7 @@ extension ViewController : UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let topic = controller?.newsArray[indexPath.row]
+        let topic = internetService?.newsArray[indexPath.row]
         let secondVC = SecondViewController()
         secondVC.topicLabel.text = topic?.description ?? Errors.topicLabelNoInfo.rawValue
         secondVC.newsImage.downLoadImage(from: topic?.urlToImage ?? Errors.error.rawValue, completion: {
@@ -233,15 +233,15 @@ extension ViewController {
     }
     
     @objc func handleRefreshControl() {
-        controller?.newsArray.removeAll()
+        internetService?.newsArray.removeAll()
         reload()
         self.commonTable.refreshControl?.endRefreshing()
         animateLoading()
-        controller?.getData(completion: {
+        internetService?.getData(completion: {
             DispatchQueue.main.async {
                 self.stopAnimatingAndHide()
             }
-        })
+        }, with: nil)
     }
 }
 
@@ -299,10 +299,10 @@ extension UIStackView {
 extension ViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        controller?.newsArray.removeAll()
+        internetService?.newsArray.removeAll()
         reload()
         animateLoading()
-        controller?.getQData(completion: {
+        internetService?.getData(completion: {
             DispatchQueue.main.async {
                 self.stopAnimatingAndHide()
             }

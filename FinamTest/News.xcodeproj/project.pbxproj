@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		849674B32774BD4700504D9D /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849674B22774BD4700504D9D /* Model.swift */; };
-		849674B62774BE2700504D9D /* Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849674B52774BE2700504D9D /* Controller.swift */; };
+		849674B62774BE2700504D9D /* InternetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849674B52774BE2700504D9D /* InternetService.swift */; };
 		849674B82774C8F100504D9D /* Assemblyer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849674B72774C8F100504D9D /* Assemblyer.swift */; };
 		84FA0F7826C6350900FB1C34 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FA0F7726C6350900FB1C34 /* AppDelegate.swift */; };
 		84FA0F7A26C6350900FB1C34 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FA0F7926C6350900FB1C34 /* SceneDelegate.swift */; };
@@ -35,7 +35,7 @@
 
 /* Begin PBXFileReference section */
 		849674B22774BD4700504D9D /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
-		849674B52774BE2700504D9D /* Controller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Controller.swift; sourceTree = "<group>"; };
+		849674B52774BE2700504D9D /* InternetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetService.swift; sourceTree = "<group>"; };
 		849674B72774C8F100504D9D /* Assemblyer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assemblyer.swift; sourceTree = "<group>"; };
 		84FA0F7426C6350900FB1C34 /* News.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = News.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84FA0F7726C6350900FB1C34 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -65,7 +65,7 @@
 			children = (
 				849674B22774BD4700504D9D /* Model.swift */,
 				84FA0F7B26C6350900FB1C34 /* ViewController.swift */,
-				849674B52774BE2700504D9D /* Controller.swift */,
+				849674B52774BE2700504D9D /* InternetService.swift */,
 				84FA0FA226C642C000FB1C34 /* SecondViewController.swift */,
 				84FA0F8E26C6362600FB1C34 /* MyTableViewCell.swift */,
 				849674B72774C8F100504D9D /* Assemblyer.swift */,
@@ -189,7 +189,7 @@
 				84FA0F8F26C6362600FB1C34 /* MyTableViewCell.swift in Sources */,
 				84FA0F7A26C6350900FB1C34 /* SceneDelegate.swift in Sources */,
 				849674B82774C8F100504D9D /* Assemblyer.swift in Sources */,
-				849674B62774BE2700504D9D /* Controller.swift in Sources */,
+				849674B62774BE2700504D9D /* InternetService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
