@@ -166,21 +166,20 @@ final class ViewController: UIViewController, UserView {
     
     func animateGoodConnection() {
         DispatchQueue.main.async { [weak self] in
-            self?.animateNaVbarBackGrColor(with: .systemGreen, completion: { finished in
-                self?.animateNaVbarBackGrColor(with: .clear, completion: nil)
-            })
+            if self?.navigationController?.navigationBar.layer.shadowColor != Colors.valueForButtonColor.cgColor {
+                self?.animateNaVbarBackGrColor(completion: nil)
+            }
         }
     }
     
-    private func animateNaVbarBackGrColor(with color: UIColor,
-                                          completion: CompletionForAnimation) {
+    private func animateNaVbarBackGrColor(completion: CompletionForAnimation) {
         UIView.animate(withDuration: 1.0,
                        delay: 0,
                        usingSpringWithDamping: 0.1,
                        initialSpringVelocity: 0.1,
                        options: .curveEaseIn,
                        animations: {
-            self.navigationController?.navigationBar.backgroundColor = color
+            self.navigationController?.navigationBar.setShadow(configureBorder: false)
         }, completion: completion)
     }
     
@@ -276,6 +275,7 @@ extension ViewController {
                            animations: {
                 self?.view.layoutIfNeeded()
                 UINotificationFeedbackGenerator().notificationOccurred(.error)
+                self?.navigationController?.navigationBar.layer.shadowColor = UIColor.clear.cgColor
             }, completion: { finished in
                 self?.animateChanges()
             })

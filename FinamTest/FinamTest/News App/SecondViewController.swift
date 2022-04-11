@@ -65,24 +65,12 @@ final class SecondViewController: UIViewController {
                            initialSpringVelocity: 0.1,
                            options: .curveLinear,
                            animations: { [self] in
-                setShadow(to: moreInfoButton, configureBorder: true)
+                moreInfoButton.setShadow(configureBorder: true)
                 view.layoutIfNeeded()
             })
             stopAnimatingGhostLoadingViewAndHide()
             showPowerOffImage()
         }
-    }
-    
-    private func setShadow(to view: UIView, configureBorder: Bool) {
-        if configureBorder {
-            view.layer.borderColor = Colors.valueForButtonColor.cgColor
-            view.layer.borderWidth = 3
-        }
-        view.layer.cornerRadius = 8
-        view.layer.shadowOffset = CGSize(width: 2, height: 3)
-        view.layer.shadowOpacity = 10
-        view.layer.shadowColor = Colors.valueForButtonColor.cgColor
-        view.layer.shadowRadius = 7
     }
     
     private func animateGhostLoadingView() {
@@ -111,7 +99,7 @@ final class SecondViewController: UIViewController {
                        options: .curveLinear,
                        animations: { [self] in
             powerOffImage.alpha = 1
-            setShadow(to: powerOffImage, configureBorder: false)
+            powerOffImage.setShadow(configureBorder: false)
             self.view.layoutIfNeeded()
         })
     }
@@ -209,3 +197,16 @@ struct Colors {
 }
 
 
+extension UIView {
+    func setShadow(configureBorder: Bool) {
+        if configureBorder {
+            self.layer.borderColor = Colors.valueForButtonColor.cgColor
+            self.layer.borderWidth = 3
+        }
+        self.layer.cornerRadius = 8
+        self.layer.shadowOffset = CGSize(width: 2, height: 3)
+        self.layer.shadowOpacity = 10
+        self.layer.shadowColor = Colors.valueForButtonColor.cgColor
+        self.layer.shadowRadius = 7
+    }
+}
