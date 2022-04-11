@@ -1,6 +1,8 @@
 import UIKit
 
 
+typealias CompletionForAnimation = ((Bool) -> Void)?
+
 protocol UserView {
     var internetService: UserInternetService? { get set }
     func reload()
@@ -164,24 +166,22 @@ final class ViewController: UIViewController, UserView {
     
     func animateGoodConnection() {
         DispatchQueue.main.async { [weak self] in
-            UIView.animate(withDuration: 1.0,
-                           delay: 0,
-                           usingSpringWithDamping: 0.1,
-                           initialSpringVelocity: 0.1,
-                           options: .curveEaseIn,
-                           animations: {
-                self?.navigationController?.navigationBar.backgroundColor = .systemGreen
-            }, completion: { finished in
-                UIView.animate(withDuration: 1.0,
-                               delay: 0,
-                               usingSpringWithDamping: 0.1,
-                               initialSpringVelocity: 0.1,
-                               options: .curveEaseIn,
-                               animations: {
-                    self?.navigationController?.navigationBar.backgroundColor = .clear
-                })
+            self?.animateNaVbarBackGrColor(with: .systemGreen, completion: { finished in
+                self?.animateNaVbarBackGrColor(with: .clear, completion: nil)
             })
         }
+    }
+    
+    private func animateNaVbarBackGrColor(with color: UIColor,
+                                          completion: CompletionForAnimation) {
+        UIView.animate(withDuration: 1.0,
+                       delay: 0,
+                       usingSpringWithDamping: 0.1,
+                       initialSpringVelocity: 0.1,
+                       options: .curveEaseIn,
+                       animations: {
+            self.navigationController?.navigationBar.backgroundColor = color
+        }, completion: completion)
     }
     
     // MARK: Skeletons animations
@@ -208,7 +208,7 @@ final class ViewController: UIViewController, UserView {
         stackViewForGhostLoadingViews.isHidden.toggle()
     }
 }
-// MARK: TableView settings
+// MARK: TableView delegate & dataSource methods
 extension ViewController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

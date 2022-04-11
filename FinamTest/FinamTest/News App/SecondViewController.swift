@@ -65,18 +65,24 @@ final class SecondViewController: UIViewController {
                            initialSpringVelocity: 0.1,
                            options: .curveLinear,
                            animations: { [self] in
-                moreInfoButton.layer.borderColor = Colors.valueForButtonColor.cgColor
-                moreInfoButton.layer.borderWidth = 3
-                moreInfoButton.layer.cornerRadius = 8
-                moreInfoButton.layer.shadowOffset = CGSize(width: 2, height: 3)
-                moreInfoButton.layer.shadowOpacity = 10
-                moreInfoButton.layer.shadowColor = Colors.valueForButtonColor.cgColor
-                moreInfoButton.layer.shadowRadius = 7
+                setShadow(to: moreInfoButton, configureBorder: true)
                 view.layoutIfNeeded()
             })
             stopAnimatingGhostLoadingViewAndHide()
             showPowerOffImage()
         }
+    }
+    
+    private func setShadow(to view: UIView, configureBorder: Bool) {
+        if configureBorder {
+            view.layer.borderColor = Colors.valueForButtonColor.cgColor
+            view.layer.borderWidth = 3
+        }
+        view.layer.cornerRadius = 8
+        view.layer.shadowOffset = CGSize(width: 2, height: 3)
+        view.layer.shadowOpacity = 10
+        view.layer.shadowColor = Colors.valueForButtonColor.cgColor
+        view.layer.shadowRadius = 7
     }
     
     private func animateGhostLoadingView() {
@@ -103,12 +109,9 @@ final class SecondViewController: UIViewController {
                        usingSpringWithDamping: 0.1,
                        initialSpringVelocity: 0.1,
                        options: .curveLinear,
-                       animations: {
+                       animations: { [self] in
             powerOffImage.alpha = 1
-            powerOffImage.layer.shadowOffset = CGSize(width: 2, height: 3)
-            powerOffImage.layer.shadowOpacity = 10
-            powerOffImage.layer.shadowColor = Colors.valueForButtonColor.cgColor
-            powerOffImage.layer.shadowRadius = powerOffImage.frame.size.height/2
+            setShadow(to: powerOffImage, configureBorder: false)
             self.view.layoutIfNeeded()
         })
     }
