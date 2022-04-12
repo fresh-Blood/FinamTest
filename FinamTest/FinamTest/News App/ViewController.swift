@@ -218,8 +218,8 @@ extension ViewController : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: MyTableViewCell.id, for: indexPath) as! MyTableViewCell
         let model = internetService?.newsArray[indexPath.row]
-        cell.titleLabel.text = model?.title
-        cell.newsDate.text = model?.publishedAt
+        cell.titleLabel.text = model?.title?.configureNewsTitle()
+        cell.newsDate.text = model?.publishedAt?.configureTime()
         cell.newsSource.text = model?.source?.name
         return cell
     }

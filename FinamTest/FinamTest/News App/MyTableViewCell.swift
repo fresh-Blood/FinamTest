@@ -61,3 +61,14 @@ final class MyTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 }
+
+extension String {
+    func configureNewsTitle() -> String {
+        String(self.reversed().drop(while: { $0 != "-" }).dropFirst(1).reversed())
+    }
+    
+    func configureTime() -> String {
+        String(self.replacingOccurrences(of: "T", with: "   ")
+                    .dropLast(4)).replacingOccurrences(of: "-", with: ".")
+    }
+}
