@@ -128,6 +128,7 @@ final class ViewController: UIViewController, UserView {
         commonTable.frame = view.bounds
         commonTable.estimatedRowHeight = 44
         commonTable.rowHeight = UITableView.automaticDimension
+        commonTable.showsVerticalScrollIndicator = false 
         for number in 1...7 {
             stackViewForGhostLoadingViews
                 .addArrangedSubview(makeNewGhostView(with: "loadingGhostView\(number)"))
