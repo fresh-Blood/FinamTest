@@ -188,7 +188,7 @@ struct Colors {
     }
     
     static var valueForButtonColor: UIColor {
-        UITraitCollection.current.userInterfaceStyle == .dark ? .systemGreen : .systemBlue
+        UITraitCollection.current.userInterfaceStyle == .dark ? .systemRed : .systemCyan
     }
     
     static var valueForLoading: UIColor {

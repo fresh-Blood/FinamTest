@@ -4,7 +4,25 @@ import UIKit
 
 final class MyTableViewCell: UITableViewCell {
     
+    struct Layout {
+        let contentInsets: UIEdgeInsets
+        
+        static var `default`: Layout {
+            Layout(contentInsets: UIEdgeInsets(top: 10, left: 0, bottom: -10, right: 0))
+        }
+    }
+    
+    var layout: Layout = .default
+    
     static let id = "MyTableViewCell"
+    
+    private lazy var bgView: UIView = {
+        let bgView = UIView()
+        bgView.layer.cornerRadius = 8
+        bgView.backgroundColor = .systemGray4.withAlphaComponent(0.5)
+        bgView.translatesAutoresizingMaskIntoConstraints = false
+        return bgView
+    }()
     
     let newsDate: UILabel = {
         let lbl = UILabel()
@@ -37,23 +55,32 @@ final class MyTableViewCell: UITableViewCell {
     }
     
     private func setupUI() {
-        contentView.addSubview(newsDate)
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(newsSource)
+        backgroundColor = .clear
+        bgView.addSubview(newsDate)
+        bgView.addSubview(titleLabel)
+        bgView.addSubview(newsSource)
+        contentView.addSubview(bgView)
+        
+        selectionStyle = .none
         
         NSLayoutConstraint.activate([
             
-            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
-            titleLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 10),
-            titleLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -5),
+            bgView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: layout.contentInsets.top),
+            bgView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: layout.contentInsets.left),
+            bgView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: layout.contentInsets.right),
+            bgView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: layout.contentInsets.bottom),
+            
+            titleLabel.topAnchor.constraint(equalTo: bgView.topAnchor, constant: 5),
+            titleLabel.leftAnchor.constraint(equalTo: bgView.leftAnchor, constant: 10),
+            titleLabel.rightAnchor.constraint(equalTo: bgView.rightAnchor, constant: -5),
             
             newsDate.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 30),
-            newsDate.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
-            newsDate.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 10),
+            newsDate.bottomAnchor.constraint(equalTo: bgView.bottomAnchor, constant: -10),
+            newsDate.leftAnchor.constraint(equalTo: bgView.leftAnchor, constant: 10),
             
             newsSource.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 30),
-            newsSource.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -10),
-            newsSource.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
+            newsSource.rightAnchor.constraint(equalTo: bgView.rightAnchor, constant: -10),
+            newsSource.bottomAnchor.constraint(equalTo: bgView.bottomAnchor, constant: -10)
         ])
     }
     

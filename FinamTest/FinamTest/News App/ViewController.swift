@@ -12,6 +12,15 @@ protocol UserView {
 
 final class ViewController: UIViewController, UserView {
     
+    struct Layout {
+        let contentInsets: UIEdgeInsets
+        
+        static var `default`: Layout {
+            Layout(contentInsets: UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16))
+        }
+    }
+    
+    var layout: Layout = .default
     var internetService: UserInternetService?
     
     private let commonTable: UITableView = {
@@ -25,7 +34,7 @@ final class ViewController: UIViewController, UserView {
         stack.alignment = .fill
         stack.distribution = .fillEqually
         stack.axis = .vertical
-        stack.spacing = 10
+        stack.spacing = 16
         return stack
     }()
     
@@ -123,13 +132,19 @@ final class ViewController: UIViewController, UserView {
     
     // MARK: Setup UI
     private func setupUI() {
+        view.backgroundColor = .systemBackground
         commonTable.delegate = self
         commonTable.dataSource = self
-        commonTable.frame = view.bounds
+        commonTable.frame = CGRect(x: view.frame.minX + layout.contentInsets.left,
+                                   y: view.frame.minY,
+                                   width: view.frame.width - layout.contentInsets.right*2,
+                                   height: view.frame.height)
         commonTable.estimatedRowHeight = 44
         commonTable.rowHeight = UITableView.automaticDimension
-        commonTable.showsVerticalScrollIndicator = false 
-        for number in 1...7 {
+        commonTable.showsVerticalScrollIndicator = false
+        commonTable.separatorStyle = .none
+        
+        for number in 1...6 {
             stackViewForGhostLoadingViews
                 .addArrangedSubview(makeNewGhostView(with: "loadingGhostView\(number)"))
         }
