@@ -1,7 +1,6 @@
 import Foundation
 import UIKit
 
-
 typealias EntryPoint = UserView & UIViewController
 
 protocol Assemblyer {

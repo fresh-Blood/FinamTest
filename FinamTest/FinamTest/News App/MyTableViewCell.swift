@@ -1,7 +1,5 @@
 import UIKit
 
-
-
 final class MyTableViewCell: UITableViewCell {
     
     struct Layout {

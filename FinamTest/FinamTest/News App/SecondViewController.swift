@@ -1,6 +1,5 @@
 import UIKit
 
-
 final class SecondViewController: UIViewController {
     
     var moreInfo = ""

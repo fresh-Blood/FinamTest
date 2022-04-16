@@ -1,6 +1,5 @@
 import UIKit
 
-
 typealias CompletionForAnimation = ((Bool) -> Void)?
 
 protocol UserView {
@@ -35,6 +34,17 @@ final class ViewController: UIViewController, UserView {
         stack.distribution = .fillEqually
         stack.axis = .vertical
         stack.spacing = 16
+        stack.isHidden = true
+        return stack
+    }()
+    
+    private let stackViewForGhostLoadingViewsBG: UIStackView = {
+        let stack = UIStackView()
+        stack.alignment = .fill
+        stack.distribution = .fillEqually
+        stack.axis = .vertical
+        stack.spacing = 16
+        stack.isHidden = true
         return stack
     }()
     
@@ -52,11 +62,17 @@ final class ViewController: UIViewController, UserView {
         return responseErrorView
     }()
     
-    private func makeNewGhostView(with name: String) -> UIView {
+    private func makeNewGhostView() -> UIView {
         let name = UIView()
-        name.backgroundColor = Colors.valueForLoading
+        name.backgroundColor = .white
         name.layer.cornerRadius = 8
-        name.alpha = 0
+        return name
+    }
+    
+    private func makeNewGhostViewBG() -> UIView {
+        let name = UIView()
+        name.backgroundColor = .systemGray4.withAlphaComponent(0.5)
+        name.layer.cornerRadius = 8
         return name
     }
     
@@ -144,10 +160,11 @@ final class ViewController: UIViewController, UserView {
         commonTable.showsVerticalScrollIndicator = false
         commonTable.separatorStyle = .none
         
-        for number in 1...6 {
-            stackViewForGhostLoadingViews
-                .addArrangedSubview(makeNewGhostView(with: "loadingGhostView\(number)"))
+        for _ in 1...6 {
+            stackViewForGhostLoadingViews.addArrangedSubview(makeNewGhostView())
+            stackViewForGhostLoadingViewsBG.addArrangedSubview(makeNewGhostViewBG())
         }
+        commonTable.addSubview(stackViewForGhostLoadingViewsBG)
         commonTable.addSubview(stackViewForGhostLoadingViews)
         view.addSubview(commonTable)
         view.addSubview(responseErrorNotificationLabel)
@@ -157,6 +174,7 @@ final class ViewController: UIViewController, UserView {
                                                    width: 60,
                                                    height: 50)
         stackViewForGhostLoadingViews.frame = commonTable.bounds
+        stackViewForGhostLoadingViewsBG.frame = commonTable.bounds
         NSLayoutConstraint.activate([
             responseErrorNotificationLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10),
             responseErrorNotificationLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10),
@@ -165,8 +183,8 @@ final class ViewController: UIViewController, UserView {
         ])
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         guard let newsArray = internetService?.newsArray else { return }
         if newsArray.isEmpty {
             animateLoading()
@@ -201,26 +219,36 @@ final class ViewController: UIViewController, UserView {
     
     // MARK: Skeletons animations
     private func animateLoading() {
-        stackViewForGhostLoadingViews.isHidden = false
-        UIView.animate(withDuration: 1.0,
-                       delay: 0,
-                       options: [.autoreverse,.repeat,.curveEaseIn],
-                       animations: {
-            self.stackViewForGhostLoadingViews.arrangedSubviews.forEach {
-                $0.alpha = 1
-            }
-        }, completion: { finished in
-            self.stackViewForGhostLoadingViews.arrangedSubviews.forEach {
-                $0.alpha = 0
-            }
-        })
+        stackViewForGhostLoadingViews.isHidden.toggle()
+        stackViewForGhostLoadingViewsBG.isHidden.toggle()
+        stackViewForGhostLoadingViews.arrangedSubviews.forEach {
+            animateGradient(view: $0)
+        }
+    }
+    
+    private func animateGradient(view: UIView) {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.colors = [
+            UIColor.clear.cgColor,
+            UIColor.white.cgColor,
+            UIColor.clear.cgColor
+        ]
+        gradientLayer.locations = [ 0, 0.5, 1 ]
+        let angle = 125 * CGFloat.pi / 180
+        gradientLayer.transform = CATransform3DMakeRotation(angle, 0, 0.1, 1)
+        let animation = CABasicAnimation(keyPath: "transform.translation.x")
+        animation.duration = 2
+        animation.fromValue = -view.frame.width*1.5
+        animation.toValue = view.frame.width*1.5
+        animation.repeatCount = Float.infinity
+        gradientLayer.add(animation, forKey: "skeleton's nice animation")
+        gradientLayer.frame = CGRect(x: view.bounds.minX, y: view.bounds.minY, width: view.bounds.width*2, height: view.bounds.height*2)
+        view.layer.mask = gradientLayer
     }
     
     private func stopAnimatingAndHide() {
-        stackViewForGhostLoadingViews.arrangedSubviews.forEach {
-            $0.layer.removeAllAnimations()
-        }
-        stackViewForGhostLoadingViews.isHidden.toggle()
+        stackViewForGhostLoadingViews.isHidden = true
+        stackViewForGhostLoadingViewsBG.isHidden = true
     }
 }
 // MARK: TableView delegate & dataSource methods

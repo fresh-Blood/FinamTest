@@ -1,6 +1,5 @@
 import Foundation
 
-
 struct CommonInfo : Decodable {
     var status : String?
     var totalResults : Int?
