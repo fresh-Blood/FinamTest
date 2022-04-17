@@ -222,28 +222,13 @@ final class ViewController: UIViewController, UserView {
         stackViewForGhostLoadingViews.isHidden.toggle()
         stackViewForGhostLoadingViewsBG.isHidden.toggle()
         stackViewForGhostLoadingViews.arrangedSubviews.forEach {
-            animateGradient(view: $0)
+            $0.animateGradient(configureAnimation: Configurable(
+                animationFromValueMultiplyer: 2,
+                animationToValueMultiplyer: 1,
+                gradientLayerWidthMultiplyer: 2,
+                gradientLayerHeightMultiplyer: 2)
+            )
         }
-    }
-    
-    private func animateGradient(view: UIView) {
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.colors = [
-            UIColor.clear.cgColor,
-            UIColor.white.cgColor,
-            UIColor.clear.cgColor
-        ]
-        gradientLayer.locations = [ 0, 0.5, 1 ]
-        let angle = 125 * CGFloat.pi / 180
-        gradientLayer.transform = CATransform3DMakeRotation(angle, 0, 0.1, 1)
-        let animation = CABasicAnimation(keyPath: "transform.translation.x")
-        animation.duration = 2
-        animation.fromValue = -view.frame.width*1.5
-        animation.toValue = view.frame.width*1.5
-        animation.repeatCount = Float.infinity
-        gradientLayer.add(animation, forKey: "skeleton's nice animation")
-        gradientLayer.frame = CGRect(x: view.bounds.minX, y: view.bounds.minY, width: view.bounds.width*2, height: view.bounds.height*2)
-        view.layer.mask = gradientLayer
     }
     
     private func stopAnimatingAndHide() {

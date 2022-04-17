@@ -16,11 +16,19 @@ final class SecondViewController: UIViewController {
         return img
     }()
     
+    private let ghostNewsViewBG: UIView = {
+        let loadingGhostView = UIView()
+        loadingGhostView.backgroundColor = .systemGray4.withAlphaComponent(0.5)
+        loadingGhostView.layer.cornerRadius = 8
+        loadingGhostView.isHidden = true
+        return loadingGhostView
+    }()
+    
     private let ghostNewsView: UIView = {
         let loadingGhostView = UIView()
-        loadingGhostView.backgroundColor = Colors.valueForLoading
-        loadingGhostView.alpha = 0
+        loadingGhostView.backgroundColor = .white
         loadingGhostView.layer.cornerRadius = 8
+        loadingGhostView.isHidden = true
         return loadingGhostView
     }()
     
@@ -73,14 +81,14 @@ final class SecondViewController: UIViewController {
     }
     
     private func animateGhostLoadingView() {
-        UIView.animate(withDuration: 1.0,
-                       delay: 0,
-                       options: [.autoreverse,.repeat,.curveEaseIn],
-                       animations: { [self] in
-            ghostNewsView.alpha = 1
-        }, completion: { finished in
-            self.ghostNewsView.alpha = 0
-        })
+        ghostNewsView.isHidden.toggle()
+        ghostNewsViewBG.isHidden.toggle()
+        ghostNewsView.animateGradient(configureAnimation: Configurable(
+            animationFromValueMultiplyer: 2,
+            animationToValueMultiplyer: 1,
+            gradientLayerWidthMultiplyer: 2,
+            gradientLayerHeightMultiplyer: 1)
+        )
     }
     
     private func showPowerOffImage() {
@@ -104,12 +112,13 @@ final class SecondViewController: UIViewController {
     }
     
     private func stopAnimatingGhostLoadingViewAndHide() {
-        ghostNewsView.layer.removeAllAnimations()
         ghostNewsView.isHidden = true
+        ghostNewsViewBG.isHidden = true
     }
     
     private func setupUI() {
         view.addSubview(topicLabel)
+        newsImage.addSubview(ghostNewsViewBG)
         newsImage.addSubview(ghostNewsView)
         view.addSubview(newsImage)
         view.addSubview(moreInfoButton)
@@ -123,6 +132,10 @@ final class SecondViewController: UIViewController {
                                  y: view.bounds.minY,
                                  width: view.bounds.width,
                                  height: view.bounds.height/2)
+        ghostNewsViewBG.frame = CGRect(x: newsImage.bounds.minX + insetForLoadingView/2,
+                                     y: newsImage.bounds.minY + insetForLoadingView*2,
+                                     width: newsImage.bounds.width - insetForLoadingView,
+                                     height: newsImage.bounds.height - insetForLoadingView*2.5)
         ghostNewsView.frame = CGRect(x: newsImage.bounds.minX + insetForLoadingView/2,
                                      y: newsImage.bounds.minY + insetForLoadingView*2,
                                      width: newsImage.bounds.width - insetForLoadingView,
@@ -208,4 +221,31 @@ extension UIView {
         self.layer.shadowColor = Colors.valueForButtonColor.cgColor
         self.layer.shadowRadius = 7
     }
+    
+    func animateGradient(configureAnimation: Configurable) {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.colors = [
+            UIColor.clear.cgColor,
+            UIColor.white.cgColor,
+            UIColor.clear.cgColor
+        ]
+        gradientLayer.locations = [ 0, 0.5, 1 ]
+        let angle = 125 * CGFloat.pi / 180
+        gradientLayer.transform = CATransform3DMakeRotation(angle, 0, 0.1, 1)
+        let animation = CABasicAnimation(keyPath: "transform.translation.x")
+        animation.duration = 2
+        animation.fromValue = -self.frame.width*configureAnimation.animationFromValueMultiplyer
+        animation.toValue = self.frame.width*configureAnimation.animationToValueMultiplyer
+        animation.repeatCount = Float.infinity
+        gradientLayer.add(animation, forKey: "skeleton's nice animation")
+        gradientLayer.frame = CGRect(x: self.bounds.minX, y: self.bounds.minY, width: self.bounds.width*configureAnimation.gradientLayerWidthMultiplyer, height: self.bounds.height*configureAnimation.gradientLayerHeightMultiplyer)
+        self.layer.mask = gradientLayer
+    }
+}
+
+struct Configurable {
+    let animationFromValueMultiplyer: CGFloat
+    let animationToValueMultiplyer: CGFloat
+    let gradientLayerWidthMultiplyer: CGFloat
+    let gradientLayerHeightMultiplyer: CGFloat
 }
