@@ -13,5 +13,5 @@ Changes:
 9) error handling added 
 10) skeletons added
 11) search added 
-![MyCollages](https://user-images.githubusercontent.com/88098218/159139244-01bad8e7-6494-4b4e-811c-296859452010.jpg)
+![MyCollages](https://user-images.githubusercontent.com/88098218/163708413-25bdc1bf-057d-467f-9b4a-461255608ec6.jpg)
 
