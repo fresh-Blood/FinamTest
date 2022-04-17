@@ -93,14 +93,16 @@ final class ViewController: UIViewController, UserView {
     private let rightBarButtonItem: UIButton = {
         let btn = UIButton()
         btn.backgroundColor = .clear
-        btn.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
+        btn.tag = 0
+        btn.isHidden = true
         return btn
     }()
     
     private let leftBarButtonItem: UIButton = {
         let btn = UIButton()
         btn.backgroundColor = .clear
-        btn.setImage(UIImage(systemName: "info.circle"), for: .normal)
+        btn.tag = 1
+        btn.isHidden = true
         return btn
     }()
     
@@ -139,11 +141,13 @@ final class ViewController: UIViewController, UserView {
     }
     
     private func configureNavigationBar() {
-        navigationItem.title = "News ಠ_ಠ"
+        navigationItem.title = InfoMessage.appTitle.rawValue
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.backButtonTitle = ""
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: self, action: nil)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "info.circle"), style: .plain, target: self, action: nil)
         navigationController?.navigationBar.largeTitleTextAttributes = [
-            .font: UIFont.systemFont(ofSize: 40,
+            .font: UIFont.systemFont(ofSize: 30,
                                      weight: .heavy),
             .foregroundColor: UIColor.label
         ]
@@ -211,6 +215,8 @@ final class ViewController: UIViewController, UserView {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        leftBarButtonItem.isHidden = false
+        rightBarButtonItem.isHidden = false 
         guard let newsArray = internetService?.newsArray else { return }
         if newsArray.isEmpty {
             animateLoading()
@@ -400,4 +406,3 @@ extension ViewController: UISearchBarDelegate {
         searchBar.text = searchBar.text?.filter{ $0.isLetter && $0 != " " }
     }
 }
-

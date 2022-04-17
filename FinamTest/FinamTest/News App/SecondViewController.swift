@@ -64,6 +64,12 @@ final class SecondViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        navigationController?.navigationBar.subviews.forEach {
+            $0.isHidden = $0.tag == 0
+            $0.isHidden = $0.tag == 1
+        }
+        
         if topicLabel.text == Errors.topicLabelNoInfo.rawValue {
             UINotificationFeedbackGenerator().notificationOccurred(.warning)
             UIView.animate(withDuration: 1.0,
