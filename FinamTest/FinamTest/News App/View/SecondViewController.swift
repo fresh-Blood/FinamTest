@@ -26,7 +26,7 @@ final class SecondViewController: UIViewController {
     
     private let ghostNewsView: UIView = {
         let loadingGhostView = UIView()
-        loadingGhostView.backgroundColor = .white
+        loadingGhostView.backgroundColor = Colors.valueForGradientAnimation
         loadingGhostView.layer.cornerRadius = 8
         loadingGhostView.isHidden = true
         return loadingGhostView
@@ -89,12 +89,7 @@ final class SecondViewController: UIViewController {
     private func animateGhostLoadingView() {
         ghostNewsView.isHidden.toggle()
         ghostNewsViewBG.isHidden.toggle()
-        ghostNewsView.animateGradient(configureAnimation: Configurable(
-            animationFromValueMultiplyer: 2,
-            animationToValueMultiplyer: 1,
-            gradientLayerWidthMultiplyer: 2,
-            gradientLayerHeightMultiplyer: 1)
-        )
+        ghostNewsView.animateGradient()
     }
     
     private func showPowerOffImage() {
@@ -158,100 +153,4 @@ final class SecondViewController: UIViewController {
     }
 }
 
-extension UIButton {
-    func pulsate() {
-        let animation = CASpringAnimation(keyPath: "transform.scale")
-        animation.fromValue = 0.98
-        animation.toValue = 1
-        animation.damping = 1.0
-        animation.duration = 0.1
-        layer.add(animation, forKey: nil)
-    }
-}
 
-// MARK: images are loading when we see them not on main queue, if the image is huge and loading takes much time - UI doesn't freeze: we can go back and choose another topic
-
-extension UIImageView {
-    func downLoadImage(from:String, completion: @escaping () -> Void) {
-        if let cachedImage = Cashe.imageCache.object(forKey: from as AnyObject) {
-            DispatchQueue.main.async {
-                completion()
-            }
-            self.image = cachedImage
-            return
-        }
-        if let url = URL(string: from) {
-            URLSession.shared.dataTask(with: url, completionHandler: { data,response,error in
-                if let data = data {
-                    DispatchQueue.main.async {
-                        guard
-                            let unwrappedImage = UIImage(data: data) else { return }
-                        Cashe.imageCache.setObject(unwrappedImage, forKey: from as AnyObject)
-                        self.image = unwrappedImage
-                        completion()
-                    }
-                }
-            }).resume()
-        }
-    }
-}
-
-struct Colors {
-    static var valueForColor: UIColor {
-        UITraitCollection.current.userInterfaceStyle == .dark ? .white : .black
-    }
-    
-    static var reversedValueForColor: UIColor {
-        UITraitCollection.current.userInterfaceStyle == .dark ? .black : .white
-    }
-    
-    static var valueForButtonColor: UIColor {
-        UITraitCollection.current.userInterfaceStyle == .dark ? .systemRed : .systemCyan
-    }
-    
-    static var valueForLoading: UIColor {
-        UITraitCollection.current.userInterfaceStyle == .dark ? .darkGray : .systemGray4
-    }
-}
-
-
-extension UIView {
-    func setShadow(configureBorder: Bool) {
-        if configureBorder {
-            self.layer.borderColor = Colors.valueForButtonColor.cgColor
-            self.layer.borderWidth = 3
-        }
-        self.layer.cornerRadius = 8
-        self.layer.shadowOffset = CGSize(width: 2, height: 3)
-        self.layer.shadowOpacity = 10
-        self.layer.shadowColor = Colors.valueForButtonColor.cgColor
-        self.layer.shadowRadius = 7
-    }
-    
-    func animateGradient(configureAnimation: Configurable) {
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.colors = [
-            UIColor.clear.cgColor,
-            UIColor.white.cgColor,
-            UIColor.clear.cgColor
-        ]
-        gradientLayer.locations = [ 0, 0.5, 1 ]
-        let angle = 125 * CGFloat.pi / 180
-        gradientLayer.transform = CATransform3DMakeRotation(angle, 0, 0.1, 1)
-        let animation = CABasicAnimation(keyPath: "transform.translation.x")
-        animation.duration = 2
-        animation.fromValue = -self.frame.width*configureAnimation.animationFromValueMultiplyer
-        animation.toValue = self.frame.width*configureAnimation.animationToValueMultiplyer
-        animation.repeatCount = Float.infinity
-        gradientLayer.add(animation, forKey: "skeleton's nice animation")
-        gradientLayer.frame = CGRect(x: self.bounds.minX, y: self.bounds.minY, width: self.bounds.width*configureAnimation.gradientLayerWidthMultiplyer, height: self.bounds.height*configureAnimation.gradientLayerHeightMultiplyer)
-        self.layer.mask = gradientLayer
-    }
-}
-
-struct Configurable {
-    let animationFromValueMultiplyer: CGFloat
-    let animationToValueMultiplyer: CGFloat
-    let gradientLayerWidthMultiplyer: CGFloat
-    let gradientLayerHeightMultiplyer: CGFloat
-}

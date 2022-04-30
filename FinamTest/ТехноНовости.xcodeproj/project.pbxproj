@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8446A223281DA20700A95290 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8446A222281DA20700A95290 /* Colors.swift */; };
+		8446A225281DA24C00A95290 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8446A224281DA24C00A95290 /* Extensions.swift */; };
 		849674B32774BD4700504D9D /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849674B22774BD4700504D9D /* Model.swift */; };
 		849674B62774BE2700504D9D /* InternetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849674B52774BE2700504D9D /* InternetService.swift */; };
 		849674B82774C8F100504D9D /* Assemblyer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849674B72774C8F100504D9D /* Assemblyer.swift */; };
@@ -34,6 +36,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		8446A222281DA20700A95290 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		8446A224281DA24C00A95290 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		849674B22774BD4700504D9D /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		849674B52774BE2700504D9D /* InternetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetService.swift; sourceTree = "<group>"; };
 		849674B72774C8F100504D9D /* Assemblyer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assemblyer.swift; sourceTree = "<group>"; };
@@ -60,14 +64,35 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8446A226281DA29400A95290 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				84FA0F7B26C6350900FB1C34 /* ViewController.swift */,
+				84FA0FA226C642C000FB1C34 /* SecondViewController.swift */,
+				84FA0F8E26C6362600FB1C34 /* MyTableViewCell.swift */,
+				84FA0F8526C6350D00FB1C34 /* LaunchScreen.storyboard */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		8446A227281DA2FB00A95290 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				84FA0F7726C6350900FB1C34 /* AppDelegate.swift */,
+				84FA0F7926C6350900FB1C34 /* SceneDelegate.swift */,
+				8446A224281DA24C00A95290 /* Extensions.swift */,
+				8446A222281DA20700A95290 /* Colors.swift */,
+				84FA0F8326C6350D00FB1C34 /* Assets.xcassets */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		849674B42774BD5600504D9D /* News App */ = {
 			isa = PBXGroup;
 			children = (
 				849674B22774BD4700504D9D /* Model.swift */,
-				84FA0F7B26C6350900FB1C34 /* ViewController.swift */,
+				8446A226281DA29400A95290 /* View */,
 				849674B52774BE2700504D9D /* InternetService.swift */,
-				84FA0FA226C642C000FB1C34 /* SecondViewController.swift */,
-				84FA0F8E26C6362600FB1C34 /* MyTableViewCell.swift */,
 				849674B72774C8F100504D9D /* Assemblyer.swift */,
 			);
 			path = "News App";
@@ -93,11 +118,8 @@
 		84FA0F7626C6350900FB1C34 /* FinamTest */ = {
 			isa = PBXGroup;
 			children = (
-				84FA0F7726C6350900FB1C34 /* AppDelegate.swift */,
-				84FA0F7926C6350900FB1C34 /* SceneDelegate.swift */,
+				8446A227281DA2FB00A95290 /* Helpers */,
 				849674B42774BD5600504D9D /* News App */,
-				84FA0F8326C6350D00FB1C34 /* Assets.xcassets */,
-				84FA0F8526C6350D00FB1C34 /* LaunchScreen.storyboard */,
 				84FA0F8826C6350D00FB1C34 /* Info.plist */,
 				84FA0F8026C6350900FB1C34 /* FinamTest.xcdatamodeld */,
 			);
@@ -182,6 +204,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				849674B32774BD4700504D9D /* Model.swift in Sources */,
+				8446A223281DA20700A95290 /* Colors.swift in Sources */,
 				84FA0FA326C642C000FB1C34 /* SecondViewController.swift in Sources */,
 				84FA0F7C26C6350900FB1C34 /* ViewController.swift in Sources */,
 				84FA0F8226C6350900FB1C34 /* FinamTest.xcdatamodeld in Sources */,
@@ -189,6 +212,7 @@
 				84FA0F8F26C6362600FB1C34 /* MyTableViewCell.swift in Sources */,
 				84FA0F7A26C6350900FB1C34 /* SceneDelegate.swift in Sources */,
 				849674B82774C8F100504D9D /* Assemblyer.swift in Sources */,
+				8446A225281DA24C00A95290 /* Extensions.swift in Sources */,
 				849674B62774BE2700504D9D /* InternetService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

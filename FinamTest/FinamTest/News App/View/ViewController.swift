@@ -64,7 +64,7 @@ final class ViewController: UIViewController, UserView {
     
     private func makeNewGhostView() -> UIView {
         let name = UIView()
-        name.backgroundColor = .white
+        name.backgroundColor = Colors.valueForGradientAnimation
         name.layer.cornerRadius = 8
         return name
     }
@@ -254,12 +254,7 @@ final class ViewController: UIViewController, UserView {
         stackViewForGhostLoadingViews.isHidden.toggle()
         stackViewForGhostLoadingViewsBG.isHidden.toggle()
         stackViewForGhostLoadingViews.arrangedSubviews.forEach {
-            $0.animateGradient(configureAnimation: Configurable(
-                animationFromValueMultiplyer: 2,
-                animationToValueMultiplyer: 1,
-                gradientLayerWidthMultiplyer: 2,
-                gradientLayerHeightMultiplyer: 2)
-            )
+            $0.animateGradient()
         }
     }
     
@@ -362,13 +357,6 @@ extension ViewController {
                        animations: {
             self.view.layoutIfNeeded()
         })
-    }
-}
-
-extension UIStackView {
-    open override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        super.point(inside: point, with: event)
-        return false
     }
 }
 
