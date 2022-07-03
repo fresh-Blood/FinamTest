@@ -10,7 +10,8 @@ final class MyTableViewCell: UITableViewCell {
         }
     }
     
-    var layout: Layout = .default
+    private lazy var isActionsVCPresented = false
+    private lazy var layout: Layout = .default
     
     static let id = "MyTableViewCell"
     
@@ -50,7 +51,35 @@ final class MyTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
+        setupShareGesture()
     }
+    
+    // MARK: Share gesture setting
+    
+    private func setupShareGesture() {
+        let gesture = UILongPressGestureRecognizer(target: self, action: #selector(share))
+        gesture.minimumPressDuration = 0.5
+        contentView.addGestureRecognizer(gesture)
+    }
+    
+    @objc private func share(with gesture: UILongPressGestureRecognizer) {
+        if gesture.state == .began && !isActionsVCPresented {
+            contentView.pulsate()
+            isActionsVCPresented.toggle()
+            UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+            
+            let newsTopicInfo = "🔥 \(titleLabel.text ?? "") 🔥 \n\(InfoMessage.shareInfo.rawValue)"
+            let shareData = [newsTopicInfo] as! Any
+            let activityVC = UIActivityViewController(activityItems: shareData as! [Any], applicationActivities: nil)
+            DispatchQueue.main.async { [weak self] in
+                self?.topVC?.present(activityVC, animated: true, completion: { [weak self] in
+                    self?.isActionsVCPresented.toggle()
+                })
+            }
+        }
+    }
+    
+    // MARK: Setup UI
     
     private func setupUI() {
         backgroundColor = .clear
@@ -85,15 +114,8 @@ final class MyTableViewCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-}
-
-extension String {
-    func configureNewsTitle() -> String {
-        String(self.reversed().drop(while: { $0 != "-" }).dropFirst(1).reversed())
-    }
     
-    func configureTime() -> String {
-        String(self.replacingOccurrences(of: "T", with: "   ")
-                    .dropLast(4)).replacingOccurrences(of: "-", with: ".")
+    var topVC: UIViewController? {
+        UIApplication.shared.keyWindow?.rootViewController
     }
 }

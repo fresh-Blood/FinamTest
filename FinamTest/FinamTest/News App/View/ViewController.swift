@@ -19,16 +19,16 @@ final class ViewController: UIViewController, UserView {
         }
     }
     
-    var layout: Layout = .default
+    private lazy var layout: Layout = .default
     var internetService: UserInternetService?
     
-    private let commonTable: UITableView = {
+    private lazy var commonTable: UITableView = {
         let tbl = UITableView()
         tbl.register(MyTableViewCell.self, forCellReuseIdentifier: MyTableViewCell.id)
         return tbl
     }()
     
-    private let stackViewForGhostLoadingViews: UIStackView = {
+    private lazy var stackViewForGhostLoadingViews: UIStackView = {
         let stack = UIStackView()
         stack.alignment = .fill
         stack.distribution = .fillEqually
@@ -38,7 +38,7 @@ final class ViewController: UIViewController, UserView {
         return stack
     }()
     
-    private let stackViewForGhostLoadingViewsBG: UIStackView = {
+    private lazy var stackViewForGhostLoadingViewsBG: UIStackView = {
         let stack = UIStackView()
         stack.alignment = .fill
         stack.distribution = .fillEqually
@@ -80,6 +80,7 @@ final class ViewController: UIViewController, UserView {
         commonTable.reloadData()
     }
     
+    // MARK: Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setRightBarButtonItemGesture()
@@ -87,10 +88,30 @@ final class ViewController: UIViewController, UserView {
         configureRefreshControl()
         configureNavigationBar()
         setupUI()
+        showOnBoardingMessageIfNeeded()
+    }
+    
+    // MARK: Show alert ( onBoarding ) with updates info
+    private func showOnBoardingMessageIfNeeded() {
+        guard (UserDefaults.standard.value(forKey: ProductKeys.currentStatus.rawValue) as? String) != nil else {
+            let alertVC = UIAlertController(title: Updates.title.rawValue,
+                                            message: Updates.whatsNew.rawValue,
+                                            preferredStyle: .actionSheet)
+            
+            alertVC.addAction(UIAlertAction(title: Updates.ok.rawValue,
+                                            style: .cancel, handler: { _ in
+                alertVC.dismiss(animated: true, completion: nil)
+            }))
+            present(alertVC, animated: true, completion: {
+                UserDefaults.standard.set(ProductKeys.currentStatus.rawValue,
+                                          forKey: ProductKeys.currentStatus.rawValue)
+            })
+            return
+        }
     }
     
     // MARK: Configure navigation bar
-    private let rightBarButtonItem: UIButton = {
+    private lazy var rightBarButtonItem: UIButton = {
         let btn = UIButton()
         btn.backgroundColor = .clear
         btn.tag = 0
@@ -98,7 +119,7 @@ final class ViewController: UIViewController, UserView {
         return btn
     }()
     
-    private let leftBarButtonItem: UIButton = {
+    private lazy var leftBarButtonItem: UIButton = {
         let btn = UIButton()
         btn.backgroundColor = .clear
         btn.tag = 1
@@ -284,7 +305,7 @@ extension ViewController : UITableViewDelegate, UITableViewDataSource {
         let secondVC = SecondViewController()
         secondVC.topicLabel.text = topic?.description ?? Errors.topicLabelNoInfo.rawValue
         secondVC.newsImage.downLoadImage(from: topic?.urlToImage ?? Errors.error.rawValue, completion: {
-            secondVC.counter += 1
+            secondVC.newsImageLoaded = true
         })
         secondVC.moreInfo = topic?.url ?? Errors.error.rawValue
         navigationController?.pushViewController(secondVC, animated: true)

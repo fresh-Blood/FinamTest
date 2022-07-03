@@ -4,11 +4,13 @@ final class SecondViewController: UIViewController {
     
     var moreInfo = ""
     
-    var counter = 0 {
+    var newsImageLoaded = false {
         didSet {
             stopAnimatingGhostLoadingViewAndHide()
         }
     }
+    
+    private lazy var scrollImageView = UIScrollView()
     
     let newsImage: UIImageView = {
         let img = UIImageView()
@@ -16,7 +18,7 @@ final class SecondViewController: UIViewController {
         return img
     }()
     
-    private let ghostNewsViewBG: UIView = {
+    private lazy var ghostNewsViewBG: UIView = {
         let loadingGhostView = UIView()
         loadingGhostView.backgroundColor = .systemGray4.withAlphaComponent(0.5)
         loadingGhostView.layer.cornerRadius = 8
@@ -24,7 +26,7 @@ final class SecondViewController: UIViewController {
         return loadingGhostView
     }()
     
-    private let ghostNewsView: UIView = {
+    private lazy var ghostNewsView: UIView = {
         let loadingGhostView = UIView()
         loadingGhostView.backgroundColor = Colors.valueForGradientAnimation
         loadingGhostView.layer.cornerRadius = 8
@@ -41,7 +43,7 @@ final class SecondViewController: UIViewController {
         return lbl
     }()
     
-    private let moreInfoButton: UIButton = {
+    private lazy var moreInfoButton: UIButton = {
         let btn = UIButton()
         btn.setTitle("Подробнее ಠ_ಠ", for: .normal)
         btn.addTarget(self,
@@ -51,7 +53,6 @@ final class SecondViewController: UIViewController {
     }()
     
     @objc private func showMoreInfo() {
-        moreInfoButton.pulsate()
         guard let url = URL(string: moreInfo) else { return }
         UIApplication.shared.open(url)
     }
@@ -60,7 +61,49 @@ final class SecondViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         animateGhostLoadingView()
+        setScrollView()
     }
+    
+    private func setScrollView() {
+        scrollImageView.delegate = self
+        scrollImageView.minimumZoomScale = 1.0
+        scrollImageView.maximumZoomScale = 6.0
+        scrollImageView.zoomScale = 1.0
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(tapTwice))
+        gesture.numberOfTapsRequired = 2
+        scrollImageView.addGestureRecognizer(gesture)
+        scrollImageView.bouncesZoom = true
+    }
+    
+    @objc private func tapTwice(gesture: UITapGestureRecognizer) {
+        if newsImageLoaded {
+            let scale = min(scrollImageView.zoomScale * 2, scrollImageView.maximumZoomScale)
+            if scale != scrollImageView.zoomScale { // zoom in
+                let point = gesture.location(in: newsImage)
+                let scrollSize = scrollImageView.frame.size
+                let size = CGSize(width: scrollSize.width / scrollImageView.maximumZoomScale,
+                                  height: scrollSize.height / scrollImageView.maximumZoomScale)
+                let origin = CGPoint(x: point.x - size.width / 2,
+                                     y: point.y - size.height / 2)
+                scrollImageView.zoom(to:CGRect(origin: origin, size: size), animated: true)
+            } else { // zoom out
+                scrollImageView.zoom(to: zoomRectForScale(scale: scrollImageView.maximumZoomScale, center: gesture.location(in: newsImage)), animated: true)
+            }
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        }
+    }
+    
+    private func zoomRectForScale(scale: CGFloat, center: CGPoint) -> CGRect {
+        var zoomRect = CGRect.zero
+        zoomRect.size.height = newsImage.frame.size.height / scale
+        zoomRect.size.width  = newsImage.frame.size.width  / scale
+        let newCenter = scrollImageView.convert(center, from: newsImage)
+        zoomRect.origin.x = newCenter.x - (zoomRect.size.width / 2.0)
+        zoomRect.origin.y = newCenter.y - (zoomRect.size.height / 2.0)
+        return zoomRect
+    }
+    
+    
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -121,7 +164,8 @@ final class SecondViewController: UIViewController {
         view.addSubview(topicLabel)
         newsImage.addSubview(ghostNewsViewBG)
         newsImage.addSubview(ghostNewsView)
-        view.addSubview(newsImage)
+        scrollImageView.addSubview(newsImage)
+        view.addSubview(scrollImageView)
         view.addSubview(moreInfoButton)
         view.backgroundColor = .systemBackground
         newsImage.backgroundColor = Colors.reversedValueForColor
@@ -129,14 +173,15 @@ final class SecondViewController: UIViewController {
         
         let inset: CGFloat = 8
         let insetForLoadingView: CGFloat = 50
-        newsImage.frame = CGRect(x: view.bounds.minX,
-                                 y: view.bounds.minY,
-                                 width: view.bounds.width,
-                                 height: view.bounds.height/2)
+        scrollImageView.frame = CGRect(x: view.bounds.minX,
+                                       y: view.bounds.minY,
+                                       width: view.bounds.width,
+                                       height: view.bounds.height/2)
+        newsImage.frame = scrollImageView.frame
         ghostNewsViewBG.frame = CGRect(x: newsImage.bounds.minX + insetForLoadingView/2,
-                                     y: newsImage.bounds.minY + insetForLoadingView*2,
-                                     width: newsImage.bounds.width - insetForLoadingView,
-                                     height: newsImage.bounds.height - insetForLoadingView*2.5)
+                                       y: newsImage.bounds.minY + insetForLoadingView*2,
+                                       width: newsImage.bounds.width - insetForLoadingView,
+                                       height: newsImage.bounds.height - insetForLoadingView*2.5)
         ghostNewsView.frame = CGRect(x: newsImage.bounds.minX + insetForLoadingView/2,
                                      y: newsImage.bounds.minY + insetForLoadingView*2,
                                      width: newsImage.bounds.width - insetForLoadingView,
@@ -153,4 +198,8 @@ final class SecondViewController: UIViewController {
     }
 }
 
-
+extension SecondViewController: UIScrollViewDelegate {
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        newsImage
+    }
+}

@@ -7,13 +7,13 @@ extension UIStackView {
     }
 }
 
-extension UIButton {
+extension UIView {
     func pulsate() {
         let animation = CASpringAnimation(keyPath: "transform.scale")
         animation.fromValue = 0.98
         animation.toValue = 1
         animation.damping = 1.0
-        animation.duration = 0.1
+        animation.duration = 0.2
         layer.add(animation, forKey: nil)
     }
 }
@@ -80,5 +80,16 @@ extension UIView {
                                      width: bounds.size.width * 4,
                                      height: bounds.size.height)
         self.layer.mask = gradientLayer
+    }
+}
+
+extension String {
+    func configureNewsTitle() -> String {
+        String(self.reversed().drop(while: { $0 != "-" }).dropFirst(1).reversed())
+    }
+    
+    func configureTime() -> String {
+        String(self.replacingOccurrences(of: "T", with: "   ")
+                    .dropLast(4)).replacingOccurrences(of: "-", with: ".")
     }
 }

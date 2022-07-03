@@ -43,7 +43,7 @@ final class InternetService: UserInternetService {
         
         DispatchQueue.main.async { [weak self] in
             self?.view?.reload()
-            UINotificationFeedbackGenerator().notificationOccurred(.success)
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
             completion()
         }
     }
