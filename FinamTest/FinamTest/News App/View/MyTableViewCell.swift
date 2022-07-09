@@ -72,8 +72,7 @@ final class MyTableViewCell: UITableViewCell {
             animateContentViewLayer(with: .start)
             isActionsVCPresented.toggle()
             VibrateManager.shared.makeLoadingResultVibration()
-            
-            let newsTopicInfo = "🔥 \(titleLabel.text ?? "") 🔥 \n\(DeveloperInfo.shareInfo.rawValue)"
+            let newsTopicInfo = "🔥 \(titleLabel.text ?? "") 🤖 \n\(DeveloperInfo.shareInfo.rawValue)"
             let shareData = [newsTopicInfo] as! Any
             let activityVC = UIActivityViewController(activityItems: shareData as! [Any], applicationActivities: nil)
             DispatchQueue.main.async { [weak self] in

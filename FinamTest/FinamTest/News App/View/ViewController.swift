@@ -203,15 +203,15 @@ final class ViewController: UIViewController, UserView {
     }
     
     @objc private func showSettings() {
-        VibrateManager.shared.makeLoadingResultVibration()
-        let settingsVC = SettingsViewController()
-        settingsVC.modalPresentationStyle = .overCurrentContext
-        settingsVC.modalTransitionStyle = .crossDissolve
-        settingsVC.closeCompletion = { [weak self] in
-            self?.isSettingsVCPresenting.toggle()
-        }
         isSettingsVCPresenting.toggle()
         if isSettingsVCPresenting {
+            let settingsVC = SettingsViewController()
+            settingsVC.modalPresentationStyle = .overCurrentContext
+            settingsVC.modalTransitionStyle = .crossDissolve
+            settingsVC.closeCompletion = { [weak self] in
+                self?.isSettingsVCPresenting.toggle()
+            }
+            VibrateManager.shared.makeLoadingResultVibration()
             present(settingsVC, animated: true, completion: nil)
         }
     }

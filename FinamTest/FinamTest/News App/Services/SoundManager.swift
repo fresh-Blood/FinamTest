@@ -20,12 +20,19 @@ struct SoundManager {
         
         do {
             player = try AVAudioPlayer(contentsOf: url)
-            // Testing, now moved it to appDelegate to prepare it
-//            player.prepareToPlay()
+            if FirstTimePlayingSessionMarker.playCount == .zero {
+                player.volume = 0.3
+                FirstTimePlayingSessionMarker.playCount += 1
+            }
             player.play()
         } catch {
             print("Error in playing sound...🙂")
         }
                 
     }
+}
+
+// To make lower the volume of load sound ( it is louder than jedy's ones)
+struct FirstTimePlayingSessionMarker {
+    static var playCount = 0
 }
