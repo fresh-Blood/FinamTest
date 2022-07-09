@@ -82,7 +82,7 @@ final class SecondViewController: UIViewController, PowerOffShowable {
     
     private lazy var moreInfoButton: UIButton = {
         let btn = UIButton()
-        btn.setTitle("Подробнее ಠ_ಠ", for: .normal)
+        btn.setTitle(Other.moreInfo.rawValue, for: .normal)
         btn.addTarget(self,
                       action: #selector(showMoreInfo),
                       for: .touchUpInside)
@@ -94,6 +94,7 @@ final class SecondViewController: UIViewController, PowerOffShowable {
         UIApplication.shared.open(url)
     }
     
+    // MARK: Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -101,6 +102,31 @@ final class SecondViewController: UIViewController, PowerOffShowable {
         setScrollView()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        navigationController?.navigationBar.subviews.forEach {
+            $0.isHidden = $0.tag == 0
+            $0.isHidden = $0.tag == 1
+        }
+        
+        if topicLabel.text == Errors.topicLabelNoInfo.rawValue {
+            VibrateManager.shared.makeWarningVibration()
+            UIView.animate(withDuration: 1.0,
+                           delay: 0,
+                           usingSpringWithDamping: 0.1,
+                           initialSpringVelocity: 0.1,
+                           options: .curveLinear,
+                           animations: { [self] in
+                moreInfoButton.configureShadow(configureBorder: true)
+                view.layoutIfNeeded()
+            })
+            stopAnimatingGhostLoadingViewAndHide()
+            showPowerOffImage(insideView: newsImage)
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    // MARK: Zoom Gesture and animations
     private func setScrollView() {
         scrollImageView.delegate = self
         scrollImageView.minimumZoomScale = 1.0
@@ -142,33 +168,6 @@ final class SecondViewController: UIViewController, PowerOffShowable {
         return zoomRect
     }
     
-    
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        navigationController?.navigationBar.subviews.forEach {
-            $0.isHidden = $0.tag == 0
-            $0.isHidden = $0.tag == 1
-        }
-        
-        if topicLabel.text == Errors.topicLabelNoInfo.rawValue {
-            VibrateManager.shared.makeWarningVibration()
-            UIView.animate(withDuration: 1.0,
-                           delay: 0,
-                           usingSpringWithDamping: 0.1,
-                           initialSpringVelocity: 0.1,
-                           options: .curveLinear,
-                           animations: { [self] in
-                moreInfoButton.configureShadow(configureBorder: true)
-                view.layoutIfNeeded()
-            })
-            stopAnimatingGhostLoadingViewAndHide()
-            showPowerOffImage(insideView: newsImage)
-            self.view.layoutIfNeeded()
-        }
-    }
-    
     private func animateGhostLoadingView() {
         ghostNewsView.isHidden.toggle()
         ghostNewsViewBG.isHidden.toggle()
@@ -180,6 +179,7 @@ final class SecondViewController: UIViewController, PowerOffShowable {
         ghostNewsViewBG.isHidden = true
     }
     
+    // MARK: SetupUI
     private func setupUI() {
         view.addSubview(topicLabel)
         newsImage.addSubview(ghostNewsViewBG)
@@ -218,6 +218,7 @@ final class SecondViewController: UIViewController, PowerOffShowable {
     }
 }
 
+// MARK: ScrollView Delegate
 extension SecondViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         newsImage

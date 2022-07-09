@@ -67,21 +67,6 @@ final class MyTableViewCell: UITableViewCell {
         case finish
     }
     
-    private func animateContentViewLayer(with status: LayerAnimationStatus) {
-        UIView.animate(withDuration: 0.2,
-                       delay: .zero,
-                       options: .curveEaseIn,
-                       animations: {
-            if status == .start {
-                self.bgView.configureShadow(configureBorder: true)
-                self.bgView.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
-            } else if status == .finish {
-                self.bgView.configureShadow(with: .removed, configureBorder: false)
-                self.bgView.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
-            }
-        })
-    }
-    
     @objc private func share(with gesture: UILongPressGestureRecognizer) {
         if gesture.state == .began && !isActionsVCPresented {
             animateContentViewLayer(with: .start)
@@ -101,8 +86,23 @@ final class MyTableViewCell: UITableViewCell {
         }
     }
     
-    // MARK: Setup UI
+    // MARK: BGView layer animation
+    private func animateContentViewLayer(with status: LayerAnimationStatus) {
+        UIView.animate(withDuration: 0.2,
+                       delay: .zero,
+                       options: .curveEaseIn,
+                       animations: {
+            if status == .start {
+                self.bgView.configureShadow(configureBorder: true)
+                self.bgView.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+            } else if status == .finish {
+                self.bgView.configureShadow(with: .removed, configureBorder: false)
+                self.bgView.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+            }
+        })
+    }
     
+    // MARK: Setup UI
     private func setupUI() {
         backgroundColor = .clear
         bgView.addSubview(newsDate)

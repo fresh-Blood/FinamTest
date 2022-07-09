@@ -69,3 +69,7 @@ enum SettingsKeys: String {
     case soundWord = "Звуки"
     case info = "Инфо"
 }
+
+enum Other: String {
+    case moreInfo = "Подробнее ಠ_ಠ"
+}

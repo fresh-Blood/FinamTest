@@ -89,6 +89,10 @@ final class SettingsViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         setupUserSoundSettings()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         animateBGViewShadow()
     }
     
@@ -109,8 +113,6 @@ final class SettingsViewController: UIViewController {
             self?.bgView.layer.shadowOpacity = 0.0
         })
     }
-    
-    
     
     // MARK: SetupUI
     private func setupUI() {
@@ -149,6 +151,7 @@ final class SettingsViewController: UIViewController {
         ])
     }
     
+    // MARK: SetupUser sound settings
     private func setupUserSoundSettings() {
         guard let soundOn = StorageService.shared.getData(for: SettingsKeys.soundSettings.rawValue) else { return }
         // SetUp initial state

@@ -266,8 +266,7 @@ final class ViewController: UIViewController, UserView {
         ])
     }
     
-    // MARK: Animations
-    
+    // MARK: Good connection animations 
     func animateGoodConnection() {
         if isInitialLoading {
             DispatchQueue.main.async {
