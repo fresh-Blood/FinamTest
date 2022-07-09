@@ -88,7 +88,7 @@ final class MyTableViewCell: UITableViewCell {
             isActionsVCPresented.toggle()
             VibrateManager.shared.makeTouchVibration()
             
-            let newsTopicInfo = "🔥 \(titleLabel.text ?? "") 🔥 \n\(InfoMessage.shareInfo.rawValue)"
+            let newsTopicInfo = "🔥 \(titleLabel.text ?? "") 🔥 \n\(DeveloperInfo.shareInfo.rawValue)"
             let shareData = [newsTopicInfo] as! Any
             let activityVC = UIActivityViewController(activityItems: shareData as! [Any], applicationActivities: nil)
             DispatchQueue.main.async { [weak self] in

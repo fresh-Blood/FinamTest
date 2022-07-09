@@ -15,6 +15,8 @@
 		844F987F2878F99000859AEB /* jedy2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 844F987E2878F99000859AEB /* jedy2.mp3 */; };
 		8455A6CE2878E45400B3D575 /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8455A6CD2878E45400B3D575 /* SoundManager.swift */; };
 		8455A6D02878E62A00B3D575 /* VibrateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8455A6CF2878E62A00B3D575 /* VibrateManager.swift */; };
+		846FC68A2879748D0045FCB2 /* StorageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846FC6892879748D0045FCB2 /* StorageService.swift */; };
+		846FC68C287987B50045FCB2 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846FC68B287987B50045FCB2 /* SettingsViewController.swift */; };
 		849674B32774BD4700504D9D /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849674B22774BD4700504D9D /* Model.swift */; };
 		849674B62774BE2700504D9D /* InternetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849674B52774BE2700504D9D /* InternetService.swift */; };
 		849674B82774C8F100504D9D /* Assemblyer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849674B72774C8F100504D9D /* Assemblyer.swift */; };
@@ -50,6 +52,8 @@
 		844F987E2878F99000859AEB /* jedy2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = jedy2.mp3; sourceTree = "<group>"; };
 		8455A6CD2878E45400B3D575 /* SoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
 		8455A6CF2878E62A00B3D575 /* VibrateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VibrateManager.swift; sourceTree = "<group>"; };
+		846FC6892879748D0045FCB2 /* StorageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageService.swift; sourceTree = "<group>"; };
+		846FC68B287987B50045FCB2 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		849674B22774BD4700504D9D /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		849674B52774BE2700504D9D /* InternetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetService.swift; sourceTree = "<group>"; };
 		849674B72774C8F100504D9D /* Assemblyer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assemblyer.swift; sourceTree = "<group>"; };
@@ -81,6 +85,7 @@
 			children = (
 				84FA0F7B26C6350900FB1C34 /* ViewController.swift */,
 				84FA0FA226C642C000FB1C34 /* SecondViewController.swift */,
+				846FC68B287987B50045FCB2 /* SettingsViewController.swift */,
 				84FA0F8E26C6362600FB1C34 /* MyTableViewCell.swift */,
 				84BF945D281DAF3A008B9F57 /* LaunchScreen.storyboard */,
 			);
@@ -115,6 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				849674B52774BE2700504D9D /* InternetService.swift */,
+				846FC6892879748D0045FCB2 /* StorageService.swift */,
 				8455A6CD2878E45400B3D575 /* SoundManager.swift */,
 				8455A6CF2878E62A00B3D575 /* VibrateManager.swift */,
 			);
@@ -249,7 +255,9 @@
 				84FA0F8226C6350900FB1C34 /* FinamTest.xcdatamodeld in Sources */,
 				84FA0F7826C6350900FB1C34 /* AppDelegate.swift in Sources */,
 				84FA0F8F26C6362600FB1C34 /* MyTableViewCell.swift in Sources */,
+				846FC68C287987B50045FCB2 /* SettingsViewController.swift in Sources */,
 				8455A6CE2878E45400B3D575 /* SoundManager.swift in Sources */,
+				846FC68A2879748D0045FCB2 /* StorageService.swift in Sources */,
 				84FA0F7A26C6350900FB1C34 /* SceneDelegate.swift in Sources */,
 				849674B82774C8F100504D9D /* Assemblyer.swift in Sources */,
 				8446A225281DA24C00A95290 /* Extensions.swift in Sources */,

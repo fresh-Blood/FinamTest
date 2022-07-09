@@ -11,6 +11,8 @@ struct SoundManager {
     }
     
     mutating func playSound(soundFileName: String) {
+        guard let soundOn = StorageService.shared.getData(for: SettingsKeys.soundSettings.rawValue) else { return }
+        guard soundOn else { return }
         guard let urlPath = Bundle
                 .main
                 .path(forResource: soundFileName, ofType: "mp3") else { return }
@@ -18,8 +20,8 @@ struct SoundManager {
         
         do {
             player = try AVAudioPlayer(contentsOf: url)
-            // TODO: Need testing, for now moved it to sceneDelegate
-//            player.prepareToPlay() ?
+            // Testing, now moved it to appDelegate to prepare it
+//            player.prepareToPlay()
             player.play()
         } catch {
             print("Error in playing sound...🙂")

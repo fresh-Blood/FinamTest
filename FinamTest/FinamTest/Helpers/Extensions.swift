@@ -52,7 +52,9 @@ extension UIView {
         case removed
     }
     
-    func configureShadow(with shadowState: ShadowState? = .set, configureBorder: Bool) {
+    func configureShadow(with shadowState: ShadowState? = .set,
+                         configureBorder: Bool,
+                         withAlpha: CGFloat? = 1) {
         guard shadowState == .set else {
             self.layer.shadowOffset = .zero
             self.layer.shadowOpacity = .zero
@@ -69,7 +71,7 @@ extension UIView {
         self.layer.cornerRadius = 8
         self.layer.shadowOffset = CGSize(width: 2, height: 3)
         self.layer.shadowOpacity = 1.0
-        self.layer.shadowColor = Colors.valueForButtonColor.cgColor
+        self.layer.shadowColor = Colors.valueForButtonColor.withAlphaComponent(withAlpha ?? 1.0).cgColor
         self.layer.shadowRadius = 7
     }
     
@@ -113,5 +115,11 @@ extension String {
         dateFormatter.dateFormat = "yyyy-MM-dd в HH:mm"
         let timeInfo = dateFormatter.string(from: date ?? Date()).drop(while: { $0 != " "})
         return dayYearInfo + timeInfo
+    }
+}
+
+extension Bundle {
+    var buildVersionNumber: String? {
+        return self.infoDictionary?["CFBundleVersion"] as? String
     }
 }

@@ -12,6 +12,7 @@ protocol UserView {
 
 final class ViewController: UIViewController, UserView {
     private lazy var isInitialLoading = true
+    private lazy var isSettingsVCPresenting = false
     
     struct Layout {
         let contentInsets: UIEdgeInsets
@@ -93,9 +94,31 @@ final class ViewController: UIViewController, UserView {
         showOnBoardingMessageIfNeeded()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        leftBarButtonItem.isHidden = false
+        rightBarButtonItem.isHidden = false
+        guard let newsArray = internetService?.newsArray else { return }
+        if newsArray.isEmpty {
+            animateLoading()
+            Task {
+                try await internetService?.getData(completion: {
+                    DispatchQueue.main.async {
+                        self.stopAnimatingAndHide()
+                    }
+                }, with: nil)
+            }
+        }
+    }
+    
     // MARK: Show alert ( onBoarding ) with updates info
     private func showOnBoardingMessageIfNeeded() {
-        guard (UserDefaults.standard.value(forKey: ProductKeys.currentStatus.rawValue) as? String) != nil else {
+        defer {
+            // Last version updates info
+            UserDefaults.standard.removeObject(forKey: ProductKeys.currentStatus.rawValue)
+        }
+        // New version updates info
+        guard (UserDefaults.standard.value(forKey: ProductKeys.currentStatus_1_3.rawValue) as? String) != nil else {
             let alertVC = UIAlertController(title: Updates.title.rawValue,
                                             message: Updates.whatsNew.rawValue,
                                             preferredStyle: .actionSheet)
@@ -105,8 +128,8 @@ final class ViewController: UIViewController, UserView {
                 alertVC.dismiss(animated: true, completion: nil)
             }))
             present(alertVC, animated: true, completion: {
-                UserDefaults.standard.set(ProductKeys.currentStatus.rawValue,
-                                          forKey: ProductKeys.currentStatus.rawValue)
+                UserDefaults.standard.set(ProductKeys.currentStatus_1_3.rawValue,
+                                          forKey: ProductKeys.currentStatus_1_3.rawValue)
             })
             return
         }
@@ -140,7 +163,7 @@ final class ViewController: UIViewController, UserView {
     private func setLeftBarButtonItemGesture() {
         let gesture = UILongPressGestureRecognizer(
             target: self,
-            action: #selector(tapInfo))
+            action: #selector(showSettings))
         gesture.minimumPressDuration = 0
         leftBarButtonItem.addGestureRecognizer(gesture)
     }
@@ -165,11 +188,11 @@ final class ViewController: UIViewController, UserView {
     }
     
     private func configureNavigationBar() {
-        navigationItem.title = InfoMessage.appTitle.rawValue
+        navigationItem.title = DeveloperInfo.appTitle.rawValue
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.backButtonTitle = ""
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: self, action: nil)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "info.circle"), style: .plain, target: self, action: nil)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gearshape"), style: .plain, target: self, action: nil)
         navigationController?.navigationBar.largeTitleTextAttributes = [
             .font: UIFont.systemFont(ofSize: 30,
                                      weight: .heavy),
@@ -179,13 +202,18 @@ final class ViewController: UIViewController, UserView {
         navigationController?.navigationBar.tintColor = Colors.valueForColor
     }
     
-    @objc private func tapInfo() {
+    @objc private func showSettings() {
         VibrateManager.shared.makeTouchVibration()
-        let alertVC = UIAlertController(title: InfoMessage.infoTitle.rawValue, message: InfoMessage.infoMessage.rawValue, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { [weak self] action in
-            self?.dismiss(animated: true, completion: nil)
-        }))
-        present(alertVC, animated: true, completion: nil)
+        let settingsVC = SettingsViewController()
+        settingsVC.modalPresentationStyle = .overCurrentContext
+        settingsVC.modalTransitionStyle = .crossDissolve
+        settingsVC.closeCompletion = { [weak self] in
+            self?.isSettingsVCPresenting.toggle()
+        }
+        isSettingsVCPresenting.toggle()
+        if isSettingsVCPresenting {
+            present(settingsVC, animated: true, completion: nil)
+        }
     }
     
     private func setSearchVC() {
@@ -238,31 +266,15 @@ final class ViewController: UIViewController, UserView {
         ])
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        leftBarButtonItem.isHidden = false
-        rightBarButtonItem.isHidden = false 
-        guard let newsArray = internetService?.newsArray else { return }
-        if newsArray.isEmpty {
-            animateLoading()
-            Task {
-                try await internetService?.getData(completion: {
-                    DispatchQueue.main.async {
-                        self.stopAnimatingAndHide()
-                    }
-                }, with: nil)
-            }
-        }
-    }
-    
     // MARK: Animations
     
     func animateGoodConnection() {
-        if isInitialLoading {   
-            SoundManager.shared.playSound(soundFileName: SoundName.loaded.rawValue)
+        if isInitialLoading {
+            DispatchQueue.main.async {
+                SoundManager.shared.playSound(soundFileName: SoundName.loaded.rawValue)
+            }
             isInitialLoading.toggle()
         }
-        
         DispatchQueue.main.async { [weak self] in
             if let view = self?.view {
                 self?.removePowerOffImage(fromView: view)
@@ -280,7 +292,7 @@ final class ViewController: UIViewController, UserView {
                        initialSpringVelocity: 0.1,
                        options: .curveEaseIn,
                        animations: {
-            self.navigationController?.navigationBar.configureShadow(configureBorder: false)
+            self.navigationController?.navigationBar.configureShadow(configureBorder: false, withAlpha: 0.5)
         }, completion: completion)
     }
     
