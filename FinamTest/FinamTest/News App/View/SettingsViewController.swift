@@ -102,7 +102,7 @@ final class SettingsViewController: UIViewController {
     }
     
     private func animateBGViewShadow() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: { [weak self] in
             let animation = CABasicAnimation(keyPath: "shadowOpacity")
             animation.fromValue = self?.bgView.layer.shadowOpacity
             animation.toValue = 0.0

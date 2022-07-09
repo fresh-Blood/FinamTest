@@ -8,10 +8,6 @@ struct VibrateManager {
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
     }
     
-    func makeTouchVibration() {
-        UIImpactFeedbackGenerator(style: .soft).impactOccurred()
-    }
-    
     func makeErrorVibration() {
         UINotificationFeedbackGenerator().notificationOccurred(.error)
     }

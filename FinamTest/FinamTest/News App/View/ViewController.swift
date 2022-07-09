@@ -170,7 +170,7 @@ final class ViewController: UIViewController, UserView {
     
     @objc private func searchAction(gesture: UILongPressGestureRecognizer) {
         if gesture.state == .began {
-            VibrateManager.shared.makeTouchVibration()
+            VibrateManager.shared.makeLoadingResultVibration()
             UIView.animate(withDuration: 0.5,
                            delay: 0,
                            usingSpringWithDamping: 0.5,
@@ -203,7 +203,7 @@ final class ViewController: UIViewController, UserView {
     }
     
     @objc private func showSettings() {
-        VibrateManager.shared.makeTouchVibration()
+        VibrateManager.shared.makeLoadingResultVibration()
         let settingsVC = SettingsViewController()
         settingsVC.modalPresentationStyle = .overCurrentContext
         settingsVC.modalTransitionStyle = .crossDissolve

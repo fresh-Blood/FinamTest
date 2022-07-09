@@ -71,7 +71,7 @@ final class MyTableViewCell: UITableViewCell {
         if gesture.state == .began && !isActionsVCPresented {
             animateContentViewLayer(with: .start)
             isActionsVCPresented.toggle()
-            VibrateManager.shared.makeTouchVibration()
+            VibrateManager.shared.makeLoadingResultVibration()
             
             let newsTopicInfo = "🔥 \(titleLabel.text ?? "") 🔥 \n\(DeveloperInfo.shareInfo.rawValue)"
             let shareData = [newsTopicInfo] as! Any
