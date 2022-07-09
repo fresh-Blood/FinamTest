@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import AVKit
 
 typealias Completion = () -> Void
 
@@ -43,7 +44,7 @@ final class InternetService: UserInternetService {
         
         DispatchQueue.main.async { [weak self] in
             self?.view?.reload()
-            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            VibrateManager.shared.makeLoadingResultVibration()
             completion()
         }
     }

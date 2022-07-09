@@ -58,15 +58,35 @@ final class MyTableViewCell: UITableViewCell {
     
     private func setupShareGesture() {
         let gesture = UILongPressGestureRecognizer(target: self, action: #selector(share))
-        gesture.minimumPressDuration = 0.5
+        gesture.minimumPressDuration = 0.2
         contentView.addGestureRecognizer(gesture)
+    }
+    
+    enum LayerAnimationStatus {
+        case start
+        case finish
+    }
+    
+    private func animateContentViewLayer(with status: LayerAnimationStatus) {
+        UIView.animate(withDuration: 0.2,
+                       delay: .zero,
+                       options: .curveEaseIn,
+                       animations: {
+            if status == .start {
+                self.bgView.configureShadow(configureBorder: true)
+                self.bgView.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+            } else if status == .finish {
+                self.bgView.configureShadow(with: .removed, configureBorder: false)
+                self.bgView.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+            }
+        })
     }
     
     @objc private func share(with gesture: UILongPressGestureRecognizer) {
         if gesture.state == .began && !isActionsVCPresented {
-            contentView.pulsate()
+            animateContentViewLayer(with: .start)
             isActionsVCPresented.toggle()
-            UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+            VibrateManager.shared.makeTouchVibration()
             
             let newsTopicInfo = "🔥 \(titleLabel.text ?? "") 🔥 \n\(InfoMessage.shareInfo.rawValue)"
             let shareData = [newsTopicInfo] as! Any
@@ -76,6 +96,8 @@ final class MyTableViewCell: UITableViewCell {
                     self?.isActionsVCPresented.toggle()
                 })
             }
+        } else {
+            animateContentViewLayer(with: .finish)
         }
     }
     

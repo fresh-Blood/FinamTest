@@ -21,7 +21,7 @@ extension UIView {
 // MARK: images are loading when we see them not on main queue, if the image is huge and loading takes much time - UI doesn't freeze: we can go back and choose another topic
 
 extension UIImageView {
-    func downLoadImage(from:String, completion: @escaping () -> Void) {
+    func downLoadImage(from: String, completion: @escaping () -> Void) {
         if let cachedImage = Cashe.imageCache.object(forKey: from as AnyObject) {
             DispatchQueue.main.async {
                 completion()
@@ -46,14 +46,29 @@ extension UIImageView {
 }
 
 extension UIView {
-    func setShadow(configureBorder: Bool) {
+    
+    enum ShadowState {
+        case set
+        case removed
+    }
+    
+    func configureShadow(with shadowState: ShadowState? = .set, configureBorder: Bool) {
+        guard shadowState == .set else {
+            self.layer.shadowOffset = .zero
+            self.layer.shadowOpacity = .zero
+            self.layer.shadowColor = .none
+            self.layer.shadowRadius = .zero
+            self.layer.borderColor = UIColor.clear.cgColor
+            self.layer.borderWidth = .zero
+            return
+        }
         if configureBorder {
             self.layer.borderColor = Colors.valueForButtonColor.cgColor
             self.layer.borderWidth = 3
-        }
+        } 
         self.layer.cornerRadius = 8
         self.layer.shadowOffset = CGSize(width: 2, height: 3)
-        self.layer.shadowOpacity = 10
+        self.layer.shadowOpacity = 1.0
         self.layer.shadowColor = Colors.valueForButtonColor.cgColor
         self.layer.shadowRadius = 7
     }
@@ -88,8 +103,15 @@ extension String {
         String(self.reversed().drop(while: { $0 != "-" }).dropFirst(1).reversed())
     }
     
-    func configureTime() -> String {
-        String(self.replacingOccurrences(of: "T", with: "   ")
-                    .dropLast(4)).replacingOccurrences(of: "-", with: ".")
+    func toReadableDate() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        let date = dateFormatter.date(from: self)
+        dateFormatter.dateStyle = .long
+        dateFormatter.locale = Locale(identifier: "ru_Ru")
+        let dayYearInfo = dateFormatter.string(from: date ?? Date())
+        dateFormatter.dateFormat = "yyyy-MM-dd в HH:mm"
+        let timeInfo = dateFormatter.string(from: date ?? Date()).drop(while: { $0 != " "})
+        return dayYearInfo + timeInfo
     }
 }

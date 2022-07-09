@@ -9,6 +9,12 @@
 /* Begin PBXBuildFile section */
 		8446A223281DA20700A95290 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8446A222281DA20700A95290 /* Colors.swift */; };
 		8446A225281DA24C00A95290 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8446A224281DA24C00A95290 /* Extensions.swift */; };
+		844F98732878EDC200859AEB /* error.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 844F98722878EDC200859AEB /* error.mp3 */; };
+		844F987B2878F80C00859AEB /* loaded.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 844F987A2878F80C00859AEB /* loaded.mp3 */; };
+		844F987D2878F89100859AEB /* jedy1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 844F987C2878F89100859AEB /* jedy1.mp3 */; };
+		844F987F2878F99000859AEB /* jedy2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 844F987E2878F99000859AEB /* jedy2.mp3 */; };
+		8455A6CE2878E45400B3D575 /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8455A6CD2878E45400B3D575 /* SoundManager.swift */; };
+		8455A6D02878E62A00B3D575 /* VibrateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8455A6CF2878E62A00B3D575 /* VibrateManager.swift */; };
 		849674B32774BD4700504D9D /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849674B22774BD4700504D9D /* Model.swift */; };
 		849674B62774BE2700504D9D /* InternetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849674B52774BE2700504D9D /* InternetService.swift */; };
 		849674B82774C8F100504D9D /* Assemblyer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849674B72774C8F100504D9D /* Assemblyer.swift */; };
@@ -38,6 +44,12 @@
 /* Begin PBXFileReference section */
 		8446A222281DA20700A95290 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		8446A224281DA24C00A95290 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		844F98722878EDC200859AEB /* error.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = error.mp3; sourceTree = "<group>"; };
+		844F987A2878F80C00859AEB /* loaded.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = loaded.mp3; sourceTree = "<group>"; };
+		844F987C2878F89100859AEB /* jedy1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = jedy1.mp3; sourceTree = "<group>"; };
+		844F987E2878F99000859AEB /* jedy2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = jedy2.mp3; sourceTree = "<group>"; };
+		8455A6CD2878E45400B3D575 /* SoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
+		8455A6CF2878E62A00B3D575 /* VibrateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VibrateManager.swift; sourceTree = "<group>"; };
 		849674B22774BD4700504D9D /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		849674B52774BE2700504D9D /* InternetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetService.swift; sourceTree = "<group>"; };
 		849674B72774C8F100504D9D /* Assemblyer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assemblyer.swift; sourceTree = "<group>"; };
@@ -83,8 +95,30 @@
 				8446A224281DA24C00A95290 /* Extensions.swift */,
 				8446A222281DA20700A95290 /* Colors.swift */,
 				84FA0F8326C6350D00FB1C34 /* Assets.xcassets */,
+				844F98802878F99700859AEB /* Sounds */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		844F98802878F99700859AEB /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				844F987A2878F80C00859AEB /* loaded.mp3 */,
+				844F98722878EDC200859AEB /* error.mp3 */,
+				844F987C2878F89100859AEB /* jedy1.mp3 */,
+				844F987E2878F99000859AEB /* jedy2.mp3 */,
+			);
+			path = Sounds;
+			sourceTree = "<group>";
+		};
+		8455A6D12878E63400B3D575 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				849674B52774BE2700504D9D /* InternetService.swift */,
+				8455A6CD2878E45400B3D575 /* SoundManager.swift */,
+				8455A6CF2878E62A00B3D575 /* VibrateManager.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 		849674B42774BD5600504D9D /* News App */ = {
@@ -92,7 +126,7 @@
 			children = (
 				849674B22774BD4700504D9D /* Model.swift */,
 				8446A226281DA29400A95290 /* View */,
-				849674B52774BE2700504D9D /* InternetService.swift */,
+				8455A6D12878E63400B3D575 /* Services */,
 				849674B72774C8F100504D9D /* Assemblyer.swift */,
 			);
 			path = "News App";
@@ -191,8 +225,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				844F987D2878F89100859AEB /* jedy1.mp3 in Resources */,
 				84BF945F281DAF3A008B9F57 /* LaunchScreen.storyboard in Resources */,
 				84FA0F8426C6350D00FB1C34 /* Assets.xcassets in Resources */,
+				844F987F2878F99000859AEB /* jedy2.mp3 in Resources */,
+				844F987B2878F80C00859AEB /* loaded.mp3 in Resources */,
+				844F98732878EDC200859AEB /* error.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -205,11 +243,13 @@
 			files = (
 				849674B32774BD4700504D9D /* Model.swift in Sources */,
 				8446A223281DA20700A95290 /* Colors.swift in Sources */,
+				8455A6D02878E62A00B3D575 /* VibrateManager.swift in Sources */,
 				84FA0FA326C642C000FB1C34 /* SecondViewController.swift in Sources */,
 				84FA0F7C26C6350900FB1C34 /* ViewController.swift in Sources */,
 				84FA0F8226C6350900FB1C34 /* FinamTest.xcdatamodeld in Sources */,
 				84FA0F7826C6350900FB1C34 /* AppDelegate.swift in Sources */,
 				84FA0F8F26C6362600FB1C34 /* MyTableViewCell.swift in Sources */,
+				8455A6CE2878E45400B3D575 /* SoundManager.swift in Sources */,
 				84FA0F7A26C6350900FB1C34 /* SceneDelegate.swift in Sources */,
 				849674B82774C8F100504D9D /* Assemblyer.swift in Sources */,
 				8446A225281DA24C00A95290 /* Extensions.swift in Sources */,

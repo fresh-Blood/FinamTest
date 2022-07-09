@@ -1,4 +1,5 @@
 import UIKit
+import AVKit
 
 typealias CompletionForAnimation = ((Bool) -> Void)?
 
@@ -10,6 +11,7 @@ protocol UserView {
 }
 
 final class ViewController: UIViewController, UserView {
+    private lazy var isInitialLoading = true
     
     struct Layout {
         let contentInsets: UIEdgeInsets
@@ -145,6 +147,7 @@ final class ViewController: UIViewController, UserView {
     
     @objc private func searchAction(gesture: UILongPressGestureRecognizer) {
         if gesture.state == .began {
+            VibrateManager.shared.makeTouchVibration()
             UIView.animate(withDuration: 0.5,
                            delay: 0,
                            usingSpringWithDamping: 0.5,
@@ -177,6 +180,7 @@ final class ViewController: UIViewController, UserView {
     }
     
     @objc private func tapInfo() {
+        VibrateManager.shared.makeTouchVibration()
         let alertVC = UIAlertController(title: InfoMessage.infoTitle.rawValue, message: InfoMessage.infoMessage.rawValue, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { [weak self] action in
             self?.dismiss(animated: true, completion: nil)
@@ -251,8 +255,18 @@ final class ViewController: UIViewController, UserView {
         }
     }
     
+    // MARK: Animations
+    
     func animateGoodConnection() {
+        if isInitialLoading {   
+            SoundManager.shared.playSound(soundFileName: SoundName.loaded.rawValue)
+            isInitialLoading.toggle()
+        }
+        
         DispatchQueue.main.async { [weak self] in
+            if let view = self?.view {
+                self?.removePowerOffImage(fromView: view)
+            }
             if self?.navigationController?.navigationBar.layer.shadowColor != Colors.valueForButtonColor.cgColor {
                 self?.animateNaVbarBackGrColor(completion: nil)
             }
@@ -266,7 +280,7 @@ final class ViewController: UIViewController, UserView {
                        initialSpringVelocity: 0.1,
                        options: .curveEaseIn,
                        animations: {
-            self.navigationController?.navigationBar.setShadow(configureBorder: false)
+            self.navigationController?.navigationBar.configureShadow(configureBorder: false)
         }, completion: completion)
     }
     
@@ -295,7 +309,7 @@ extension ViewController : UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: MyTableViewCell.id, for: indexPath) as! MyTableViewCell
         let model = internetService?.newsArray[indexPath.row]
         cell.titleLabel.text = model?.title
-        cell.newsDate.text = model?.publishedAt?.configureTime()
+        cell.newsDate.text = model?.publishedAt?.toReadableDate()
         cell.newsSource.text = model?.source?.name
         return cell
     }
@@ -323,6 +337,8 @@ extension ViewController {
     }
     
     @objc func handleRefreshControl() {
+        removePowerOffImage(fromView: view)
+        SoundManager.shared.playSound(soundFileName: SoundManager.shared.randomRefreshJedySound)
         internetService?.newsArray.removeAll()
         reload()
         commonTable.refreshControl?.endRefreshing()
@@ -338,10 +354,13 @@ extension ViewController {
 }
 
 // MARK: Animate errors
-extension ViewController {
-    
+extension ViewController: PowerOffShowable {
     func animateResponseError(with error: String) {
         DispatchQueue.main.async { [weak self] in
+            if let currentView = self?.view {
+                self?.showPowerOffImage(insideView: currentView)
+            }
+            SoundManager.shared.playSound(soundFileName: SoundName.error.rawValue)
             self?.responseErrorNotificationLabel.text = error
             self?.setErrorResponseLabelHeightConstraint(to: 100, from: 0)
             UIView.animate(withDuration: 2.0,
@@ -351,7 +370,7 @@ extension ViewController {
                            options: .curveEaseIn,
                            animations: {
                 self?.view.layoutIfNeeded()
-                UINotificationFeedbackGenerator().notificationOccurred(.error)
+                VibrateManager.shared.makeErrorVibration()
                 self?.navigationController?.navigationBar.layer.shadowColor = UIColor.clear.cgColor
             }, completion: { finished in
                 self?.animateChanges()
@@ -383,7 +402,6 @@ extension ViewController {
 
 // MARK: Search bar delegate settings
 extension ViewController: UISearchBarDelegate {
-    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         internetService?.newsArray.removeAll()
         reload()

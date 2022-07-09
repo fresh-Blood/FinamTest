@@ -1,6 +1,43 @@
 import UIKit
 
-final class SecondViewController: UIViewController {
+protocol PowerOffShowable {
+    func showPowerOffImage(insideView: UIView)
+    func removePowerOffImage(fromView: UIView)
+    var powerOffImageId: String { get }
+}
+
+extension PowerOffShowable {
+    
+    var powerOffImageId: String {
+        "powerOffImage"
+    }
+    
+    func showPowerOffImage(insideView: UIView) {
+        let powerOffImage = UIImageView(image: UIImage(systemName: "power.dotted"))
+        powerOffImage.tintColor = Colors.valueForButtonColor
+        powerOffImage.frame.size = CGSize(width: 50, height: 50)
+        powerOffImage.center = insideView.center
+        powerOffImage.alpha = 0
+        powerOffImage.accessibilityIdentifier = powerOffImageId
+        insideView.addSubview(powerOffImage)
+        
+        UIView.animate(withDuration: 1.0,
+                       delay: 0,
+                       usingSpringWithDamping: 0.1,
+                       initialSpringVelocity: 0.1,
+                       options: .curveLinear,
+                       animations: {
+            powerOffImage.alpha = 1
+            powerOffImage.configureShadow(configureBorder: false)
+        })
+    }
+    func removePowerOffImage(fromView: UIView) {
+        let powerOffImage = fromView.subviews.first(where: { $0.accessibilityIdentifier == powerOffImageId })
+        powerOffImage?.removeFromSuperview()
+    }
+}
+
+final class SecondViewController: UIViewController, PowerOffShowable {
     
     var moreInfo = ""
     
@@ -67,7 +104,9 @@ final class SecondViewController: UIViewController {
     private func setScrollView() {
         scrollImageView.delegate = self
         scrollImageView.minimumZoomScale = 1.0
-        scrollImageView.maximumZoomScale = 6.0
+        scrollImageView.maximumZoomScale = 7.0
+        scrollImageView.showsHorizontalScrollIndicator = false
+        scrollImageView.showsVerticalScrollIndicator = false 
         scrollImageView.zoomScale = 1.0
         let gesture = UITapGestureRecognizer(target: self, action: #selector(tapTwice))
         gesture.numberOfTapsRequired = 2
@@ -89,7 +128,7 @@ final class SecondViewController: UIViewController {
             } else { // zoom out
                 scrollImageView.zoom(to: zoomRectForScale(scale: scrollImageView.maximumZoomScale, center: gesture.location(in: newsImage)), animated: true)
             }
-            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            VibrateManager.shared.makeLoadingResultVibration()
         }
     }
     
@@ -114,18 +153,19 @@ final class SecondViewController: UIViewController {
         }
         
         if topicLabel.text == Errors.topicLabelNoInfo.rawValue {
-            UINotificationFeedbackGenerator().notificationOccurred(.warning)
+            VibrateManager.shared.makeWarningVibration()
             UIView.animate(withDuration: 1.0,
                            delay: 0,
                            usingSpringWithDamping: 0.1,
                            initialSpringVelocity: 0.1,
                            options: .curveLinear,
                            animations: { [self] in
-                moreInfoButton.setShadow(configureBorder: true)
+                moreInfoButton.configureShadow(configureBorder: true)
                 view.layoutIfNeeded()
             })
             stopAnimatingGhostLoadingViewAndHide()
-            showPowerOffImage()
+            showPowerOffImage(insideView: newsImage)
+            self.view.layoutIfNeeded()
         }
     }
     
@@ -133,26 +173,6 @@ final class SecondViewController: UIViewController {
         ghostNewsView.isHidden.toggle()
         ghostNewsViewBG.isHidden.toggle()
         ghostNewsView.animateGradient()
-    }
-    
-    private func showPowerOffImage() {
-        let powerOffImage = UIImageView(image: UIImage(systemName: "power.dotted"))
-        powerOffImage.tintColor = Colors.valueForButtonColor
-        powerOffImage.frame.size = CGSize(width: 50, height: 50)
-        powerOffImage.center = self.newsImage.center
-        powerOffImage.alpha = 0
-        self.newsImage.addSubview(powerOffImage)
-        
-        UIView.animate(withDuration: 1.0,
-                       delay: 0,
-                       usingSpringWithDamping: 0.1,
-                       initialSpringVelocity: 0.1,
-                       options: .curveLinear,
-                       animations: { [self] in
-            powerOffImage.alpha = 1
-            powerOffImage.setShadow(configureBorder: false)
-            self.view.layoutIfNeeded()
-        })
     }
     
     private func stopAnimatingGhostLoadingViewAndHide() {

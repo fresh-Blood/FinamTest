@@ -14,7 +14,7 @@ struct Colors {
     
     static var valueForButtonColor: UIColor {
         let color: UIColor = UITraitCollection.current.userInterfaceStyle == .dark ? .systemGreen : .systemCyan
-        return (UIColor(named: "valueForButtonColor") ?? color).withAlphaComponent(0.5)
+        return (UIColor(named: "valueForButtonColor") ?? color)
     }
 
     static var valueForGradientAnimation: UIColor {
