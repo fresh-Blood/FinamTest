@@ -73,13 +73,10 @@ final class MyTableViewCell: UITableViewCell {
             isActionsVCPresented.toggle()
             VibrateManager.shared.makeLoadingResultVibration()
             let newsTopicInfo = "🔥 \(titleLabel.text ?? "") 🤖 \n\(DeveloperInfo.shareInfo.rawValue)"
-            let shareData = [newsTopicInfo] as! Any
-            let activityVC = UIActivityViewController(activityItems: shareData as! [Any], applicationActivities: nil)
-            DispatchQueue.main.async { [weak self] in
-                self?.topVC?.present(activityVC, animated: true, completion: { [weak self] in
-                    self?.isActionsVCPresented.toggle()
-                })
-            }
+            let activityVC = UIActivityViewController(activityItems: [newsTopicInfo], applicationActivities: nil)
+            rootVC?.present(activityVC, animated: true, completion: { [weak self] in
+                self?.isActionsVCPresented.toggle()
+            })
         } else {
             animateContentViewLayer(with: .finish)
         }
@@ -136,7 +133,7 @@ final class MyTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    var topVC: UIViewController? {
-        UIApplication.shared.keyWindow?.rootViewController
+    private var rootVC: UIViewController? {
+        contentView.window?.windowScene?.keyWindow?.rootViewController
     }
 }
