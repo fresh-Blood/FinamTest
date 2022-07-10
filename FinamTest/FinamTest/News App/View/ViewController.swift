@@ -91,11 +91,11 @@ final class ViewController: UIViewController, UserView {
         configureRefreshControl()
         configureNavigationBar()
         setupUI()
-        showOnBoardingMessageIfNeeded()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        showOnBoardingMessageIfNeeded()
         leftBarButtonItem.isHidden = false
         rightBarButtonItem.isHidden = false
         guard let newsArray = internetService?.newsArray else { return }
@@ -122,7 +122,7 @@ final class ViewController: UIViewController, UserView {
             let alertVC = UIAlertController(title: Updates.title.rawValue,
                                             message: Updates.whatsNew.rawValue,
                                             preferredStyle: .actionSheet)
-            
+            alertVC.prepairForIPad(withVCView: view, withVC: self)
             alertVC.addAction(UIAlertAction(title: Updates.ok.rawValue,
                                             style: .cancel, handler: { _ in
                 alertVC.dismiss(animated: true, completion: nil)

@@ -74,6 +74,7 @@ final class MyTableViewCell: UITableViewCell {
             VibrateManager.shared.makeLoadingResultVibration()
             let newsTopicInfo = "🔥 \(titleLabel.text ?? "") 🤖 \n\(DeveloperInfo.shareInfo.rawValue)"
             let activityVC = UIActivityViewController(activityItems: [newsTopicInfo], applicationActivities: nil)
+            activityVC.prepairForIPad(withVCView: contentView, withVC: rootVC)
             rootVC?.present(activityVC, animated: true, completion: { [weak self] in
                 self?.isActionsVCPresented.toggle()
             })

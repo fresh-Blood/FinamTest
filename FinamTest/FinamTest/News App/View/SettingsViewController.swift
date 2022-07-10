@@ -69,6 +69,7 @@ final class SettingsViewController: UIViewController {
                 alertVC.dismiss(animated: true, completion: nil)
                 sender.setOn(!sender.isOn, animated: true)
             }))
+            alertVC.prepairForIPad(withVCView: view, withVC: self)
             present(alertVC, animated: true, completion: nil)
         }
     }

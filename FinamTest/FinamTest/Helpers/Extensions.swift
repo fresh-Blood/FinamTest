@@ -123,3 +123,11 @@ extension Bundle {
         return self.infoDictionary?["CFBundleVersion"] as? String
     }
 }
+
+extension UIViewController {
+    func prepairForIPad(withVCView: UIView?, withVC: UIViewController?) {
+        self.popoverPresentationController?.sourceView = withVCView
+        self.popoverPresentationController?.sourceRect = CGRect(origin: withVCView?.center ?? .zero, size: .zero)
+        self.popoverPresentationController?.barButtonItem = withVC?.navigationItem.backBarButtonItem
+    }
+}
