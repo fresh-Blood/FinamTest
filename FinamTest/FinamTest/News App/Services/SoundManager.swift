@@ -28,7 +28,6 @@ struct SoundManager {
         } catch {
             print("Error in playing sound...🙂")
         }
-                
     }
 }
 

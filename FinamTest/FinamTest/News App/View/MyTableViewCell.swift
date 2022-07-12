@@ -87,15 +87,18 @@ final class MyTableViewCell: UITableViewCell {
     private func animateContentViewLayer(with status: LayerAnimationStatus) {
         UIView.animate(withDuration: 0.2,
                        delay: .zero,
-                       options: .curveEaseIn,
+                       usingSpringWithDamping: 1,
+                       initialSpringVelocity: .zero,
+                       options: .curveEaseInOut,
                        animations: {
             if status == .start {
                 self.bgView.configureShadow(configureBorder: true)
                 self.bgView.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
-            } else if status == .finish {
-                self.bgView.configureShadow(with: .removed, configureBorder: false)
-                self.bgView.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
-            }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: { [weak self] in
+                    self?.bgView.transform = .identity
+                    self?.bgView.configureShadow(with: .removed, configureBorder: false)
+                })
+            } 
         })
     }
     

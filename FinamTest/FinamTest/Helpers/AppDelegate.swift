@@ -1,5 +1,6 @@
 import UIKit
 import CoreData
+import AVKit
 
 @available(iOS 15.0, *)
 @main
@@ -7,6 +8,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         SoundManager.shared.player.prepareToPlay()
+        try? AVAudioSession.sharedInstance().setCategory(.playback, options: .mixWithOthers)
         return true
     }
     
