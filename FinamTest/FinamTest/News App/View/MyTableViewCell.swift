@@ -93,7 +93,7 @@ final class MyTableViewCell: UITableViewCell {
                            options: .curveEaseInOut,
                            animations: {
                 self.bgView.configureShadow(configureBorder: true)
-                self.bgView.transform = CGAffineTransform(scaleX: 0.98, y: 0.98)
+                self.bgView.transform = CGAffineTransform(scaleX: 0.97, y: 0.97)
             }, completion: { finished in
                 if finished {
                     UIView.animate(withDuration: 0.2,
