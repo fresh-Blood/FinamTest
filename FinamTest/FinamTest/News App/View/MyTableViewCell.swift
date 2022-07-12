@@ -86,17 +86,17 @@ final class MyTableViewCell: UITableViewCell {
     // MARK: BGView layer animation
     private func animateContentViewLayer(with status: LayerAnimationStatus) {
         if status == .start {
-            UIView.animate(withDuration: 0.3,
+            UIView.animate(withDuration: 0.2,
                            delay: .zero,
                            usingSpringWithDamping: 1,
                            initialSpringVelocity: .zero,
                            options: .curveEaseInOut,
                            animations: {
                 self.bgView.configureShadow(configureBorder: true)
-                self.bgView.transform = CGAffineTransform(scaleX: 0.96, y: 0.96)
+                self.bgView.transform = CGAffineTransform(scaleX: 0.98, y: 0.98)
             }, completion: { finished in
                 if finished {
-                    UIView.animate(withDuration: 0.3,
+                    UIView.animate(withDuration: 0.2,
                                    delay: .zero,
                                    animations: {
                         self.bgView.transform = .identity
