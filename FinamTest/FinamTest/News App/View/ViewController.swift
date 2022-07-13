@@ -447,9 +447,8 @@ extension ViewController: UISearchBarDelegate {
 }
 
 extension ViewController: CellDelegate {
-    func sendDetailsForPresenting(vc: UIActivityViewController, contentView: UIView) {
-        vc.prepairForIPad(withVCView: contentView, withVC: self)
-        // Bad idea, but for some reason close button doesn't work, so i made my own =)
+    
+    private func injectCloseButtonTo(vc: UIViewController) {
         let closeButton = UIButton()
         closeButton.translatesAutoresizingMaskIntoConstraints = false
         closeButton.addTarget(self, action: #selector(close),
@@ -464,6 +463,12 @@ extension ViewController: CellDelegate {
             closeButton.widthAnchor.constraint(equalToConstant: closeButtonSize),
             closeButton.heightAnchor.constraint(equalToConstant: closeButtonSize)
         ])
+    }
+    
+    func sendDetailsForPresenting(vc: UIActivityViewController, contentView: UIView) {
+        vc.prepairForIPad(withVCView: contentView, withVC: self)
+        // Bad idea, but for some reason close button doesn't work, so i made my own =)
+        injectCloseButtonTo(vc: vc)
         present(vc, animated: true, completion: nil)
     }
     
