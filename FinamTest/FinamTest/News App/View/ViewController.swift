@@ -322,6 +322,7 @@ extension ViewController : UITableViewDelegate, UITableViewDataSource {
         cell.titleLabel.text = model?.title
         cell.newsDate.text = model?.publishedAt?.toReadableDate()
         cell.newsSource.text = model?.source?.name
+        cell.cellDelegate = self
         return cell
     }
     
@@ -442,5 +443,12 @@ extension ViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         searchBar.text = searchBar.text?.filter{ $0.isLetter && $0 != " " }
+    }
+}
+
+extension ViewController: CellDelegate {
+    func sendDetailsForPresenting(vc: UIActivityViewController, contentView: UIView) {
+        vc.prepairForIPad(withVCView: contentView, withVC: self)
+        present(vc, animated: true, completion: nil)
     }
 }

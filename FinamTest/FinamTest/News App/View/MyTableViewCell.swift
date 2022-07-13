@@ -1,6 +1,12 @@
 import UIKit
 
+protocol CellDelegate {
+    func sendDetailsForPresenting(vc: UIActivityViewController, contentView: UIView)
+}
+
 final class MyTableViewCell: UITableViewCell {
+    
+    var cellDelegate: CellDelegate?
     
     struct Layout {
         let contentInsets: UIEdgeInsets
@@ -9,8 +15,7 @@ final class MyTableViewCell: UITableViewCell {
             Layout(contentInsets: UIEdgeInsets(top: 10, left: 0, bottom: -10, right: 0))
         }
     }
-    
-    private lazy var isActionsVCPresented = false
+
     private lazy var layout: Layout = .default
     
     static let id = "MyTableViewCell"
@@ -68,16 +73,12 @@ final class MyTableViewCell: UITableViewCell {
     }
     
     @objc private func share(with gesture: UILongPressGestureRecognizer) {
-        if gesture.state == .began && !isActionsVCPresented {
+        if gesture.state == .began {
             animateContentViewLayer(with: .start)
-            isActionsVCPresented.toggle()
             VibrateManager.shared.makeLoadingResultVibration()
             let newsTopicInfo = "🔥 \(titleLabel.text ?? "") 🤖 \n\(DeveloperInfo.shareInfo.rawValue)"
             let activityVC = UIActivityViewController(activityItems: [newsTopicInfo], applicationActivities: nil)
-            activityVC.prepairForIPad(withVCView: contentView, withVC: rootVC)
-            rootVC?.present(activityVC, animated: true, completion: { [weak self] in
-                self?.isActionsVCPresented.toggle()
-            })
+            cellDelegate?.sendDetailsForPresenting(vc: activityVC, contentView: contentView)
         } else {
             animateContentViewLayer(with: .finish)
         }
@@ -140,9 +141,5 @@ final class MyTableViewCell: UITableViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    private var rootVC: UIViewController? {
-        contentView.window?.windowScene?.keyWindow?.rootViewController
     }
 }
