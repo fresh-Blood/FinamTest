@@ -449,6 +449,27 @@ extension ViewController: UISearchBarDelegate {
 extension ViewController: CellDelegate {
     func sendDetailsForPresenting(vc: UIActivityViewController, contentView: UIView) {
         vc.prepairForIPad(withVCView: contentView, withVC: self)
+        // Bad idea, but for some reason close button doesn't work, so i made my own =)
+        let closeButton = UIButton()
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+        closeButton.addTarget(self, action: #selector(close),
+                              for: .touchUpInside)
+        closeButton.backgroundColor = .clear
+        let closeButtonSize: CGFloat = 50
+        
+        vc.view.addSubview(closeButton)
+        NSLayoutConstraint.activate([
+            closeButton.topAnchor.constraint(equalTo: vc.view.topAnchor, constant: .zero),
+            closeButton.rightAnchor.constraint(equalTo: vc.view.rightAnchor, constant: .zero),
+            closeButton.widthAnchor.constraint(equalToConstant: closeButtonSize),
+            closeButton.heightAnchor.constraint(equalToConstant: closeButtonSize)
+        ])
         present(vc, animated: true, completion: nil)
+    }
+    
+    @objc private func close() {
+        if let presentingVC = UIApplication.shared.keyWindow?.rootViewController?.presentedViewController {
+            presentingVC.dismiss(animated: true)
+        }
     }
 }
