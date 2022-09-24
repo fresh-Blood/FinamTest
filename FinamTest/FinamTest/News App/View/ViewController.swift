@@ -186,7 +186,7 @@ final class ViewController: UIViewController, UserView {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.backButtonTitle = ""
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: self, action: nil)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gearshape"), style: .plain, target: self, action: nil)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "slider.vertical.3"), style: .plain, target: self, action: nil)
         navigationController?.navigationBar.largeTitleTextAttributes = [
             .font: UIFont.systemFont(ofSize: 30,
                                      weight: .heavy),
