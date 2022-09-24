@@ -68,14 +68,14 @@ final class ViewController: UIViewController, UserView {
     private func makeNewGhostView() -> UIView {
         let name = UIView()
         name.backgroundColor = Colors.valueForGradientAnimation
-        name.layer.cornerRadius = 8
+        name.layer.cornerRadius = 16
         return name
     }
     
     private func makeNewGhostViewBG() -> UIView {
         let name = UIView()
         name.backgroundColor = .systemGray4.withAlphaComponent(0.5)
-        name.layer.cornerRadius = 8
+        name.layer.cornerRadius = 16
         return name
     }
     
@@ -113,12 +113,7 @@ final class ViewController: UIViewController, UserView {
     
     // MARK: Show alert ( onBoarding ) with updates info
     private func showOnBoardingMessageIfNeeded() {
-        defer {
-            // Last version updates info
-            UserDefaults.standard.removeObject(forKey: ProductKeys.currentStatus.rawValue)
-        }
-        // New version updates info
-        guard (UserDefaults.standard.value(forKey: ProductKeys.currentStatus_1_3.rawValue) as? String) != nil else {
+        guard StorageService.shared.getAppVersion(AppVersion.current) != nil else {
             let alertVC = UIAlertController(title: Updates.title.rawValue,
                                             message: Updates.whatsNew.rawValue,
                                             preferredStyle: .actionSheet)
@@ -127,9 +122,8 @@ final class ViewController: UIViewController, UserView {
                                             style: .cancel, handler: { _ in
                 alertVC.dismiss(animated: true, completion: nil)
             }))
-            present(alertVC, animated: true, completion: {
-                UserDefaults.standard.set(ProductKeys.currentStatus_1_3.rawValue,
-                                          forKey: ProductKeys.currentStatus_1_3.rawValue)
+            present(alertVC, animated: true, completion: { 
+                StorageService.shared.saveAppVersion(AppVersion.current)
             })
             return
         }

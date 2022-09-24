@@ -31,8 +31,6 @@ enum ProductKeys: String {
     // MARK: This key is already used in appStore, please, generate new one to avoid errors for my app users, it's free. Because max. number of requests for one product key ( connected to your mail ) is 100 for all users. When this number is reached, we need to wait for the next day and not demo key price is about 50 000 $, which i don't have yet. Thanks.
     case forTestFirst = "8f825354e7354c71829cfb4cb15c4893"
     case forTestSecond = ""
-    case currentStatus = "currentStatus"
-    case currentStatus_1_3 = "currentStatus_1_3"
 }
 
 enum Errors: String {
@@ -72,4 +70,8 @@ enum SettingsKeys: String {
 
 enum Other: String {
     case moreInfo = "Подробнее ಠ_ಠ"
+}
+
+enum AppVersion {
+    static let current = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
 }

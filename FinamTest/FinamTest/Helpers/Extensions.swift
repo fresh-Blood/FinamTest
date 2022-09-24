@@ -118,12 +118,6 @@ extension String {
     }
 }
 
-extension Bundle {
-    var buildVersionNumber: String? {
-        return self.infoDictionary?["CFBundleVersion"] as? String
-    }
-}
-
 extension UIViewController {
     func prepairForIPad(withVCView: UIView?, withVC: UIViewController?) {
         self.popoverPresentationController?.sourceView = withVCView

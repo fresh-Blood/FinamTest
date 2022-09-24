@@ -1,12 +1,12 @@
 import UIKit
 
-protocol CellDelegate {
+protocol CellDelegate: AnyObject {
     func sendDetailsForPresenting(vc: UIActivityViewController, contentView: UIView)
 }
 
 final class MyTableViewCell: UITableViewCell {
     
-    var cellDelegate: CellDelegate?
+    weak var cellDelegate: CellDelegate?
     
     struct Layout {
         let contentInsets: UIEdgeInsets
@@ -22,7 +22,7 @@ final class MyTableViewCell: UITableViewCell {
     
     private lazy var bgView: UIView = {
         let bgView = UIView()
-        bgView.layer.cornerRadius = 8
+        bgView.layer.cornerRadius = 16
         bgView.backgroundColor = .systemGray4.withAlphaComponent(0.5)
         bgView.translatesAutoresizingMaskIntoConstraints = false
         return bgView

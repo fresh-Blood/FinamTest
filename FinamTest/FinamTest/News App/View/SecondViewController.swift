@@ -191,7 +191,7 @@ final class SecondViewController: UIViewController, PowerOffShowable {
         newsImage.backgroundColor = Colors.reversedValueForColor
         moreInfoButton.setTitleColor(Colors.valueForColor, for: .normal)
         
-        let inset: CGFloat = 8
+        let inset: CGFloat = 16
         let insetForLoadingView: CGFloat = 50
         scrollImageView.frame = CGRect(x: view.bounds.minX,
                                        y: view.bounds.minY,
