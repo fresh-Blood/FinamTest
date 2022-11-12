@@ -12,6 +12,10 @@ final class SettingsViewController: UIViewController {
     
     var closeCompletion: (() -> Void)?
     
+    private var currentUserInterfaceStyle: UIUserInterfaceStyle {
+        UIScreen.main.traitCollection.userInterfaceStyle
+    }
+    
     private lazy var layout = Layout.default
     
     private lazy var bgView: UIView = {
@@ -40,7 +44,7 @@ final class SettingsViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .center
         label.text = SettingsKeys.appVerstion.rawValue + " " + AppVersion.current
-        label.textColor = .systemGray4
+        label.textColor = Colors.valueForColor
         label.numberOfLines = .zero
         label.font = .preferredFont(forTextStyle: .caption1)
         label.adjustsFontSizeToFitWidth = true
@@ -113,6 +117,7 @@ final class SettingsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setNavBarPrefersLargeTitles()
+        removeGradientIfNeeded()
     }
     
     private func setNavBarPrefersLargeTitles() {
@@ -136,6 +141,7 @@ final class SettingsViewController: UIViewController {
     private func setupUI() {
         title = SettingsKeys.settings.rawValue
         view.backgroundColor = .systemBackground
+        setGradient()
         let soundStack = getVerticalStack()
         let infoStack = getVerticalStack()
         soundStack.addArrangedSubview(soundsSettingsLabel)
@@ -146,6 +152,7 @@ final class SettingsViewController: UIViewController {
         bgView.addSubview(infoStack)
         view.addSubview(bgView)
         view.addSubview(appVersionLabel)
+        showKittenIfDarkDeviceTheme()
         let width: CGFloat = view.frame.width / 3
         let navBarHeight: CGFloat = 96
         
@@ -169,6 +176,52 @@ final class SettingsViewController: UIViewController {
         ])
     }
     
+    private func showKittenIfDarkDeviceTheme() {
+        guard currentUserInterfaceStyle == .dark else { return }
+        setGradient()
+        let kitten = UIImageView()
+        kitten.image = UIImage.gifImageWithName("kitten")
+        kitten.translatesAutoresizingMaskIntoConstraints = false
+        kitten.backgroundColor = .clear
+        view.insertSubview(kitten, belowSubview: appVersionLabel)
+        NSLayoutConstraint.activate([
+            kitten.leftAnchor.constraint(equalTo: appVersionLabel.rightAnchor, constant: -50),
+            kitten.centerYAnchor.constraint(equalTo: appVersionLabel.centerYAnchor),
+            kitten.widthAnchor.constraint(equalToConstant: 170),
+            kitten.heightAnchor.constraint(equalToConstant: 140)
+        ])
+        DispatchQueue.main.asyncAfter(deadline: .now() + Constants.kittenAnimationTime,
+                                      execute: {
+            UIView.animate(withDuration: 0.3,
+                           delay: .zero,
+                           options: .curveEaseOut,
+                           animations: {
+                kitten.alpha = .zero
+            }, completion: {_ in
+                kitten.removeFromSuperview()
+            })
+        })
+    }
+    
+    private func setGradient() {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.name = "gradientLayer"
+        gradientLayer.frame = view.bounds
+        gradientLayer.colors = [
+            UIColor.systemBackground.cgColor,
+            #colorLiteral(red: 0.0862628296, green: 0.08628197759, blue: 0.08625862747, alpha: 1).cgColor,
+            #colorLiteral(red: 0.0862628296, green: 0.08628197759, blue: 0.08625862747, alpha: 1).cgColor
+        ]
+        view.layer.insertSublayer(gradientLayer, at: .zero)
+    }
+    
+    private func removeGradientIfNeeded() {
+        if currentUserInterfaceStyle != .dark {
+            let gradientLayer = view.layer.sublayers?.first(where: { $0.name == "gradientLayer" })
+            gradientLayer?.removeFromSuperlayer()
+        }
+    }
+    
     // MARK: SetupUser sound settings
     private func setupUserSoundSettings() {
         guard let soundOn = StorageService.shared.getData(for: SettingsKeys.soundSettings.rawValue) else { return }
@@ -177,3 +230,6 @@ final class SettingsViewController: UIViewController {
     }
 }
 
+private enum Constants {
+    static let kittenAnimationTime: Double = 4.5
+}
