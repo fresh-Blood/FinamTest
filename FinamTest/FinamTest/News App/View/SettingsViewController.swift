@@ -97,7 +97,7 @@ final class SettingsViewController: UIViewController {
         return label
     }()
     
-    private func getVerticalStack() -> UIStackView {
+    private func getHorizontalStack() -> UIStackView {
         let stack = UIStackView()
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .horizontal
@@ -137,8 +137,8 @@ final class SettingsViewController: UIViewController {
         title = SettingsKeys.settings.rawValue
         view.backgroundColor = .systemBackground
         setGradient()
-        let soundStack = getVerticalStack()
-        let infoStack = getVerticalStack()
+        let soundStack = getHorizontalStack()
+        let infoStack = getHorizontalStack()
         soundStack.addArrangedSubview(soundsSettingsLabel)
         soundStack.addArrangedSubview(soundSwitcher)
         infoStack.addArrangedSubview(developerInfoLabel)
@@ -149,7 +149,6 @@ final class SettingsViewController: UIViewController {
         view.addSubview(appVersionLabel)
         showKittenIfDarkDeviceTheme()
         let width: CGFloat = view.frame.width / 3
-        let navBarHeight: CGFloat = navigationController?.navigationBar.frame.height ?? .zero
         
         NSLayoutConstraint.activate([
             appVersionLabel.widthAnchor.constraint(equalToConstant: width),
