@@ -62,6 +62,10 @@ enum SoundName: String {
     case jedy2
 }
 
+enum GifName: String {
+    case kitten
+}
+
 enum SettingsKeys: String {
     case soundSettings
     case soundWord = "Звуки"

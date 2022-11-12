@@ -25,10 +25,20 @@ final class ViewController: UIViewController, UserView {
     private lazy var layout: Layout = .default
     var internetService: UserInternetService?
     
-    private lazy var commonTable: UITableView = {
-        let tbl = UITableView()
-        tbl.register(MyTableViewCell.self, forCellReuseIdentifier: MyTableViewCell.id)
-        return tbl
+    private lazy var newsList: UITableView = {
+        let list = UITableView()
+        list.delegate = self
+        list.dataSource = self
+        list.frame = CGRect(x: view.frame.minX + layout.contentInsets.left,
+                                   y: view.frame.minY,
+                                   width: view.frame.width - layout.contentInsets.right*2,
+                                   height: view.frame.height)
+        list.estimatedRowHeight = 44
+        list.rowHeight = UITableView.automaticDimension
+        list.showsVerticalScrollIndicator = false
+        list.separatorStyle = .none
+        list.register(MyTableViewCell.self, forCellReuseIdentifier: MyTableViewCell.id)
+        return list
     }()
     
     private lazy var stackViewForGhostLoadingViews: UIStackView = {
@@ -80,7 +90,7 @@ final class ViewController: UIViewController, UserView {
     }
     
     func reload() {
-        commonTable.reloadData()
+        newsList.reloadData()
     }
     
     // MARK: Life cycle
@@ -183,15 +193,9 @@ final class ViewController: UIViewController, UserView {
     
     private func configureNavigationBar() {
         navigationItem.title = DeveloperInfo.appTitle.rawValue
-        navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.backButtonTitle = ""
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: self, action: nil)
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "slider.vertical.3"), style: .plain, target: self, action: nil)
-        navigationController?.navigationBar.largeTitleTextAttributes = [
-            .font: UIFont.systemFont(ofSize: 30,
-                                     weight: .heavy),
-            .foregroundColor: UIColor.label
-        ]
         navigationController?.navigationBar.backgroundColor = .clear
         navigationController?.navigationBar.tintColor = Colors.valueForColor
     }
@@ -220,24 +224,14 @@ final class ViewController: UIViewController, UserView {
     // MARK: Setup UI
     private func setupUI() {
         view.backgroundColor = .systemBackground
-        commonTable.delegate = self
-        commonTable.dataSource = self
-        commonTable.frame = CGRect(x: view.frame.minX + layout.contentInsets.left,
-                                   y: view.frame.minY,
-                                   width: view.frame.width - layout.contentInsets.right*2,
-                                   height: view.frame.height)
-        commonTable.estimatedRowHeight = 44
-        commonTable.rowHeight = UITableView.automaticDimension
-        commonTable.showsVerticalScrollIndicator = false
-        commonTable.separatorStyle = .none
         
         for _ in 1...6 {
             stackViewForGhostLoadingViews.addArrangedSubview(makeNewGhostView())
             stackViewForGhostLoadingViewsBG.addArrangedSubview(makeNewGhostViewBG())
         }
-        commonTable.addSubview(stackViewForGhostLoadingViewsBG)
-        commonTable.addSubview(stackViewForGhostLoadingViews)
-        view.addSubview(commonTable)
+        newsList.addSubview(stackViewForGhostLoadingViewsBG)
+        newsList.addSubview(stackViewForGhostLoadingViews)
+        view.addSubview(newsList)
         view.addSubview(responseErrorNotificationLabel)
         navigationController?.navigationBar.addSubview(rightBarButtonItem)
         navigationController?.navigationBar.addSubview(leftBarButtonItem)
@@ -249,8 +243,8 @@ final class ViewController: UIViewController, UserView {
                                                    y: 0,
                                                    width: 60,
                                                    height: 50)
-        stackViewForGhostLoadingViews.frame = commonTable.bounds
-        stackViewForGhostLoadingViewsBG.frame = commonTable.bounds
+        stackViewForGhostLoadingViews.frame = newsList.bounds
+        stackViewForGhostLoadingViewsBG.frame = newsList.bounds
         NSLayoutConstraint.activate([
             responseErrorNotificationLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10),
             responseErrorNotificationLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10),
@@ -335,8 +329,8 @@ extension ViewController : UITableViewDelegate, UITableViewDataSource {
 // MARK: Refresh control settings
 extension ViewController {
     func configureRefreshControl () {
-        commonTable.refreshControl = UIRefreshControl()
-        commonTable.refreshControl?.addTarget(self, action:
+        newsList.refreshControl = UIRefreshControl()
+        newsList.refreshControl?.addTarget(self, action:
                                                 #selector(handleRefreshControl),
                                               for: .valueChanged)
     }
@@ -346,7 +340,7 @@ extension ViewController {
         SoundManager.shared.playSound(soundFileName: SoundManager.shared.randomRefreshJedySound)
         internetService?.newsArray.removeAll()
         reload()
-        commonTable.refreshControl?.endRefreshing()
+        newsList.refreshControl?.endRefreshing()
         animateLoading()
         Task {
             try await internetService?.getData(completion: {

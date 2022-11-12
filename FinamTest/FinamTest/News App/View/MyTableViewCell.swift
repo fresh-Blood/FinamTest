@@ -38,7 +38,7 @@ final class MyTableViewCell: UITableViewCell {
     
     let newsSource: UILabel = {
         let lbl = UILabel()
-        lbl.numberOfLines = 0
+        lbl.numberOfLines = 1
         lbl.textAlignment = .center
         lbl.font = .systemFont(ofSize: 17, weight: .light)
         lbl.translatesAutoresizingMaskIntoConstraints = false
@@ -125,21 +125,30 @@ final class MyTableViewCell: UITableViewCell {
             bgView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: layout.contentInsets.right),
             bgView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: layout.contentInsets.bottom),
             
-            titleLabel.topAnchor.constraint(equalTo: bgView.topAnchor, constant: 16),
-            titleLabel.leftAnchor.constraint(equalTo: bgView.leftAnchor, constant: 16),
-            titleLabel.rightAnchor.constraint(equalTo: bgView.rightAnchor, constant: -16),
+            titleLabel.topAnchor.constraint(equalTo: bgView.topAnchor, constant: Constants.plus16),
+            titleLabel.leftAnchor.constraint(equalTo: bgView.leftAnchor, constant: Constants.plus16),
+            titleLabel.rightAnchor.constraint(equalTo: bgView.rightAnchor, constant: Constants.minus16),
             
-            newsDate.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 30),
-            newsDate.bottomAnchor.constraint(equalTo: bgView.bottomAnchor, constant: -16),
-            newsDate.leftAnchor.constraint(equalTo: bgView.leftAnchor, constant: 16),
+            newsDate.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: Constants.plus30),
+            newsDate.bottomAnchor.constraint(equalTo: bgView.bottomAnchor, constant: Constants.minus16),
+            newsDate.leftAnchor.constraint(equalTo: bgView.leftAnchor, constant: Constants.plus16),
             
-            newsSource.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 30),
-            newsSource.rightAnchor.constraint(equalTo: bgView.rightAnchor, constant: -16),
-            newsSource.bottomAnchor.constraint(equalTo: bgView.bottomAnchor, constant: -16)
+            newsSource.leftAnchor.constraint(equalTo: newsDate.rightAnchor, constant: Constants.plus16),
+            newsSource.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: Constants.plus30),
+            newsSource.rightAnchor.constraint(equalTo: bgView.rightAnchor, constant: Constants.minus16),
+            newsSource.bottomAnchor.constraint(equalTo: bgView.bottomAnchor, constant: Constants.minus16)
         ])
+        newsDate.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        newsSource.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
+
+private enum Constants {
+    static let plus30: CGFloat = 30
+    static let plus16: CGFloat = 16
+    static let minus16: CGFloat = -16
 }

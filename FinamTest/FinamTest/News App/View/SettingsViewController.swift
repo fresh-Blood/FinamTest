@@ -6,7 +6,7 @@ final class SettingsViewController: UIViewController {
         let contentInsets: UIEdgeInsets
         
         static var `default`: Layout {
-            Layout(contentInsets: UIEdgeInsets(top: 40, left: 16, bottom: -40, right: -16))
+            Layout(contentInsets: UIEdgeInsets(top: 16, left: 16, bottom: -16, right: -16))
         }
     }
     
@@ -32,7 +32,7 @@ final class SettingsViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .natural
         label.text = SettingsKeys.soundWord.rawValue
-        label.numberOfLines = 0
+        label.numberOfLines = .zero
         label.font = .systemFont(ofSize: 18, weight: .medium)
         label.adjustsFontSizeToFitWidth = true
         return label
@@ -91,7 +91,7 @@ final class SettingsViewController: UIViewController {
         label.text = SettingsKeys.info.rawValue
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .natural
-        label.numberOfLines = 0
+        label.numberOfLines = .zero
         label.font = .systemFont(ofSize: 18, weight: .medium)
         label.adjustsFontSizeToFitWidth = true
         return label
@@ -103,6 +103,7 @@ final class SettingsViewController: UIViewController {
         stack.axis = .horizontal
         stack.alignment = .center
         stack.distribution = .equalCentering
+        stack.isUserInteractionEnabled = true
         return stack
     }
 
@@ -111,17 +112,11 @@ final class SettingsViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         setupUserSoundSettings()
-        setNavBarPrefersLargeTitles()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setNavBarPrefersLargeTitles()
         removeGradientIfNeeded()
-    }
-    
-    private func setNavBarPrefersLargeTitles() {
-        navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -154,25 +149,26 @@ final class SettingsViewController: UIViewController {
         view.addSubview(appVersionLabel)
         showKittenIfDarkDeviceTheme()
         let width: CGFloat = view.frame.width / 3
-        let navBarHeight: CGFloat = 96
+        let navBarHeight: CGFloat = navigationController?.navigationBar.frame.height ?? .zero
         
         NSLayoutConstraint.activate([
             appVersionLabel.widthAnchor.constraint(equalToConstant: width),
             appVersionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            appVersionLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: layout.contentInsets.bottom),
+            appVersionLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40),
             
-            bgView.topAnchor.constraint(equalTo: view.topAnchor, constant: layout.contentInsets.top + view.safeAreaInsets.top + navBarHeight + layout.contentInsets.left),
+            bgView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
+                                        constant: 10),
             bgView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: layout.contentInsets.left),
             bgView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: layout.contentInsets.right),
 
-            soundStack.topAnchor.constraint(equalTo: bgView.topAnchor, constant: 16),
-            soundStack.leftAnchor.constraint(equalTo: bgView.leftAnchor, constant: 16),
-            soundStack.rightAnchor.constraint(equalTo: bgView.rightAnchor, constant: -16),
+            soundStack.topAnchor.constraint(equalTo: bgView.topAnchor, constant: layout.contentInsets.top),
+            soundStack.leftAnchor.constraint(equalTo: bgView.leftAnchor, constant: layout.contentInsets.left),
+            soundStack.rightAnchor.constraint(equalTo: bgView.rightAnchor, constant: layout.contentInsets.bottom),
             
-            infoStack.topAnchor.constraint(equalTo: soundStack.bottomAnchor, constant: 16),
-            infoStack.leftAnchor.constraint(equalTo: bgView.leftAnchor, constant: 16),
-            infoStack.rightAnchor.constraint(equalTo: bgView.rightAnchor, constant: -16),
-            infoStack.bottomAnchor.constraint(equalTo: bgView.bottomAnchor, constant: -16)
+            infoStack.topAnchor.constraint(equalTo: soundStack.bottomAnchor, constant: layout.contentInsets.top),
+            infoStack.leftAnchor.constraint(equalTo: bgView.leftAnchor, constant: layout.contentInsets.left),
+            infoStack.rightAnchor.constraint(equalTo: bgView.rightAnchor, constant: layout.contentInsets.right),
+            infoStack.bottomAnchor.constraint(equalTo: bgView.bottomAnchor, constant: layout.contentInsets.bottom)
         ])
     }
     
@@ -180,19 +176,19 @@ final class SettingsViewController: UIViewController {
         guard currentUserInterfaceStyle == .dark else { return }
         setGradient()
         let kitten = UIImageView()
-        kitten.image = UIImage.gifImageWithName("kitten")
+        kitten.image = UIImage.gifImageWithName(GifName.kitten.rawValue)
         kitten.translatesAutoresizingMaskIntoConstraints = false
         kitten.backgroundColor = .clear
         view.insertSubview(kitten, belowSubview: appVersionLabel)
         NSLayoutConstraint.activate([
-            kitten.leftAnchor.constraint(equalTo: appVersionLabel.rightAnchor, constant: -50),
+            kitten.leftAnchor.constraint(equalTo: appVersionLabel.rightAnchor, constant: Constants.kittenLeftInsetValue),
             kitten.centerYAnchor.constraint(equalTo: appVersionLabel.centerYAnchor),
-            kitten.widthAnchor.constraint(equalToConstant: 170),
-            kitten.heightAnchor.constraint(equalToConstant: 140)
+            kitten.widthAnchor.constraint(equalToConstant: Constants.kittenSize.width),
+            kitten.heightAnchor.constraint(equalToConstant: Constants.kittenSize.height)
         ])
-        DispatchQueue.main.asyncAfter(deadline: .now() + Constants.kittenAnimationTime,
+        DispatchQueue.main.asyncAfter(deadline: .now() + Constants.kittenAnimationDuration,
                                       execute: {
-            UIView.animate(withDuration: 0.3,
+            UIView.animate(withDuration: Constants.kittenHidingDuration,
                            delay: .zero,
                            options: .curveEaseOut,
                            animations: {
@@ -231,5 +227,9 @@ final class SettingsViewController: UIViewController {
 }
 
 private enum Constants {
-    static let kittenAnimationTime: Double = 4.5
+    static let kittenAnimationDuration: Double = 4.5
+    static let kittenHidingDuration: Double = 0.3
+    static let kittenSize: CGSize = CGSize(width: 190, height: 140)
+    static let kittenLeftInsetValue: CGFloat = -70
+    static let navBarHeight: CGFloat = 96
 }
