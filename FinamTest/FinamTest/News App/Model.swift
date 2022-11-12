@@ -65,7 +65,9 @@ enum SoundName: String {
 enum SettingsKeys: String {
     case soundSettings
     case soundWord = "Звуки"
+    case appVerstion = "Версия"
     case info = "Инфо"
+    case settings = "Настройки"
 }
 
 enum Other: String {
@@ -73,5 +75,5 @@ enum Other: String {
 }
 
 enum AppVersion {
-    static let current = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+    static let current = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Error in recognizing appVersion"
 }

@@ -68,7 +68,7 @@ extension UIView {
             self.layer.borderColor = Colors.valueForButtonColor.cgColor
             self.layer.borderWidth = 3
         } 
-        self.layer.cornerRadius = 8
+        self.layer.cornerRadius = 16
         self.layer.shadowOffset = CGSize(width: 2, height: 3)
         self.layer.shadowOpacity = 1.0
         self.layer.shadowColor = Colors.valueForButtonColor.withAlphaComponent(withAlpha ?? 1.0).cgColor

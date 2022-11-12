@@ -58,7 +58,7 @@ final class SecondViewController: UIViewController, PowerOffShowable {
     private lazy var ghostNewsViewBG: UIView = {
         let loadingGhostView = UIView()
         loadingGhostView.backgroundColor = .systemGray4.withAlphaComponent(0.5)
-        loadingGhostView.layer.cornerRadius = 8
+        loadingGhostView.layer.cornerRadius = 16
         loadingGhostView.isHidden = true
         return loadingGhostView
     }()
@@ -66,7 +66,7 @@ final class SecondViewController: UIViewController, PowerOffShowable {
     private lazy var ghostNewsView: UIView = {
         let loadingGhostView = UIView()
         loadingGhostView.backgroundColor = Colors.valueForGradientAnimation
-        loadingGhostView.layer.cornerRadius = 8
+        loadingGhostView.layer.cornerRadius = 16
         loadingGhostView.isHidden = true
         return loadingGhostView
     }()

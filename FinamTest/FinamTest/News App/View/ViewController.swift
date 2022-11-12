@@ -54,7 +54,7 @@ final class ViewController: UIViewController, UserView {
     var responseErrorNotificationLabel: UILabel = {
         let responseErrorView = UILabel()
         responseErrorView.backgroundColor = .systemRed
-        responseErrorView.layer.cornerRadius = 8
+        responseErrorView.layer.cornerRadius = 16
         responseErrorView.translatesAutoresizingMaskIntoConstraints = false
         responseErrorView.textAlignment = .center
         responseErrorView.numberOfLines = 0
@@ -197,16 +197,15 @@ final class ViewController: UIViewController, UserView {
     }
     
     @objc private func showSettings() {
+        // Тк дефолтные кнопки нав бара не нажимались по какой то причине, я сделал костыли в виде прозрачных кнопок, у которых есть обработка нажатий. И теперь тут чтобы 2 раза не открывался vc настроек, сделал костыльный флаг. (Непонятно почему отрабатывает дважды нажатие тут, как и непонятно почему при нажатии _поделиться_ открывается контроллер на котором в верхнем правом углу есть кнопка _закрыть_ и она тоже не нажимается( , поэтому пришлось сделать костыль по инжекту кнопки прозрачной с закрытием его ниже)
         isSettingsVCPresenting.toggle()
         if isSettingsVCPresenting {
             let settingsVC = SettingsViewController()
-            settingsVC.modalPresentationStyle = .overCurrentContext
-            settingsVC.modalTransitionStyle = .crossDissolve
             settingsVC.closeCompletion = { [weak self] in
                 self?.isSettingsVCPresenting.toggle()
             }
             VibrateManager.shared.makeLoadingResultVibration()
-            present(settingsVC, animated: true, completion: nil)
+            navigationController?.pushViewController(settingsVC, animated: true)
         }
     }
     
@@ -462,6 +461,7 @@ extension ViewController: CellDelegate {
     func sendDetailsForPresenting(vc: UIActivityViewController, contentView: UIView) {
         vc.prepairForIPad(withVCView: contentView, withVC: self)
         // Bad idea, but for some reason close button doesn't work, so i made my own =)
+        // Костыль на закрытие контроллера _Поделиться_ 
         injectCloseButtonTo(vc: vc)
         present(vc, animated: true, completion: nil)
     }

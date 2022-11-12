@@ -125,17 +125,17 @@ final class MyTableViewCell: UITableViewCell {
             bgView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: layout.contentInsets.right),
             bgView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: layout.contentInsets.bottom),
             
-            titleLabel.topAnchor.constraint(equalTo: bgView.topAnchor, constant: 5),
-            titleLabel.leftAnchor.constraint(equalTo: bgView.leftAnchor, constant: 10),
-            titleLabel.rightAnchor.constraint(equalTo: bgView.rightAnchor, constant: -5),
+            titleLabel.topAnchor.constraint(equalTo: bgView.topAnchor, constant: 16),
+            titleLabel.leftAnchor.constraint(equalTo: bgView.leftAnchor, constant: 16),
+            titleLabel.rightAnchor.constraint(equalTo: bgView.rightAnchor, constant: -16),
             
             newsDate.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 30),
-            newsDate.bottomAnchor.constraint(equalTo: bgView.bottomAnchor, constant: -10),
-            newsDate.leftAnchor.constraint(equalTo: bgView.leftAnchor, constant: 10),
+            newsDate.bottomAnchor.constraint(equalTo: bgView.bottomAnchor, constant: -16),
+            newsDate.leftAnchor.constraint(equalTo: bgView.leftAnchor, constant: 16),
             
             newsSource.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 30),
-            newsSource.rightAnchor.constraint(equalTo: bgView.rightAnchor, constant: -10),
-            newsSource.bottomAnchor.constraint(equalTo: bgView.bottomAnchor, constant: -10)
+            newsSource.rightAnchor.constraint(equalTo: bgView.rightAnchor, constant: -16),
+            newsSource.bottomAnchor.constraint(equalTo: bgView.bottomAnchor, constant: -16)
         ])
     }
     
