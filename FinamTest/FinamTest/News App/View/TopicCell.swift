@@ -4,7 +4,7 @@ protocol CellDelegate: AnyObject {
     func sendDetailsForPresenting(vc: UIActivityViewController, contentView: UIView)
 }
 
-final class MyTableViewCell: UITableViewCell {
+final class TopicCell: UITableViewCell {
     
     weak var cellDelegate: CellDelegate?
     

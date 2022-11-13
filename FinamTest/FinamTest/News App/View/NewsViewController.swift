@@ -10,7 +10,7 @@ protocol UserView {
     func animateGoodConnection()
 }
 
-final class ViewController: UIViewController, UserView {
+final class NewsViewController: UIViewController, UserView {
     private lazy var isInitialLoading = true
     private lazy var isSettingsVCPresenting = false
     
@@ -37,7 +37,7 @@ final class ViewController: UIViewController, UserView {
         list.rowHeight = UITableView.automaticDimension
         list.showsVerticalScrollIndicator = false
         list.separatorStyle = .none
-        list.register(MyTableViewCell.self, forCellReuseIdentifier: MyTableViewCell.id)
+        list.register(TopicCell.self, forCellReuseIdentifier: TopicCell.id)
         return list
     }()
     
@@ -297,14 +297,14 @@ final class ViewController: UIViewController, UserView {
     }
 }
 // MARK: TableView delegate & dataSource methods
-extension ViewController : UITableViewDelegate, UITableViewDataSource {
+extension NewsViewController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return internetService?.newsArray.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: MyTableViewCell.id, for: indexPath) as! MyTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: TopicCell.id, for: indexPath) as! TopicCell
         let model = internetService?.newsArray[indexPath.row]
         cell.titleLabel.text = model?.title
         cell.newsDate.text = model?.publishedAt?.toReadableDate()
@@ -315,7 +315,8 @@ extension ViewController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let topic = internetService?.newsArray[indexPath.row]
-        let secondVC = SecondViewController()
+        let secondVC = SelectedTopicViewController()
+        secondVC.title = topic?.title
         secondVC.topicLabel.text = topic?.description ?? Errors.topicLabelNoInfo.rawValue
         secondVC.newsImage.downLoadImage(from: topic?.urlToImage ?? Errors.error.rawValue, completion: {
             secondVC.newsImageLoaded = true
@@ -327,7 +328,7 @@ extension ViewController : UITableViewDelegate, UITableViewDataSource {
 }
 
 // MARK: Refresh control settings
-extension ViewController {
+extension NewsViewController {
     func configureRefreshControl () {
         newsList.refreshControl = UIRefreshControl()
         newsList.refreshControl?.addTarget(self, action:
@@ -353,7 +354,7 @@ extension ViewController {
 }
 
 // MARK: Animate errors
-extension ViewController: PowerOffShowable {
+extension NewsViewController: PowerOffShowable {
     func animateResponseError(with error: String) {
         DispatchQueue.main.async { [weak self] in
             if let currentView = self?.view {
@@ -400,7 +401,7 @@ extension ViewController: PowerOffShowable {
 }
 
 // MARK: Search bar delegate settings
-extension ViewController: UISearchBarDelegate {
+extension NewsViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         internetService?.newsArray.removeAll()
         reload()
@@ -433,7 +434,7 @@ extension ViewController: UISearchBarDelegate {
     }
 }
 
-extension ViewController: CellDelegate {
+extension NewsViewController: CellDelegate {
     
     private func injectCloseButtonTo(vc: UIViewController) {
         let closeButton = UIButton()

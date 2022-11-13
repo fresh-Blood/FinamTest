@@ -37,7 +37,7 @@ extension PowerOffShowable {
     }
 }
 
-final class SecondViewController: UIViewController, PowerOffShowable {
+final class SelectedTopicViewController: UIViewController, PowerOffShowable {
     
     var moreInfo = ""
     
@@ -219,7 +219,7 @@ final class SecondViewController: UIViewController, PowerOffShowable {
 }
 
 // MARK: ScrollView Delegate
-extension SecondViewController: UIScrollViewDelegate {
+extension SelectedTopicViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         newsImage
     }

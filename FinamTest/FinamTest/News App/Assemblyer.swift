@@ -12,7 +12,7 @@ final class UserAssemblyer: Assemblyer {
     var entry: EntryPoint?
     static func start() -> Assemblyer {
         let assemblyer = UserAssemblyer()
-        let view = ViewController()
+        let view = NewsViewController()
         let internetService = InternetService()
         view.internetService = internetService
         internetService.view = view
