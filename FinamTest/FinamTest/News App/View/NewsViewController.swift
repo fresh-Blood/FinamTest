@@ -209,10 +209,7 @@ final class NewsViewController: UIViewController, UserView {
                 self?.isSettingsVCPresenting.toggle()
             }
             VibrateManager.shared.makeLoadingResultVibration()
-//            navigationController?.pushViewController(settingsVC, animated: true)
-            settingsVC.modalPresentationStyle = .popover
-            settingsVC.modalTransitionStyle = .coverVertical
-            present(settingsVC, animated: true)
+            navigationController?.pushViewController(settingsVC, animated: true)
         }
     }
     

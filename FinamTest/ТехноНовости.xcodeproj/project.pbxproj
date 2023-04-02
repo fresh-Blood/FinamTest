@@ -29,6 +29,9 @@
 		84FA0F8426C6350D00FB1C34 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84FA0F8326C6350D00FB1C34 /* Assets.xcassets */; };
 		84FA0F8F26C6362600FB1C34 /* TopicCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FA0F8E26C6362600FB1C34 /* TopicCell.swift */; };
 		84FA0FA326C642C000FB1C34 /* SelectedTopicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FA0FA226C642C000FB1C34 /* SelectedTopicViewController.swift */; };
+		C411227829D9A9CC0089F601 /* SettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C411227729D9A9CC0089F601 /* SettingsCell.swift */; };
+		C411227A29D9AA460089F601 /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C411227929D9AA460089F601 /* SettingsModel.swift */; };
+		C411227F29D9B19A0089F601 /* SettingsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C411227E29D9B19A0089F601 /* SettingsService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -69,6 +72,9 @@
 		84FA0F8826C6350D00FB1C34 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84FA0F8E26C6362600FB1C34 /* TopicCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicCell.swift; sourceTree = "<group>"; };
 		84FA0FA226C642C000FB1C34 /* SelectedTopicViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedTopicViewController.swift; sourceTree = "<group>"; };
+		C411227729D9A9CC0089F601 /* SettingsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCell.swift; sourceTree = "<group>"; };
+		C411227929D9AA460089F601 /* SettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
+		C411227E29D9B19A0089F601 /* SettingsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +94,7 @@
 				84FA0F7B26C6350900FB1C34 /* NewsViewController.swift */,
 				84FA0FA226C642C000FB1C34 /* SelectedTopicViewController.swift */,
 				846FC68B287987B50045FCB2 /* SettingsViewController.swift */,
+				C411227729D9A9CC0089F601 /* SettingsCell.swift */,
 				84FA0F8E26C6362600FB1C34 /* TopicCell.swift */,
 				84BF945D281DAF3A008B9F57 /* LaunchScreen.storyboard */,
 			);
@@ -124,6 +131,7 @@
 			children = (
 				849674B52774BE2700504D9D /* InternetService.swift */,
 				846FC6892879748D0045FCB2 /* StorageService.swift */,
+				C411227E29D9B19A0089F601 /* SettingsService.swift */,
 				8455A6CD2878E45400B3D575 /* SoundManager.swift */,
 				8455A6CF2878E62A00B3D575 /* VibrateManager.swift */,
 			);
@@ -141,7 +149,7 @@
 		849674B42774BD5600504D9D /* News App */ = {
 			isa = PBXGroup;
 			children = (
-				849674B22774BD4700504D9D /* Model.swift */,
+				C411227B29D9AA630089F601 /* Models */,
 				8446A226281DA29400A95290 /* View */,
 				8455A6D12878E63400B3D575 /* Services */,
 				849674B72774C8F100504D9D /* Assemblyer.swift */,
@@ -182,6 +190,15 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C411227B29D9AA630089F601 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				849674B22774BD4700504D9D /* Model.swift */,
+				C411227929D9AA460089F601 /* SettingsModel.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -260,8 +277,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C411227F29D9B19A0089F601 /* SettingsService.swift in Sources */,
 				849674B32774BD4700504D9D /* Model.swift in Sources */,
 				8446A223281DA20700A95290 /* Colors.swift in Sources */,
+				C411227A29D9AA460089F601 /* SettingsModel.swift in Sources */,
 				8455A6D02878E62A00B3D575 /* VibrateManager.swift in Sources */,
 				84FA0FA326C642C000FB1C34 /* SelectedTopicViewController.swift in Sources */,
 				84FA0F7C26C6350900FB1C34 /* NewsViewController.swift in Sources */,
@@ -274,6 +293,7 @@
 				84FA0F7A26C6350900FB1C34 /* SceneDelegate.swift in Sources */,
 				849674B82774C8F100504D9D /* Assemblyer.swift in Sources */,
 				8446A225281DA24C00A95290 /* Extensions.swift in Sources */,
+				C411227829D9A9CC0089F601 /* SettingsCell.swift in Sources */,
 				849674B62774BE2700504D9D /* InternetService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

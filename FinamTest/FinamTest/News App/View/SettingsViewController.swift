@@ -2,6 +2,8 @@ import UIKit
 
 final class SettingsViewController: UIViewController {
     
+    private let settingsService = SettingsService()
+    
     struct Layout {
         let contentInsets: UIEdgeInsets
         
@@ -18,24 +20,15 @@ final class SettingsViewController: UIViewController {
     
     private lazy var layout = Layout.default
     
-    private lazy var bgView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .systemGray4.withAlphaComponent(0.5)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 16
-        return view
-    }()
-    
-    // MARK: Sound
-    private lazy var soundsSettingsLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .natural
-        label.text = SettingsKeys.soundWord.rawValue
-        label.numberOfLines = .zero
-        label.font = .systemFont(ofSize: 18, weight: .medium)
-        label.adjustsFontSizeToFitWidth = true
-        return label
+    private lazy var settingsList: UITableView = {
+        let settingsList = UITableView()
+        settingsList.backgroundColor = .clear
+        settingsList.translatesAutoresizingMaskIntoConstraints = false
+        settingsList.showsVerticalScrollIndicator = false
+        settingsList.separatorStyle = .none
+        settingsList.isScrollEnabled = false 
+        settingsList.register(SettingsCell.self, forCellReuseIdentifier: SettingsCell.id)
+        return settingsList
     }()
     
     // MARK: AppVersion label
@@ -52,66 +45,12 @@ final class SettingsViewController: UIViewController {
         return label
     }()
     
-    // MARK: Sound Switcher
-    private lazy var soundSwitcher: UISwitch = {
-        let switcher = UISwitch()
-        switcher.addTarget(self, action: #selector(switcherValueDidChange), for: .valueChanged)
-        switcher.translatesAutoresizingMaskIntoConstraints = false
-        return switcher
-    }()
-    
-    @objc private func switcherValueDidChange(sender: UISwitch) {
-        soundSwitcher.setOn(sender.isOn, animated: true)
-        StorageService.shared.saveData(with: sender.isOn, for: SettingsKeys.soundSettings.rawValue)
-    }
-    
-    // MARK: Developer Switcher
-    private lazy var developerInfoSwitcher: UISwitch = {
-        let switcher = UISwitch()
-        switcher.addTarget(self, action: #selector(showDeveloperInfo), for: .valueChanged)
-        switcher.translatesAutoresizingMaskIntoConstraints = false
-        return switcher
-    }()
-    
-    // MARK: Developer info
-    @objc private func showDeveloperInfo(sender: UISwitch) {
-        if sender.isOn {
-            let alertVC = UIAlertController(title: DeveloperInfo.title.rawValue, message: DeveloperInfo.message.rawValue, preferredStyle: .alert)
-            alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in
-                alertVC.dismiss(animated: true, completion: nil)
-                sender.setOn(!sender.isOn, animated: true)
-            }))
-            alertVC.prepairForIPad(withVCView: view, withVC: self)
-            present(alertVC, animated: true, completion: nil)
-        }
-    }
-    
-    private lazy var developerInfoLabel: UILabel = {
-        let label = UILabel()
-        label.text = SettingsKeys.info.rawValue
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .natural
-        label.numberOfLines = .zero
-        label.font = .systemFont(ofSize: 18, weight: .medium)
-        label.adjustsFontSizeToFitWidth = true
-        return label
-    }()
-    
-    private func getHorizontalStack() -> UIStackView {
-        let stack = UIStackView()
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.axis = .horizontal
-        stack.alignment = .center
-        stack.distribution = .equalCentering
-        stack.isUserInteractionEnabled = true
-        return stack
-    }
-
     // MARK: Life - cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
-        setupUserSoundSettings()
+        settingsList.delegate = self
+        settingsList.dataSource = self 
+        setupUI()        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -137,15 +76,7 @@ final class SettingsViewController: UIViewController {
         title = SettingsKeys.settings.rawValue
         view.backgroundColor = .systemBackground
         setGradient()
-        let soundStack = getHorizontalStack()
-        let infoStack = getHorizontalStack()
-        soundStack.addArrangedSubview(soundsSettingsLabel)
-        soundStack.addArrangedSubview(soundSwitcher)
-        infoStack.addArrangedSubview(developerInfoLabel)
-        infoStack.addArrangedSubview(developerInfoSwitcher)
-        bgView.addSubview(soundStack)
-        bgView.addSubview(infoStack)
-        view.addSubview(bgView)
+        view.addSubview(settingsList)
         view.addSubview(appVersionLabel)
         showKittenIfDarkDeviceTheme()
         let width: CGFloat = view.frame.width / 3
@@ -155,19 +86,11 @@ final class SettingsViewController: UIViewController {
             appVersionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             appVersionLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40),
             
-            bgView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
+            settingsList.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
                                         constant: 10),
-            bgView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: layout.contentInsets.left),
-            bgView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: layout.contentInsets.right),
-
-            soundStack.topAnchor.constraint(equalTo: bgView.topAnchor, constant: layout.contentInsets.top),
-            soundStack.leftAnchor.constraint(equalTo: bgView.leftAnchor, constant: layout.contentInsets.left),
-            soundStack.rightAnchor.constraint(equalTo: bgView.rightAnchor, constant: layout.contentInsets.bottom),
-            
-            infoStack.topAnchor.constraint(equalTo: soundStack.bottomAnchor, constant: layout.contentInsets.top),
-            infoStack.leftAnchor.constraint(equalTo: bgView.leftAnchor, constant: layout.contentInsets.left),
-            infoStack.rightAnchor.constraint(equalTo: bgView.rightAnchor, constant: layout.contentInsets.right),
-            infoStack.bottomAnchor.constraint(equalTo: bgView.bottomAnchor, constant: layout.contentInsets.bottom)
+            settingsList.leftAnchor.constraint(equalTo: view.leftAnchor, constant: layout.contentInsets.left),
+            settingsList.rightAnchor.constraint(equalTo: view.rightAnchor, constant: layout.contentInsets.right),
+            settingsList.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
     
@@ -216,12 +139,20 @@ final class SettingsViewController: UIViewController {
             gradientLayer?.removeFromSuperlayer()
         }
     }
+}
+
+extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        settingsService.settingsList.count
+    }
     
-    // MARK: SetupUser sound settings
-    private func setupUserSoundSettings() {
-        guard let soundOn = StorageService.shared.getData(for: SettingsKeys.soundSettings.rawValue) else { return }
-        // SetUp initial state
-        soundSwitcher.setOn(soundOn, animated: true)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = settingsList.dequeueReusableCell(withIdentifier: SettingsCell.id, for: indexPath) as? SettingsCell else {
+            return UITableViewCell(frame: .zero)
+        }
+        let model = settingsService.settingsList[indexPath.row]
+        cell.update(model: model)
+        return cell
     }
 }
 

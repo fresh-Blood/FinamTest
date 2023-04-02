@@ -23,7 +23,7 @@ struct Source : Decodable {
 }
 
 enum URLs: String {
-    case topHeadLinesTechnology = "https://newsapi.org/v2/top-headlines?country=ru&category=technology&pageSize=100&apiKey=8f825354e7354c71829cfb4cb15c4893"
+    case topHeadLinesTechnology = "https://newsapi.org/v2/top-headlines?country=us&category=technology&pageSize=100&apiKey=8f825354e7354c71829cfb4cb15c4893"
     case everythingQWithParameters = "https://newsapi.org/v2/everything?q=apple&pageSize=100&language=ru&apiKey=8f825354e7354c71829cfb4cb15c4893"
 }
 
@@ -67,10 +67,8 @@ enum GifName: String {
 }
 
 enum SettingsKeys: String {
-    case soundSettings
-    case soundWord = "Звуки"
+    case soundSettings = "Звуки"
     case appVerstion = "Версия"
-    case info = "Инфо"
     case settings = "Настройки"
 }
 
