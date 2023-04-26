@@ -127,7 +127,7 @@ final class SettingsViewController: UIViewController {
         gradientLayer.frame = view.bounds
         gradientLayer.colors = [
             UIColor.systemBackground.cgColor,
-            #colorLiteral(red: 0.0862628296, green: 0.08628197759, blue: 0.08625862747, alpha: 1).cgColor,
+            #colorLiteral(red: 0.0689323023, green: 0.01944343746, blue: 0.03194189072, alpha: 1).cgColor,
             #colorLiteral(red: 0.0862628296, green: 0.08628197759, blue: 0.08625862747, alpha: 1).cgColor
         ]
         view.layer.insertSublayer(gradientLayer, at: .zero)
