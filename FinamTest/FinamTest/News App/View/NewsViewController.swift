@@ -25,6 +25,18 @@ final class NewsViewController: UIViewController, UserView {
     private lazy var layout: Layout = .default
     var internetService: UserInternetService?
     
+    private lazy var upButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "chevron.up"), for: .normal)
+        button.layer.cornerRadius = Constants.upButtonCornerRadius
+        button.backgroundColor = .systemGray4.withAlphaComponent(0.5)
+        button.tintColor = Colors.valueForColor
+        button.addTarget(self, action: #selector(upButtonTapped), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.alpha = .zero
+        return button
+    }()
+    
     private lazy var newsList: UITableView = {
         let list = UITableView()
         list.delegate = self
@@ -251,6 +263,14 @@ final class NewsViewController: UIViewController, UserView {
             responseErrorNotificationLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
             responseErrorNotificationLabel.heightAnchor.constraint(equalToConstant: 0)
         ])
+        
+        view.addSubview(upButton)
+        NSLayoutConstraint.activate([
+            upButton.heightAnchor.constraint(equalToConstant: 40),
+            upButton.widthAnchor.constraint(equalToConstant: 40),
+            upButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -35),
+            upButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -35),
+        ])
     }
     
     // MARK: Good connection animations 
@@ -466,4 +486,43 @@ extension NewsViewController: CellDelegate {
             presentingVC.dismiss(animated: true)
         }
     }
+}
+
+extension NewsViewController {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let contentOffset = scrollView.contentOffset.y
+        if contentOffset >= Constants.upButtonContentOffset {
+            UIView.animate(withDuration: Constants.animationDuration,
+                           delay: .zero,
+                           usingSpringWithDamping: 0.5,
+                           initialSpringVelocity: 0.1,
+                           options: .curveEaseInOut,
+                           animations: { [weak self] in
+                self?.upButton.alpha = 1.0
+                self?.upButton.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
+            })
+        } else {
+            UIView.animate(withDuration: Constants.animationDuration,
+                           delay: .zero,
+                           options: .curveEaseInOut,
+                           animations: { [weak self] in
+                self?.upButton.alpha = .zero
+                self?.upButton.transform = .identity
+            })
+        }
+    }
+    
+    @objc
+    private func upButtonTapped() {
+        newsList.scrollToRow(at: IndexPath(row: .zero, section: .zero),
+                             at: .top,
+                             animated: true)
+        VibrateManager.shared.makeSoftResultVibration()
+    }
+}
+
+private enum Constants {
+    static let animationDuration: CGFloat = 0.3
+    static let upButtonContentOffset: CGFloat = 20.0
+    static let upButtonCornerRadius: CGFloat = 20.0
 }

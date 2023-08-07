@@ -18,4 +18,9 @@ struct VibrateManager {
         UINotificationFeedbackGenerator().prepare()
         UINotificationFeedbackGenerator().notificationOccurred(.warning)
     }
+    
+    func makeSoftResultVibration() {
+        UIImpactFeedbackGenerator().prepare()
+        UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+    }
 }
