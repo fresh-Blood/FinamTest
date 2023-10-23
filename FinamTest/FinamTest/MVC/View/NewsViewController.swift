@@ -6,11 +6,11 @@ typealias CompletionForAnimation = ((Bool) -> Void)?
 protocol NewsView {
     var internetService: UserInternetService? { get set }
     func reload()
-    func animateResponseError(with error: String)
-    func animateGoodConnection()
+    func handleResponseFailure(with error: String)
+    func handleResponseSuccess()
 }
 
-final class NewsViewController: UIViewController, NewsView {
+final class NewsViewController: UIViewController {
     struct Layout {
         let contentInsets: UIEdgeInsets
         
@@ -21,6 +21,8 @@ final class NewsViewController: UIViewController, NewsView {
     
     private lazy var layout: Layout = .default
     private lazy var isInitialLoading = true
+    private lazy var skeletonsStackView = makeStackView()
+    private lazy var skeletonsBackgroundViewsStackView = makeStackView()
     
     var internetService: UserInternetService?
     
@@ -41,9 +43,9 @@ final class NewsViewController: UIViewController, NewsView {
         list.delegate = self
         list.dataSource = self
         list.frame = CGRect(x: view.frame.minX + layout.contentInsets.left,
-                                   y: view.frame.minY,
-                                   width: view.frame.width - layout.contentInsets.right*2,
-                                   height: view.frame.height)
+                            y: view.frame.minY,
+                            width: view.frame.width - layout.contentInsets.right*2,
+                            height: view.frame.height)
         list.estimatedRowHeight = 44
         list.rowHeight = UITableView.automaticDimension
         list.showsVerticalScrollIndicator = false
@@ -51,26 +53,6 @@ final class NewsViewController: UIViewController, NewsView {
         list.clipsToBounds = false
         list.register(TopicCell.self, forCellReuseIdentifier: TopicCell.id)
         return list
-    }()
-    
-    private lazy var skeletonsStackView: UIStackView = {
-        let stack = UIStackView()
-        stack.alignment = .fill
-        stack.distribution = .fillEqually
-        stack.axis = .vertical
-        stack.spacing = 16
-        stack.isHidden = true
-        return stack
-    }()
-    
-    private lazy var skeletonsBackgroundViewsStackView: UIStackView = {
-        let stack = UIStackView()
-        stack.alignment = .fill
-        stack.distribution = .fillEqually
-        stack.axis = .vertical
-        stack.spacing = 16
-        stack.isHidden = true
-        return stack
     }()
     
     var responseErrorLabel: UILabel = {
@@ -99,10 +81,6 @@ final class NewsViewController: UIViewController, NewsView {
         name.backgroundColor = .systemGray4.withAlphaComponent(0.5)
         name.layer.cornerRadius = 16
         return name
-    }
-    
-    func reload() {
-        newsList.reloadData()
     }
     
     // MARK: Life cycle
@@ -134,7 +112,7 @@ final class NewsViewController: UIViewController, NewsView {
         }
     }
     
-    // MARK: Show alert ( onBoarding ) with updates info
+    // MARK: OnBoarding
     private func showOnBoardingMessageIfNeeded() {
         guard StorageService.shared.getAppVersion(AppVersion.current) != nil else {
             let alertVC = UIAlertController(title: Updates.title.rawValue,
@@ -145,7 +123,7 @@ final class NewsViewController: UIViewController, NewsView {
                                             style: .cancel, handler: { _ in
                 alertVC.dismiss(animated: true, completion: nil)
             }))
-            present(alertVC, animated: true, completion: { 
+            present(alertVC, animated: true, completion: {
                 StorageService.shared.saveAppVersion(AppVersion.current)
             })
             return
@@ -156,7 +134,7 @@ final class NewsViewController: UIViewController, NewsView {
     private lazy var leftBarButtonItem: UIButton = {
         let btn = UIButton()
         btn.backgroundColor = .clear
-        btn.tag = 1
+        btn.tag = 0
         btn.isHidden = true
         return btn
     }()
@@ -181,7 +159,7 @@ final class NewsViewController: UIViewController, NewsView {
         navigationItem.searchController = searchVC
         searchVC.searchBar.keyboardType = .asciiCapable
         searchVC.searchBar.delegate = self
-        searchVC.searchBar.placeholder = "Please type the keyword"
+        searchVC.searchBar.placeholder = "Please type search query"
         navigationItem.hidesSearchBarWhenScrolling = true
     }
     
@@ -191,6 +169,16 @@ final class NewsViewController: UIViewController, NewsView {
         } else if gesture.state == .ended {
             navigationController?.pushViewController(SettingsViewController(), animated: true)
         }
+    }
+    
+    private func makeStackView() -> UIStackView {
+        let stack = UIStackView()
+        stack.alignment = .fill
+        stack.distribution = .fillEqually
+        stack.axis = .vertical
+        stack.spacing = 16
+        stack.isHidden = true
+        return stack
     }
     
     // MARK: Setup UI
@@ -204,9 +192,12 @@ final class NewsViewController: UIViewController, NewsView {
         
         newsList.addSubview(skeletonsBackgroundViewsStackView)
         newsList.addSubview(skeletonsStackView)
+        
         view.addSubview(newsList)
         view.addSubview(responseErrorLabel)
+        
         navigationController?.navigationBar.addSubview(leftBarButtonItem)
+        
         leftBarButtonItem.frame = CGRect(x: 0,
                                          y: 0,
                                          width: 60,
@@ -230,18 +221,6 @@ final class NewsViewController: UIViewController, NewsView {
             upButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -35),
             upButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -35),
         ])
-    }
-    
-    // MARK: Good connection animations 
-    func animateGoodConnection() {
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            
-            if isInitialLoading {
-                SoundManager.shared.playSound(soundFileName: SoundName.loaded.rawValue)
-                isInitialLoading.toggle()
-            }
-        }
     }
     
     // MARK: Skeletons animations
@@ -312,9 +291,24 @@ extension NewsViewController {
     }
 }
 
-// MARK: Animate errors
-extension NewsViewController {
-    func animateResponseError(with error: String) {
+// MARK: NewsView
+extension NewsViewController: NewsView {
+    func reload() {
+        newsList.reloadData()
+    }
+    
+    func handleResponseSuccess() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            
+            if isInitialLoading {
+                SoundManager.shared.playSound(soundFileName: SoundName.loaded.rawValue)
+                isInitialLoading.toggle()
+            }
+        }
+    }
+    
+    func handleResponseFailure(with error: String) {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             SoundManager.shared.playSound(soundFileName: SoundName.error.rawValue)
@@ -414,6 +408,7 @@ extension NewsViewController: CellDelegate {
     }
 }
 
+// MARK: - ScrollViewDidScroll
 extension NewsViewController {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let contentOffset = scrollView.contentOffset.y

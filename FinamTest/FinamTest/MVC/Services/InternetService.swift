@@ -27,7 +27,7 @@ final class InternetService: UserInternetService {
         timer = Timer.scheduledTimer(withTimeInterval: 7, repeats: false, block: { [weak self] _ in
             guard let newsArray = self?.newsArray else { return }
             if newsArray.isEmpty {
-                self?.view?.animateResponseError(with: Errors.error.rawValue)
+                self?.view?.handleResponseFailure(with: Errors.error.rawValue)
                 completion()
                 self?.timer.invalidate()
             }
@@ -52,15 +52,15 @@ final class InternetService: UserInternetService {
     private func handleResponse(httpResponseStatusCode: Int) {
         switch httpResponseStatusCode {
             case 429:
-                view?.animateResponseError(with: Errors.tooManyRequests.rawValue)
+                view?.handleResponseFailure(with: Errors.tooManyRequests.rawValue)
             case 500:
-                view?.animateResponseError(with: Errors.serverError.rawValue)
+                view?.handleResponseFailure(with: Errors.serverError.rawValue)
             case 401:
-                view?.animateResponseError(with: Errors.unauthorized.rawValue)
+                view?.handleResponseFailure(with: Errors.unauthorized.rawValue)
             case 400:
-                view?.animateResponseError(with: Errors.badRequest.rawValue)
+                view?.handleResponseFailure(with: Errors.badRequest.rawValue)
             case 200:
-                view?.animateGoodConnection()
+                view?.handleResponseSuccess()
             default:
                 break
         }

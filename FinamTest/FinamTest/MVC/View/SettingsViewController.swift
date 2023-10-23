@@ -1,7 +1,6 @@
 import UIKit
 
 final class SettingsViewController: UIViewController {
-    
     private let settingsService = SettingsService()
     
     struct Layout {
@@ -62,7 +61,6 @@ final class SettingsViewController: UIViewController {
         super.viewDidAppear(animated)
         navigationController?.navigationBar.subviews.forEach {
             $0.isHidden = $0.tag == 0
-            $0.isHidden = $0.tag == 1
         }
     }
     

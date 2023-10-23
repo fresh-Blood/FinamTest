@@ -74,15 +74,13 @@ final class TopicViewController: UIViewController, WKNavigationDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        navigationController?.navigationBar.subviews.forEach { $0.isHidden = $0.tag == 1 }
+        navigationController?.navigationBar.subviews.forEach { $0.isHidden = $0.tag == 0 }
         
         if topicLabel.text == Errors.topicLabelNoInfo.rawValue {
             VibrateManager.shared.vibrate(.warning)
             imageSkeleton.layer.removeAllAnimations()
             imageSkeleton.alpha = 1
         }
-        
-        view.layoutIfNeeded()
     }
     
     private func animateSkeleton() {
