@@ -16,7 +16,7 @@ final class TopicViewController: UIViewController, WKNavigationDelegate {
     
     private lazy var imageSkeleton: UIView = {
         let view = UIView()
-        view.backgroundColor = .systemGray4.withAlphaComponent(0.5)
+        view.backgroundColor = .systemGray4
         view.layer.cornerRadius = 16
         view.clipsToBounds = false
         view.translatesAutoresizingMaskIntoConstraints = false
