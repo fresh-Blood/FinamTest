@@ -169,6 +169,7 @@ final class NewsViewController: UIViewController, NewsView {
     }
     
     private func configureNavigationBar() {
+        navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = DeveloperInfo.appTitle.rawValue
         navigationItem.backButtonTitle = ""
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "slider.vertical.3"), style: .plain, target: self, action: nil)
@@ -241,22 +242,7 @@ final class NewsViewController: UIViewController, NewsView {
             }
             
             removePowerOffImage(fromView: view)
-            
-            if navigationController?.navigationBar.layer.shadowColor != Colors.valueForButtonColor.cgColor {
-                animateNaVbarBackGrColor(completion: nil)
-            }
         }
-    }
-    
-    private func animateNaVbarBackGrColor(completion: CompletionForAnimation) {
-        UIView.animate(withDuration: 1.0,
-                       delay: 0,
-                       usingSpringWithDamping: 0.1,
-                       initialSpringVelocity: 0.1,
-                       options: .curveEaseIn,
-                       animations: {
-            self.navigationController?.navigationBar.configureShadow(configureBorder: false, withAlpha: 0.5)
-        }, completion: completion)
     }
     
     // MARK: Skeletons animations
