@@ -51,7 +51,7 @@ enum Errors: String {
 
 enum DeveloperInfo: String {
     case appTitle = "News"
-    case shareInfo = "Load news, stay in touch 🤙🏽 ➡️ _link to appStore_"
+    case shareInfo = "Stay in touch 🤙🏽 ➡️ _link to appStore_"
 }
 
 enum Updates: String {
