@@ -146,7 +146,7 @@
 			path = Gifs;
 			sourceTree = "<group>";
 		};
-		849674B42774BD5600504D9D /* News App */ = {
+		849674B42774BD5600504D9D /* MVC */ = {
 			isa = PBXGroup;
 			children = (
 				C411227B29D9AA630089F601 /* Models */,
@@ -154,7 +154,7 @@
 				8455A6D12878E63400B3D575 /* Services */,
 				849674B72774C8F100504D9D /* Assemblyer.swift */,
 			);
-			path = "News App";
+			path = MVC;
 			sourceTree = "<group>";
 		};
 		84FA0F6B26C6350900FB1C34 = {
@@ -178,7 +178,7 @@
 			isa = PBXGroup;
 			children = (
 				8446A227281DA2FB00A95290 /* Helpers */,
-				849674B42774BD5600504D9D /* News App */,
+				849674B42774BD5600504D9D /* MVC */,
 				84FA0F8826C6350D00FB1C34 /* Info.plist */,
 				84FA0F8026C6350900FB1C34 /* FinamTest.xcdatamodeld */,
 			);
