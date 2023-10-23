@@ -1,16 +1,14 @@
 import UIKit
+import WebKit
 
 protocol PowerOffShowable {
+    var powerOffImageId: String { get }
     func showPowerOffImage(insideView: UIView)
     func removePowerOffImage(fromView: UIView)
-    var powerOffImageId: String { get }
 }
 
 extension PowerOffShowable {
-    
-    var powerOffImageId: String {
-        "powerOffImage"
-    }
+    var powerOffImageId: String { "powerOffImage" }
     
     func showPowerOffImage(insideView: UIView) {
         let powerOffImage = UIImageView(image: UIImage(systemName: "power.dotted"))
@@ -28,34 +26,34 @@ extension PowerOffShowable {
                        options: .curveLinear,
                        animations: {
             powerOffImage.alpha = 1
-            powerOffImage.configureShadow(configureBorder: false)
         })
     }
+    
     func removePowerOffImage(fromView: UIView) {
         let powerOffImage = fromView.subviews.first(where: { $0.accessibilityIdentifier == powerOffImageId })
         powerOffImage?.removeFromSuperview()
     }
 }
 
-final class SelectedTopicViewController: UIViewController, PowerOffShowable {
-    
+final class TopicViewController: UIViewController, PowerOffShowable, WKNavigationDelegate {
     var moreInfo = ""
     
     var newsImageLoaded = false {
         didSet {
-            stopAnimatingGhostLoadingViewAndHide()
+            stopAnimatingSkeletonAndHide()
         }
     }
     
     private lazy var scrollImageView = UIScrollView()
     
-    let newsImage: UIImageView = {
+    lazy var newsImage: UIImageView = {
         let img = UIImageView()
         img.contentMode = .scaleAspectFit
+        img.backgroundColor = Colors.reversedValueForColor
         return img
     }()
     
-    private lazy var ghostNewsViewBG: UIView = {
+    private lazy var skeletonBackgroundView: UIView = {
         let loadingGhostView = UIView()
         loadingGhostView.backgroundColor = .systemGray4.withAlphaComponent(0.5)
         loadingGhostView.layer.cornerRadius = 16
@@ -63,7 +61,7 @@ final class SelectedTopicViewController: UIViewController, PowerOffShowable {
         return loadingGhostView
     }()
     
-    private lazy var ghostNewsView: UIView = {
+    private lazy var skeleton: UIView = {
         let loadingGhostView = UIView()
         loadingGhostView.backgroundColor = Colors.valueForGradientAnimation
         loadingGhostView.layer.cornerRadius = 16
@@ -71,7 +69,7 @@ final class SelectedTopicViewController: UIViewController, PowerOffShowable {
         return loadingGhostView
     }()
     
-    let topicLabel: UILabel = {
+    lazy var topicLabel: UILabel = {
         let lbl = UILabel()
         lbl.textAlignment = .natural
         lbl.numberOfLines = 0
@@ -80,54 +78,60 @@ final class SelectedTopicViewController: UIViewController, PowerOffShowable {
         return lbl
     }()
     
-    private lazy var moreInfoButton: UIButton = {
-        let btn = UIButton()
-        btn.setTitle(Other.moreInfo.rawValue, for: .normal)
-        btn.addTarget(self,
-                      action: #selector(showMoreInfo),
-                      for: .touchUpInside)
-        return btn
+    private lazy var moreInfoButton: UILabel = {
+        let label = UILabel()
+        label.text = Other.moreInfo.rawValue
+        label.textColor = Colors.valueForColor
+        label.backgroundColor = .systemGray4.withAlphaComponent(0.5)
+        label.layer.cornerRadius = 16
+        label.isUserInteractionEnabled = true
+        label.textAlignment = .center
+        
+        let gesture = UILongPressGestureRecognizer(target: self, action: #selector(moreInfoTapped))
+        gesture.minimumPressDuration = .zero
+        label.addGestureRecognizer(gesture)
+        return label
     }()
     
-    @objc private func showMoreInfo() {
-        guard let url = URL(string: moreInfo) else { return }
-        UIApplication.shared.open(url)
+    @objc private func moreInfoTapped(gesture: UILongPressGestureRecognizer) {
+        moreInfoButton.animatePressing(gesture: gesture, completion: { [weak self] in
+            guard let self, let url = URL(string: moreInfo) else { return }
+
+            let webView = WKWebView()
+            webView.navigationDelegate = self
+            webView.load(URLRequest(url: url))
+            webView.allowsBackForwardNavigationGestures = true
+            webView.frame = CGRect(x: view.frame.minX,
+                                   y: navigationController?.navigationBar.frame.maxY ?? .zero,
+                                   width: view.frame.width,
+                                   height: view.frame.height)
+            view.addSubview(webView)
+        })
     }
     
     // MARK: Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        animateGhostLoadingView()
-        setScrollView()
+        animateSkeleton()
+        configureScrollView()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        navigationController?.navigationBar.subviews.forEach {
-            $0.isHidden = $0.tag == 0
-            $0.isHidden = $0.tag == 1
-        }
+        navigationController?.navigationBar.subviews.forEach { $0.isHidden = $0.tag == 1 }
         
         if topicLabel.text == Errors.topicLabelNoInfo.rawValue {
             VibrateManager.shared.vibrate(.warning)
-            UIView.animate(withDuration: 1.0,
-                           delay: 0,
-                           usingSpringWithDamping: 0.1,
-                           initialSpringVelocity: 0.1,
-                           options: .curveLinear,
-                           animations: { [self] in
-                moreInfoButton.configureShadow(configureBorder: true)
-                view.layoutIfNeeded()
-            })
-            stopAnimatingGhostLoadingViewAndHide()
+            stopAnimatingSkeletonAndHide()
             showPowerOffImage(insideView: newsImage)
-            self.view.layoutIfNeeded()
         }
+        
+        view.layoutIfNeeded()
     }
     
     // MARK: Zoom Gesture and animations
-    private func setScrollView() {
+    private func configureScrollView() {
         scrollImageView.delegate = self
         scrollImageView.minimumZoomScale = 1.0
         scrollImageView.maximumZoomScale = 7.0
@@ -154,7 +158,7 @@ final class SelectedTopicViewController: UIViewController, PowerOffShowable {
             } else { // zoom out
                 scrollImageView.zoom(to: zoomRectForScale(scale: scrollImageView.maximumZoomScale, center: gesture.location(in: newsImage)), animated: true)
             }
-            VibrateManager.shared.impactOccured(.light)
+            VibrateManager.shared.impactOccured(.rigid)
         }
     }
     
@@ -168,41 +172,43 @@ final class SelectedTopicViewController: UIViewController, PowerOffShowable {
         return zoomRect
     }
     
-    private func animateGhostLoadingView() {
-        ghostNewsView.isHidden.toggle()
-        ghostNewsViewBG.isHidden.toggle()
-        ghostNewsView.animateGradient()
+    private func animateSkeleton() {
+        skeleton.isHidden = false
+        skeletonBackgroundView.isHidden = false
+        skeleton.animateGradient()
     }
     
-    private func stopAnimatingGhostLoadingViewAndHide() {
-        ghostNewsView.isHidden = true
-        ghostNewsViewBG.isHidden = true
+    private func stopAnimatingSkeletonAndHide() {
+        skeleton.isHidden = true
+        skeletonBackgroundView.isHidden = true
     }
     
     // MARK: SetupUI
     private func setupUI() {
-        view.addSubview(topicLabel)
-        newsImage.addSubview(ghostNewsViewBG)
-        newsImage.addSubview(ghostNewsView)
+        view.backgroundColor = .systemBackground
+        
+        newsImage.addSubview(skeletonBackgroundView)
+        newsImage.addSubview(skeleton)
+        
         scrollImageView.addSubview(newsImage)
+        
+        view.addSubview(topicLabel)
         view.addSubview(scrollImageView)
         view.addSubview(moreInfoButton)
-        view.backgroundColor = .systemBackground
-        newsImage.backgroundColor = Colors.reversedValueForColor
-        moreInfoButton.setTitleColor(Colors.valueForColor, for: .normal)
         
         let inset: CGFloat = 16
         let insetForLoadingView: CGFloat = 50
+        
         scrollImageView.frame = CGRect(x: view.bounds.minX,
                                        y: view.bounds.minY,
                                        width: view.bounds.width,
                                        height: view.bounds.height/2)
         newsImage.frame = scrollImageView.frame
-        ghostNewsViewBG.frame = CGRect(x: newsImage.bounds.minX + insetForLoadingView/2,
+        skeletonBackgroundView.frame = CGRect(x: newsImage.bounds.minX + insetForLoadingView/2,
                                        y: newsImage.bounds.minY + insetForLoadingView*2,
                                        width: newsImage.bounds.width - insetForLoadingView,
                                        height: newsImage.bounds.height - insetForLoadingView*2.5)
-        ghostNewsView.frame = CGRect(x: newsImage.bounds.minX + insetForLoadingView/2,
+        skeleton.frame = CGRect(x: newsImage.bounds.minX + insetForLoadingView/2,
                                      y: newsImage.bounds.minY + insetForLoadingView*2,
                                      width: newsImage.bounds.width - insetForLoadingView,
                                      height: newsImage.bounds.height - insetForLoadingView*2.5)
@@ -219,8 +225,6 @@ final class SelectedTopicViewController: UIViewController, PowerOffShowable {
 }
 
 // MARK: ScrollView Delegate
-extension SelectedTopicViewController: UIScrollViewDelegate {
-    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        newsImage
-    }
+extension TopicViewController: UIScrollViewDelegate {
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? { newsImage }
 }

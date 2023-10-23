@@ -67,45 +67,17 @@ final class TopicCell: UITableViewCell {
         contentView.addGestureRecognizer(gesture)
     }
     
-    enum LayerAnimationStatus {
-        case start
-        case finish
-    }
-    
     @objc private func share(with gesture: UILongPressGestureRecognizer) {
-        if gesture.state == .began {
-            animateContentViewLayer(with: .start)
+        bgView.animatePressing(gesture: gesture, completion: { [weak self] in
+            guard let self else { return }
+            
             VibrateManager.shared.impactOccured(.light)
+            
             let newsTopicInfo = "🔥 \(titleLabel.text ?? "") 🤖 \n\(DeveloperInfo.shareInfo.rawValue)"
             let activityVC = UIActivityViewController(activityItems: [newsTopicInfo], applicationActivities: nil)
+            
             cellDelegate?.sendDetailsForPresenting(vc: activityVC, contentView: contentView)
-        } else {
-            animateContentViewLayer(with: .finish)
-        }
-    }
-    
-    // MARK: BGView layer animation
-    private func animateContentViewLayer(with status: LayerAnimationStatus) {
-        if status == .start {
-            UIView.animate(withDuration: 0.2,
-                           delay: .zero,
-                           usingSpringWithDamping: 1,
-                           initialSpringVelocity: .zero,
-                           options: .curveEaseInOut,
-                           animations: {
-                self.bgView.configureShadow(configureBorder: true)
-                self.bgView.transform = CGAffineTransform(scaleX: 0.97, y: 0.97)
-            }, completion: { finished in
-                if finished {
-                    UIView.animate(withDuration: 0.2,
-                                   delay: .zero,
-                                   animations: {
-                        self.bgView.transform = .identity
-                        self.bgView.configureShadow(with: .removed, configureBorder: false)
-                    })
-                }
-            })
-        }
+        })
     }
     
     // MARK: Setup UI

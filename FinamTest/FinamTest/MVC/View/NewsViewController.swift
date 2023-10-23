@@ -279,7 +279,7 @@ extension NewsViewController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let topic = internetService?.newsArray[indexPath.row]
-        let secondVC = SelectedTopicViewController()
+        let secondVC = TopicViewController()
         secondVC.title = topic?.title
         secondVC.topicLabel.text = topic?.description ?? Errors.topicLabelNoInfo.rawValue
         secondVC.newsImage.downLoadImage(from: topic?.urlToImage ?? Errors.error.rawValue, completion: {

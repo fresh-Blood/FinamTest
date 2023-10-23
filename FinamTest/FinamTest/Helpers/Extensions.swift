@@ -61,6 +61,31 @@ extension UIView {
         case removed
     }
     
+    func animatePressing(gesture: UILongPressGestureRecognizer, completion: Action?) {
+        if gesture.state == .began {
+            UIView.animate(withDuration: 0.2,
+                           delay: .zero,
+                           usingSpringWithDamping: 1,
+                           initialSpringVelocity: .zero,
+                           options: .curveEaseInOut,
+                           animations: {
+                self.configureShadow(configureBorder: true)
+                self.transform = CGAffineTransform(scaleX: 0.97, y: 0.97)
+            })
+            
+        } else if gesture.state == .ended {
+            UIView.animate(withDuration: 0.2,
+                           delay: .zero,
+                           animations: {
+                self.transform = .identity
+                self.configureShadow(with: .removed, configureBorder: false)
+                
+            }, completion: { _ in
+                completion?()
+            })
+        }
+    }
+    
     func configureShadow(with shadowState: ShadowState? = .set,
                          configureBorder: Bool,
                          withAlpha: CGFloat? = 1) {
