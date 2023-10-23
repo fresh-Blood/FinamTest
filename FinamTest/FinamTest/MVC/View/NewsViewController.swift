@@ -159,7 +159,7 @@ final class NewsViewController: UIViewController {
                                                            target: nil,
                                                            action: nil)
         navigationController?.navigationBar.addSubview(settingsButton)
-        settingsButton.frame = CGRect(origin: .zero, size: CGSize(width: 36, height: 36))
+        settingsButton.frame = CGRect(origin: .zero, size: CGSize(width: 46, height: 36))
         
         let searchVC = UISearchController()
         navigationItem.searchController = searchVC
