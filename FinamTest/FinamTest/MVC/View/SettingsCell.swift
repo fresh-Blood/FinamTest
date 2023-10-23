@@ -50,6 +50,7 @@ final class SettingsCell: UITableViewCell {
     
     func update(model: SettingsModel) {
         title.text = model.name
+        switcher.isHidden = model.action != nil
         self.model = model
     }
     

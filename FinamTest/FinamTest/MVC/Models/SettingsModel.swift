@@ -11,4 +11,5 @@ typealias Action = () -> Void
 
 struct SettingsModel {
     let name: String
+    var action: Action?
 }

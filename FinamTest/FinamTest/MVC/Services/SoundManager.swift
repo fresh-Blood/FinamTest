@@ -1,7 +1,6 @@
 import Foundation
 import AVKit
 
-
 struct SoundManager {
     static var shared = SoundManager()
     var player = AVAudioPlayer()

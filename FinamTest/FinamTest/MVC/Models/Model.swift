@@ -60,6 +60,7 @@ enum GifName: String {
 
 enum SettingsKeys: String {
     case soundSettings = "Sounds"
+    case newsTheme = "Theme"
     case appVerstion = "Version"
     case settings = "Settings"
 }

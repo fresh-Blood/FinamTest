@@ -1,8 +1,6 @@
 import Foundation
 
-
 struct StorageService {
-    
     static let shared = StorageService()
     
     func getData(for key: String) -> Bool? {

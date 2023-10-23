@@ -5,6 +5,7 @@ protocol CellDelegate: AnyObject {
 }
 
 final class TopicCell: UITableViewCell {
+    static let id = "MyTableViewCell"
     
     weak var cellDelegate: CellDelegate?
     
@@ -18,8 +19,6 @@ final class TopicCell: UITableViewCell {
 
     private lazy var layout: Layout = .default
     
-    static let id = "MyTableViewCell"
-    
     private lazy var bgView: UIView = {
         let bgView = UIView()
         bgView.layer.cornerRadius = 16
@@ -28,7 +27,7 @@ final class TopicCell: UITableViewCell {
         return bgView
     }()
     
-    let newsDate: UILabel = {
+    lazy var newsDate: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 0
         lbl.font = .systemFont(ofSize: 17, weight: .light)
@@ -36,7 +35,7 @@ final class TopicCell: UITableViewCell {
         return lbl
     }()
     
-    let newsSource: UILabel = {
+    lazy var newsSource: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 1
         lbl.textAlignment = .center
@@ -45,7 +44,7 @@ final class TopicCell: UITableViewCell {
         return lbl
     }()
     
-    let titleLabel: UILabel = {
+    lazy var titleLabel: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 0
         lbl.font = .systemFont(ofSize: 18, weight: .regular)
@@ -59,8 +58,7 @@ final class TopicCell: UITableViewCell {
         setupShareGesture()
     }
     
-    // MARK: Share gesture setting
-    
+    // MARK: Share
     private func setupShareGesture() {
         let gesture = UILongPressGestureRecognizer(target: self, action: #selector(share))
         gesture.minimumPressDuration = 0.2

@@ -1,7 +1,12 @@
 import UIKit
 
 final class SettingsViewController: UIViewController {
-    private let settingsService = SettingsService()
+    private lazy var settings = [
+        SettingsModel(name: SettingsKeys.soundSettings.rawValue),
+        SettingsModel(name: SettingsKeys.newsTheme.rawValue, action: {
+            
+        })
+    ]
     
     struct Layout {
         let contentInsets: UIEdgeInsets
@@ -10,8 +15,6 @@ final class SettingsViewController: UIViewController {
             Layout(contentInsets: UIEdgeInsets(top: 16, left: 16, bottom: -16, right: -16))
         }
     }
-    
-    var closeCompletion: (() -> Void)?
     
     private var currentUserInterfaceStyle: UIUserInterfaceStyle {
         UIScreen.main.traitCollection.userInterfaceStyle
@@ -26,6 +29,8 @@ final class SettingsViewController: UIViewController {
         settingsList.showsVerticalScrollIndicator = false
         settingsList.separatorStyle = .none
         settingsList.isScrollEnabled = false 
+        settingsList.delegate = self
+        settingsList.dataSource = self
         settingsList.register(SettingsCell.self, forCellReuseIdentifier: SettingsCell.id)
         return settingsList
     }()
@@ -47,8 +52,6 @@ final class SettingsViewController: UIViewController {
     // MARK: Life - cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        settingsList.delegate = self
-        settingsList.dataSource = self 
         setupUI()        
     }
     
@@ -64,48 +67,51 @@ final class SettingsViewController: UIViewController {
         }
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        closeCompletion?()
-    }
-    
     // MARK: SetupUI
     private func setupUI() {
         title = SettingsKeys.settings.rawValue
         view.backgroundColor = .systemBackground
+        
         setGradient()
+        
         view.addSubview(settingsList)
         view.addSubview(appVersionLabel)
+        
         showKittenIfDarkDeviceTheme()
+        
         let width: CGFloat = view.frame.width / 3
         
         NSLayoutConstraint.activate([
-            appVersionLabel.widthAnchor.constraint(equalToConstant: width),
-            appVersionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            appVersionLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40),
-            
-            settingsList.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
-                                        constant: 10),
+            settingsList.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
             settingsList.leftAnchor.constraint(equalTo: view.leftAnchor, constant: layout.contentInsets.left),
             settingsList.rightAnchor.constraint(equalTo: view.rightAnchor, constant: layout.contentInsets.right),
-            settingsList.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            
+            appVersionLabel.topAnchor.constraint(equalTo: settingsList.bottomAnchor, constant: 16),
+            appVersionLabel.widthAnchor.constraint(equalToConstant: width),
+            appVersionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            appVersionLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40)
         ])
     }
     
     private func showKittenIfDarkDeviceTheme() {
         guard currentUserInterfaceStyle == .dark else { return }
+        
         setGradient()
+        
         let kitten = UIImageView()
         kitten.image = UIImage.gifImageWithName(GifName.kitten.rawValue)
         kitten.translatesAutoresizingMaskIntoConstraints = false
         kitten.backgroundColor = .clear
+        
         view.insertSubview(kitten, belowSubview: appVersionLabel)
+        
         NSLayoutConstraint.activate([
             kitten.leftAnchor.constraint(equalTo: appVersionLabel.rightAnchor, constant: Constants.kittenLeftInsetValue),
             kitten.centerYAnchor.constraint(equalTo: appVersionLabel.centerYAnchor),
             kitten.widthAnchor.constraint(equalToConstant: Constants.kittenSize.width),
             kitten.heightAnchor.constraint(equalToConstant: Constants.kittenSize.height)
         ])
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + Constants.kittenAnimationDuration,
                                       execute: {
             UIView.animate(withDuration: Constants.kittenHidingDuration,
@@ -141,14 +147,15 @@ final class SettingsViewController: UIViewController {
 
 extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        settingsService.settingsList.count
+        settings.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = settingsList.dequeueReusableCell(withIdentifier: SettingsCell.id, for: indexPath) as? SettingsCell else {
             return UITableViewCell(frame: .zero)
         }
-        let model = settingsService.settingsList[indexPath.row]
+        
+        let model = settings[indexPath.row]
         cell.update(model: model)
         return cell
     }

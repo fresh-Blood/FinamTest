@@ -5,9 +5,9 @@ import AVKit
 typealias Completion = () -> Void
 
 protocol UserInternetService {
-    func getData(completion: @escaping Completion, with keyWord: String?) async throws
     var view: NewsView? { get set }
     var newsArray: [Articles] { get set }
+    func getData(completion: @escaping Completion, with keyWord: String?) async throws
 }
 
 final class InternetService: UserInternetService {

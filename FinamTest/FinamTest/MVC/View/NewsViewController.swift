@@ -376,6 +376,7 @@ extension NewsViewController: UISearchBarDelegate {
     }
 }
 
+// MARK: - CellDelegate
 extension NewsViewController: CellDelegate {
     private func injectCloseButtonTo(vc: UIViewController) {
         let closeButton = UIButton()
