@@ -48,6 +48,7 @@ final class NewsViewController: UIViewController, NewsView {
         list.rowHeight = UITableView.automaticDimension
         list.showsVerticalScrollIndicator = false
         list.separatorStyle = .none
+        list.clipsToBounds = false
         list.register(TopicCell.self, forCellReuseIdentifier: TopicCell.id)
         return list
     }()

@@ -70,12 +70,8 @@ final class TopicCell: UITableViewCell {
     @objc private func share(with gesture: UILongPressGestureRecognizer) {
         bgView.animatePressing(gesture: gesture, completion: { [weak self] in
             guard let self else { return }
-            
-            VibrateManager.shared.impactOccured(.light)
-            
             let newsTopicInfo = "🔥 \(titleLabel.text ?? "") 🤖 \n\(DeveloperInfo.shareInfo.rawValue)"
             let activityVC = UIActivityViewController(activityItems: [newsTopicInfo], applicationActivities: nil)
-            
             cellDelegate?.sendDetailsForPresenting(vc: activityVC, contentView: contentView)
         })
     }

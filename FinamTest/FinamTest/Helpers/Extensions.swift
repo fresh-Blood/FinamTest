@@ -63,7 +63,7 @@ extension UIView {
     
     func animatePressing(gesture: UILongPressGestureRecognizer, completion: Action?) {
         if gesture.state == .began {
-            UIView.animate(withDuration: 0.2,
+            UIView.animate(withDuration: 1,
                            delay: .zero,
                            usingSpringWithDamping: 1,
                            initialSpringVelocity: .zero,
@@ -74,7 +74,7 @@ extension UIView {
             })
             
         } else if gesture.state == .ended {
-            UIView.animate(withDuration: 0.2,
+            UIView.animate(withDuration: 0.5,
                            delay: .zero,
                            animations: {
                 self.transform = .identity
@@ -82,6 +82,7 @@ extension UIView {
                 
             }, completion: { _ in
                 completion?()
+                VibrateManager.shared.impactOccured(.rigid)
             })
         }
     }
@@ -105,10 +106,10 @@ extension UIView {
         }
         
         layer.cornerRadius = 16
-        layer.shadowOffset = CGSize(width: 2, height: 3)
+        layer.shadowOffset = CGSize(width: -1, height: 1)
         layer.shadowOpacity = 1.0
         layer.shadowColor = Colors.valueForButtonColor.withAlphaComponent(withAlpha ?? 1.0).cgColor
-        layer.shadowRadius = 7
+        layer.shadowRadius = 10
     }
     
     func animateGradient() {
