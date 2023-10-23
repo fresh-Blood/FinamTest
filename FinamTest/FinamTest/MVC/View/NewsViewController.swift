@@ -26,6 +26,14 @@ final class NewsViewController: UIViewController {
     
     var internetService: UserInternetService?
     
+    private lazy var settingsButton: UIView = {
+        let view = UIView()
+        let gesture = UILongPressGestureRecognizer(target: self, action: #selector(showSettings(gesture: )))
+        gesture.minimumPressDuration = .zero
+        view.addGestureRecognizer(gesture)
+        return view
+    }()
+    
     private lazy var upButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "chevron.up"), for: .normal)
@@ -86,17 +94,24 @@ final class NewsViewController: UIViewController {
     // MARK: Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setLeftBarButtonItemGesture()
         configureRefreshControl()
         configureNavigationBar()
         setupUI()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        settingsButton.isHidden = true
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        settingsButton.isHidden = false
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         showOnBoardingMessageIfNeeded()
-        
-        leftBarButtonItem.isHidden = false
         
         guard let newsArray = internetService?.newsArray else { return }
         
@@ -131,29 +146,17 @@ final class NewsViewController: UIViewController {
     }
     
     // MARK: Configure navigation bar
-    private lazy var leftBarButtonItem: UIButton = {
-        let btn = UIButton()
-        btn.backgroundColor = .clear
-        btn.tag = 0
-        btn.isHidden = true
-        return btn
-    }()
-    
-    private func setLeftBarButtonItemGesture() {
-        let gesture = UILongPressGestureRecognizer(
-            target: self,
-            action: #selector(showSettings))
-        gesture.minimumPressDuration = 0
-        leftBarButtonItem.addGestureRecognizer(gesture)
-    }
-    
     private func configureNavigationBar() {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = DeveloperInfo.appTitle.rawValue
-        navigationItem.backButtonTitle = ""
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "slider.vertical.3"), style: .plain, target: self, action: nil)
         navigationController?.navigationBar.backgroundColor = .clear
         navigationController?.navigationBar.tintColor = Colors.valueForColor
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "slider.vertical.3"),
+                                                           style: .plain,
+                                                           target: nil,
+                                                           action: nil)
+        navigationController?.navigationBar.addSubview(settingsButton)
+        settingsButton.frame = CGRect(origin: .zero, size: CGSize(width: 36, height: 36))
         
         let searchVC = UISearchController()
         navigationItem.searchController = searchVC
@@ -163,7 +166,7 @@ final class NewsViewController: UIViewController {
         navigationItem.hidesSearchBarWhenScrolling = true
     }
     
-    @objc private func showSettings(gesture: UILongPressGestureRecognizer) {
+    @objc func showSettings(gesture: UILongPressGestureRecognizer) {
         if gesture.state == .began {
             VibrateManager.shared.impactOccured(.rigid)
         } else if gesture.state == .ended {
@@ -195,13 +198,6 @@ final class NewsViewController: UIViewController {
         
         view.addSubview(newsList)
         view.addSubview(responseErrorLabel)
-        
-        navigationController?.navigationBar.addSubview(leftBarButtonItem)
-        
-        leftBarButtonItem.frame = CGRect(x: 0,
-                                         y: 0,
-                                         width: 60,
-                                         height: 50)
         
         skeletonsStackView.frame = newsList.bounds
         skeletonsBackgroundViewsStackView.frame = newsList.bounds
@@ -257,12 +253,12 @@ extension NewsViewController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let topic = internetService?.newsArray[indexPath.row]
-        let secondVC = TopicViewController()
-        secondVC.title = topic?.title
-        secondVC.topicLabel.text = topic?.description ?? Errors.topicLabelNoInfo.rawValue
-        secondVC.newsImage.downLoadImage(from: topic?.urlToImage ?? Errors.error.rawValue)
-        secondVC.moreInfo = topic?.url ?? Errors.error.rawValue
-        navigationController?.pushViewController(secondVC, animated: true)
+        let topicVC = TopicViewController()
+        topicVC.title = topic?.title
+        topicVC.topicLabel.text = topic?.description ?? Errors.topicLabelNoInfo.rawValue
+        topicVC.newsImage.downLoadImage(from: topic?.urlToImage ?? Errors.error.rawValue)
+        topicVC.moreInfo = topic?.url ?? Errors.error.rawValue
+        navigationController?.pushViewController(topicVC, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }
@@ -322,7 +318,6 @@ extension NewsViewController: NewsView {
                            animations: {
                 self.view.layoutIfNeeded()
                 VibrateManager.shared.vibrate(.error)
-                self.navigationController?.navigationBar.layer.shadowColor = UIColor.clear.cgColor
             }, completion: { [weak self] finished in
                 self?.animateChanges()
             })

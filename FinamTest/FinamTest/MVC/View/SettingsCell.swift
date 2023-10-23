@@ -25,6 +25,16 @@ final class SettingsCell: UITableViewCell {
         return title
     }()
     
+    lazy var rightTitle: UILabel = {
+        let title = UILabel()
+        title.textAlignment = .right
+        title.textColor = .gray
+        title.numberOfLines = .zero
+        title.font = .systemFont(ofSize: 17, weight: .medium)
+        title.translatesAutoresizingMaskIntoConstraints = false
+        return title
+    }()
+    
     private lazy var switcher: UISwitch = {
         let switcher = UISwitch()
         switcher.addTarget(self, action: #selector(tapped), for: .valueChanged)
@@ -49,14 +59,23 @@ final class SettingsCell: UITableViewCell {
     }
     
     func update(model: SettingsModel) {
-        title.text = model.name
-        switcher.isHidden = model.action != nil
+        if model.rightTitle != nil {
+            accessoryType = .disclosureIndicator
+            contentView.backgroundColor = .clear
+            backgroundColor = .systemGray4.withAlphaComponent(0.5)
+            layer.cornerRadius = 16
+        }
         self.model = model
+        rightTitle.isHidden = model.rightTitle == nil
+        switcher.isHidden = model.rightTitle != nil
+        rightTitle.text = model.rightTitle
+        title.text = model.name
     }
     
     private func setupUI() {
         contentView.backgroundColor = .systemGray4.withAlphaComponent(0.5)
         contentView.addSubview(title)
+        contentView.addSubview(rightTitle)
         contentView.addSubview(switcher)
         contentView.layer.cornerRadius = 16
         
@@ -68,6 +87,10 @@ final class SettingsCell: UITableViewCell {
             switcher.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
             switcher.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -16),
             switcher.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -19),
+            
+            rightTitle.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
+            rightTitle.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -16),
+            rightTitle.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
             
             contentView.heightAnchor.constraint(equalToConstant: 57)
         ])

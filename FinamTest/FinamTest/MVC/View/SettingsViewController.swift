@@ -1,11 +1,9 @@
 import UIKit
 
-final class SettingsViewController: UIViewController {
+class SettingsViewController: UIViewController {
     private lazy var settings = [
         SettingsModel(name: SettingsKeys.soundSettings.rawValue),
-        SettingsModel(name: SettingsKeys.newsTheme.rawValue, action: {
-            
-        })
+        SettingsModel(name: SettingsKeys.newsTheme.rawValue, rightTitle: "test")
     ]
     
     struct Layout {
@@ -20,9 +18,9 @@ final class SettingsViewController: UIViewController {
         UIScreen.main.traitCollection.userInterfaceStyle
     }
     
-    private lazy var layout = Layout.default
+    lazy var layout = Layout.default
     
-    private lazy var settingsList: UITableView = {
+    lazy var settingsList: UITableView = {
         let settingsList = UITableView()
         settingsList.backgroundColor = .clear
         settingsList.translatesAutoresizingMaskIntoConstraints = false
@@ -60,15 +58,8 @@ final class SettingsViewController: UIViewController {
         removeGradientIfNeeded()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        navigationController?.navigationBar.subviews.forEach {
-            $0.isHidden = $0.tag == 0
-        }
-    }
-    
     // MARK: SetupUI
-    private func setupUI() {
+    func setupUI() {
         title = SettingsKeys.settings.rawValue
         view.backgroundColor = .systemBackground
         
@@ -82,7 +73,7 @@ final class SettingsViewController: UIViewController {
         let width: CGFloat = view.frame.width / 3
         
         NSLayoutConstraint.activate([
-            settingsList.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            settingsList.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             settingsList.leftAnchor.constraint(equalTo: view.leftAnchor, constant: layout.contentInsets.left),
             settingsList.rightAnchor.constraint(equalTo: view.rightAnchor, constant: layout.contentInsets.right),
             
@@ -131,8 +122,9 @@ final class SettingsViewController: UIViewController {
         gradientLayer.frame = view.bounds
         gradientLayer.colors = [
             UIColor.systemBackground.cgColor,
-            #colorLiteral(red: 0.0689323023, green: 0.01944343746, blue: 0.03194189072, alpha: 1).cgColor,
-            #colorLiteral(red: 0.0862628296, green: 0.08628197759, blue: 0.08625862747, alpha: 1).cgColor
+            #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1).cgColor,
+            #colorLiteral(red: 0.08748871833, green: 0.08748871833, blue: 0.08748871833, alpha: 1).cgColor,
+            #colorLiteral(red: 0.08748871833, green: 0.08748871833, blue: 0.08748871833, alpha: 1).cgColor
         ]
         view.layer.insertSublayer(gradientLayer, at: .zero)
     }
@@ -145,19 +137,41 @@ final class SettingsViewController: UIViewController {
     }
 }
 
+// MARK: - UITableViewDelegate, UITableViewDataSource
 extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        settings.count
+        1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = settingsList.dequeueReusableCell(withIdentifier: SettingsCell.id, for: indexPath) as? SettingsCell else {
             return UITableViewCell(frame: .zero)
         }
-        
-        let model = settings[indexPath.row]
+        let model = settings[indexPath.section]
         cell.update(model: model)
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        UIView()
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        guard section != 0 else { return .zero }
+        return .zero
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        settings.count
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch indexPath.section {
+            case 1:
+                print("1")
+            default:
+                break 
+        }
     }
 }
 
