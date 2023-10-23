@@ -1,8 +1,6 @@
 import UIKit
 import AVKit
 
-typealias CompletionForAnimation = ((Bool) -> Void)?
-
 protocol NewsView {
     var internetService: UserInternetService? { get set }
     func reload()
@@ -120,21 +118,9 @@ final class NewsViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         showOnBoardingMessageIfNeeded()
-        
-//        guard let newsArray = internetService?.newsArray else { return }
-        
-        if needLoadNews {
+        if needLoadNews { 
             loadNews()
-//            animateLoading()
-//            Task {
-//                try await internetService?.getData(completion: { [weak self] in
-//                    DispatchQueue.main.async {
-//                        self?.stopAnimatingAndHide()
-//                    }
-//                },
-//                                                   with: nil,
-//                                                   category: StorageService.shared.selectedCategory)
-//            }
+            cachedCategory = StorageService.shared.selectedCategory
         }
     }
     
@@ -144,14 +130,20 @@ final class NewsViewController: UIViewController {
             let alertVC = UIAlertController(title: Updates.title.rawValue,
                                             message: Updates.whatsNew.rawValue,
                                             preferredStyle: .actionSheet)
+            
+            alertVC.view.tintColor = .systemGray
+            
             alertVC.prepairForIPad(withVCView: view, withVC: self)
+            
             alertVC.addAction(UIAlertAction(title: Updates.ok.rawValue,
                                             style: .cancel, handler: { _ in
                 alertVC.dismiss(animated: true, completion: nil)
             }))
+            
             present(alertVC, animated: true, completion: {
                 StorageService.shared.save(AppVersion.current, forKey: AppVersion.current)
             })
+            
             return
         }
     }
@@ -210,8 +202,11 @@ final class NewsViewController: UIViewController {
         view.addSubview(newsList)
         view.addSubview(responseErrorLabel)
         
-        skeletonsStackView.frame = newsList.bounds
-        skeletonsBackgroundViewsStackView.frame = newsList.bounds
+        let frame = CGRect(origin: CGPoint(x: newsList.bounds.minX,
+                                           y: newsList.bounds.minY + 7),
+                           size: newsList.frame.size)
+        skeletonsStackView.frame = frame
+        skeletonsBackgroundViewsStackView.frame = skeletonsStackView.frame
         
         NSLayoutConstraint.activate([
             responseErrorLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10),
