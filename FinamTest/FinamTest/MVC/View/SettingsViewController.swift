@@ -169,8 +169,10 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
         switch indexPath.section {
             case 1:
                 let chooseThemeVc = UIAlertController(title: Categories.title,
-                                                      message: nil,
+                                                      message: Categories.title,
                                                       preferredStyle: .actionSheet)
+                
+                chooseThemeVc.prepairForIPad(withVCView: view, withVC: self)
                 
                 Categories.allCases.forEach { category in
                     chooseThemeVc.addAction(UIAlertAction(title: category.rawValue,

@@ -26,6 +26,13 @@ final class NewsViewController: UIViewController {
     
     var internetService: UserInternetService?
     
+    private var cachedCategory: String?
+    
+    private var needLoadNews: Bool {
+        let currentCategory = StorageService.shared.selectedCategory
+        return cachedCategory != currentCategory || internetService?.newsArray.isEmpty ?? false
+    }
+    
     private lazy var settingsButton: UIView = {
         let view = UIView()
         let gesture = UILongPressGestureRecognizer(target: self, action: #selector(showSettings(gesture: )))
@@ -97,6 +104,7 @@ final class NewsViewController: UIViewController {
         configureRefreshControl()
         configureNavigationBar()
         setupUI()
+        cachedCategory = StorageService.shared.selectedCategory
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -113,19 +121,20 @@ final class NewsViewController: UIViewController {
         super.viewDidAppear(animated)
         showOnBoardingMessageIfNeeded()
         
-        guard let newsArray = internetService?.newsArray else { return }
+//        guard let newsArray = internetService?.newsArray else { return }
         
-        if newsArray.isEmpty {
-            animateLoading()
-            Task {
-                try await internetService?.getData(completion: { [weak self] in
-                    DispatchQueue.main.async {
-                        self?.stopAnimatingAndHide()
-                    }
-                },
-                                                   with: nil,
-                                                   category: StorageService.shared.selectedCategory)
-            }
+        if needLoadNews {
+            loadNews()
+//            animateLoading()
+//            Task {
+//                try await internetService?.getData(completion: { [weak self] in
+//                    DispatchQueue.main.async {
+//                        self?.stopAnimatingAndHide()
+//                    }
+//                },
+//                                                   with: nil,
+//                                                   category: StorageService.shared.selectedCategory)
+//            }
         }
     }
     
@@ -276,17 +285,23 @@ extension NewsViewController {
     
     @objc func handleRefreshControl() {
         SoundManager.shared.playSound(soundFileName: SoundManager.shared.randomRefreshJedySound)
+        loadNews()
+    }
+    
+    private func loadNews() {
         internetService?.newsArray.removeAll()
         reload()
         animateLoading()
+        
         Task {
-            try await internetService?.getData(completion: { [weak self] in
-                DispatchQueue.main.async {
-                    self?.stopAnimatingAndHide()
-                }
-            }, 
-                                               with: nil,
-                                               category: StorageService.shared.selectedCategory)
+            try await internetService?.getData(
+                completion: { [weak self] in
+                    DispatchQueue.main.async {
+                        self?.stopAnimatingAndHide()
+                    }
+                },
+                with: nil,
+                category: StorageService.shared.selectedCategory)
         }
     }
 }
