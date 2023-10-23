@@ -374,7 +374,6 @@ extension NewsViewController: UISearchBarDelegate {
             try await internetService?.getData(completion: { [weak self] in
                 DispatchQueue.main.async {
                     self?.stopAnimatingAndHide()
-                    searchBar.text?.removeAll()
                     self?.view.endEditing(true)
                 }
             }, with: searchBar.text)
@@ -383,6 +382,10 @@ extension NewsViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         searchBar.text = searchBar.text?.filter{ $0.isLetter && $0 != " " }
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text?.removeAll()
     }
 }
 
