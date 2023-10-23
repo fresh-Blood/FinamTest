@@ -283,9 +283,7 @@ extension NewsViewController : UITableViewDelegate, UITableViewDataSource {
         let secondVC = TopicViewController()
         secondVC.title = topic?.title
         secondVC.topicLabel.text = topic?.description ?? Errors.topicLabelNoInfo.rawValue
-        secondVC.newsImage.downLoadImage(from: topic?.urlToImage ?? Errors.error.rawValue, completion: {
-            secondVC.newsImageLoaded = true
-        })
+        secondVC.newsImage.downLoadImage(from: topic?.urlToImage ?? Errors.error.rawValue)
         secondVC.moreInfo = topic?.url ?? Errors.error.rawValue
         navigationController?.pushViewController(secondVC, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)

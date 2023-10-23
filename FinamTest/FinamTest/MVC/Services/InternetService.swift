@@ -44,7 +44,7 @@ final class InternetService: UserInternetService {
         
         DispatchQueue.main.async { [weak self] in
             self?.view?.reload()
-            VibrateManager.shared.impactOccured(.light)
+            VibrateManager.shared.impactOccured(.rigid)
             completion()
         }
     }
