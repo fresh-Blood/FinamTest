@@ -6,14 +6,14 @@ typealias Completion = () -> Void
 
 protocol UserInternetService {
     func getData(completion: @escaping Completion, with keyWord: String?) async throws
-    var view: UserView? { get set }
+    var view: NewsView? { get set }
     var newsArray: [Articles] { get set }
 }
 
 final class InternetService: UserInternetService {
     
     private var timer = Timer()
-    var view: UserView?
+    var view: NewsView?
     var newsArray: [Articles] = []
     
     func getData(completion: @escaping Completion, with keyWord: String?) async throws {

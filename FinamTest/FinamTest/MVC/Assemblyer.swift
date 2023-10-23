@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-typealias EntryPoint = UserView & UIViewController
+typealias EntryPoint = NewsView & UIViewController
 
 protocol Assemblyer {
     var entry: EntryPoint? { get }

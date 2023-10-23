@@ -3,16 +3,14 @@ import AVKit
 
 typealias CompletionForAnimation = ((Bool) -> Void)?
 
-protocol UserView {
+protocol NewsView {
     var internetService: UserInternetService? { get set }
     func reload()
     func animateResponseError(with error: String)
     func animateGoodConnection()
 }
 
-final class NewsViewController: UIViewController, UserView {
-    private lazy var isInitialLoading = true
-    
+final class NewsViewController: UIViewController, NewsView {
     struct Layout {
         let contentInsets: UIEdgeInsets
         
@@ -22,6 +20,8 @@ final class NewsViewController: UIViewController, UserView {
     }
     
     private lazy var layout: Layout = .default
+    private lazy var isInitialLoading = true
+    
     var internetService: UserInternetService?
     
     private lazy var upButton: UIButton = {
@@ -52,7 +52,7 @@ final class NewsViewController: UIViewController, UserView {
         return list
     }()
     
-    private lazy var stackViewForGhostLoadingViews: UIStackView = {
+    private lazy var skeletonsStackView: UIStackView = {
         let stack = UIStackView()
         stack.alignment = .fill
         stack.distribution = .fillEqually
@@ -62,7 +62,7 @@ final class NewsViewController: UIViewController, UserView {
         return stack
     }()
     
-    private lazy var stackViewForGhostLoadingViewsBG: UIStackView = {
+    private lazy var skeletonsBackgroundViewsStackView: UIStackView = {
         let stack = UIStackView()
         stack.alignment = .fill
         stack.distribution = .fillEqually
@@ -72,7 +72,7 @@ final class NewsViewController: UIViewController, UserView {
         return stack
     }()
     
-    var responseErrorNotificationLabel: UILabel = {
+    var responseErrorLabel: UILabel = {
         let responseErrorView = UILabel()
         responseErrorView.backgroundColor = .systemRed
         responseErrorView.layer.cornerRadius = 16
@@ -86,14 +86,14 @@ final class NewsViewController: UIViewController, UserView {
         return responseErrorView
     }()
     
-    private func makeNewGhostView() -> UIView {
+    private func makeSkeleton() -> UIView {
         let name = UIView()
         name.backgroundColor = Colors.valueForGradientAnimation
         name.layer.cornerRadius = 16
         return name
     }
     
-    private func makeNewGhostViewBG() -> UIView {
+    private func makeSkeletonBackgroundview() -> UIView {
         let name = UIView()
         name.backgroundColor = .systemGray4.withAlphaComponent(0.5)
         name.layer.cornerRadius = 16
@@ -107,7 +107,6 @@ final class NewsViewController: UIViewController, UserView {
     // MARK: Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setRightBarButtonItemGesture()
         setLeftBarButtonItemGesture()
         configureRefreshControl()
         configureNavigationBar()
@@ -117,15 +116,17 @@ final class NewsViewController: UIViewController, UserView {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         showOnBoardingMessageIfNeeded()
+        
         leftBarButtonItem.isHidden = false
-        rightBarButtonItem.isHidden = false
+        
         guard let newsArray = internetService?.newsArray else { return }
+        
         if newsArray.isEmpty {
             animateLoading()
             Task {
-                try await internetService?.getData(completion: {
+                try await internetService?.getData(completion: { [weak self] in
                     DispatchQueue.main.async {
-                        self.stopAnimatingAndHide()
+                        self?.stopAnimatingAndHide()
                     }
                 }, with: nil)
             }
@@ -151,14 +152,6 @@ final class NewsViewController: UIViewController, UserView {
     }
     
     // MARK: Configure navigation bar
-    private lazy var rightBarButtonItem: UIButton = {
-        let btn = UIButton()
-        btn.backgroundColor = .clear
-        btn.tag = 0
-        btn.isHidden = true
-        return btn
-    }()
-    
     private lazy var leftBarButtonItem: UIButton = {
         let btn = UIButton()
         btn.backgroundColor = .clear
@@ -166,14 +159,6 @@ final class NewsViewController: UIViewController, UserView {
         btn.isHidden = true
         return btn
     }()
-    
-    private func setRightBarButtonItemGesture() {
-        let gesture = UILongPressGestureRecognizer(
-            target: self,
-            action: #selector(searchAction))
-        gesture.minimumPressDuration = 0
-        rightBarButtonItem.addGestureRecognizer(gesture)
-    }
     
     private func setLeftBarButtonItemGesture() {
         let gesture = UILongPressGestureRecognizer(
@@ -183,32 +168,19 @@ final class NewsViewController: UIViewController, UserView {
         leftBarButtonItem.addGestureRecognizer(gesture)
     }
     
-    @objc private func searchAction(gesture: UILongPressGestureRecognizer) {
-        if gesture.state == .began {
-            VibrateManager.shared.impactOccured(.rigid)
-            UIView.animate(withDuration: 0.5,
-                           delay: 0,
-                           usingSpringWithDamping: 0.5,
-                           initialSpringVelocity: 0.1,
-                           options: .curveEaseIn,
-                           animations: { [self] in
-                if navigationItem.searchController != nil {
-                    navigationItem.searchController = nil
-                } else {
-                    setSearchVC()
-                    navigationItem.hidesSearchBarWhenScrolling = false
-                }
-            })
-        }
-    }
-    
     private func configureNavigationBar() {
         navigationItem.title = DeveloperInfo.appTitle.rawValue
         navigationItem.backButtonTitle = ""
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: self, action: nil)
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "slider.vertical.3"), style: .plain, target: self, action: nil)
         navigationController?.navigationBar.backgroundColor = .clear
         navigationController?.navigationBar.tintColor = Colors.valueForColor
+        
+        let searchVC = UISearchController()
+        navigationItem.searchController = searchVC
+        searchVC.searchBar.keyboardType = .asciiCapable
+        searchVC.searchBar.delegate = self
+        searchVC.searchBar.placeholder = "Please type the keyword"
+        navigationItem.hidesSearchBarWhenScrolling = true
     }
     
     @objc private func showSettings(gesture: UILongPressGestureRecognizer) {
@@ -219,46 +191,37 @@ final class NewsViewController: UIViewController, UserView {
         }
     }
     
-    private func setSearchVC() {
-        let searchVC = UISearchController()
-        navigationItem.searchController = searchVC
-        searchVC.searchBar.keyboardType = .asciiCapable
-        searchVC.searchBar.delegate = self
-        searchVC.searchBar.placeholder = "Keyword?"
-    }
-    
     // MARK: Setup UI
     private func setupUI() {
         view.backgroundColor = .systemBackground
         
         for _ in 1...6 {
-            stackViewForGhostLoadingViews.addArrangedSubview(makeNewGhostView())
-            stackViewForGhostLoadingViewsBG.addArrangedSubview(makeNewGhostViewBG())
+            skeletonsStackView.addArrangedSubview(makeSkeleton())
+            skeletonsBackgroundViewsStackView.addArrangedSubview(makeSkeletonBackgroundview())
         }
-        newsList.addSubview(stackViewForGhostLoadingViewsBG)
-        newsList.addSubview(stackViewForGhostLoadingViews)
+        
+        newsList.addSubview(skeletonsBackgroundViewsStackView)
+        newsList.addSubview(skeletonsStackView)
         view.addSubview(newsList)
-        view.addSubview(responseErrorNotificationLabel)
-        navigationController?.navigationBar.addSubview(rightBarButtonItem)
+        view.addSubview(responseErrorLabel)
         navigationController?.navigationBar.addSubview(leftBarButtonItem)
         leftBarButtonItem.frame = CGRect(x: 0,
                                          y: 0,
                                          width: 60,
                                          height: 50)
-        rightBarButtonItem.frame = CGRect(x: view.bounds.maxX - 60,
-                                                   y: 0,
-                                                   width: 60,
-                                                   height: 50)
-        stackViewForGhostLoadingViews.frame = newsList.bounds
-        stackViewForGhostLoadingViewsBG.frame = newsList.bounds
+        
+        skeletonsStackView.frame = newsList.bounds
+        skeletonsBackgroundViewsStackView.frame = newsList.bounds
+        
         NSLayoutConstraint.activate([
-            responseErrorNotificationLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10),
-            responseErrorNotificationLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10),
-            responseErrorNotificationLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
-            responseErrorNotificationLabel.heightAnchor.constraint(equalToConstant: 0)
+            responseErrorLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10),
+            responseErrorLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10),
+            responseErrorLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
+            responseErrorLabel.heightAnchor.constraint(equalToConstant: 0)
         ])
         
         view.addSubview(upButton)
+        
         NSLayoutConstraint.activate([
             upButton.heightAnchor.constraint(equalToConstant: 40),
             upButton.widthAnchor.constraint(equalToConstant: 40),
@@ -269,18 +232,18 @@ final class NewsViewController: UIViewController, UserView {
     
     // MARK: Good connection animations 
     func animateGoodConnection() {
-        if isInitialLoading {
-            DispatchQueue.main.async {
-                SoundManager.shared.playSound(soundFileName: SoundName.loaded.rawValue)
-            }
-            isInitialLoading.toggle()
-        }
         DispatchQueue.main.async { [weak self] in
-            if let view = self?.view {
-                self?.removePowerOffImage(fromView: view)
+            guard let self else { return }
+            
+            if isInitialLoading {
+                SoundManager.shared.playSound(soundFileName: SoundName.loaded.rawValue)
+                isInitialLoading.toggle()
             }
-            if self?.navigationController?.navigationBar.layer.shadowColor != Colors.valueForButtonColor.cgColor {
-                self?.animateNaVbarBackGrColor(completion: nil)
+            
+            removePowerOffImage(fromView: view)
+            
+            if navigationController?.navigationBar.layer.shadowColor != Colors.valueForButtonColor.cgColor {
+                animateNaVbarBackGrColor(completion: nil)
             }
         }
     }
@@ -298,21 +261,22 @@ final class NewsViewController: UIViewController, UserView {
     
     // MARK: Skeletons animations
     private func animateLoading() {
-        stackViewForGhostLoadingViews.isHidden.toggle()
-        stackViewForGhostLoadingViewsBG.isHidden.toggle()
-        stackViewForGhostLoadingViews.arrangedSubviews.forEach {
+        skeletonsStackView.isHidden = false
+        skeletonsBackgroundViewsStackView.isHidden = false
+        skeletonsStackView.arrangedSubviews.forEach {
             $0.animateGradient()
         }
     }
     
     private func stopAnimatingAndHide() {
-        stackViewForGhostLoadingViews.isHidden = true
-        stackViewForGhostLoadingViewsBG.isHidden = true
+        newsList.refreshControl?.endRefreshing()
+        skeletonsStackView.isHidden = true
+        skeletonsBackgroundViewsStackView.isHidden = true
     }
 }
+
 // MARK: TableView delegate & dataSource methods
 extension NewsViewController : UITableViewDelegate, UITableViewDataSource {
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return internetService?.newsArray.count ?? 0
     }
@@ -344,10 +308,10 @@ extension NewsViewController : UITableViewDelegate, UITableViewDataSource {
 // MARK: Refresh control settings
 extension NewsViewController {
     func configureRefreshControl () {
-        newsList.refreshControl = UIRefreshControl()
-        newsList.refreshControl?.addTarget(self, action:
-                                                #selector(handleRefreshControl),
-                                              for: .valueChanged)
+        let refreshContol = UIRefreshControl()
+        refreshContol.transform = CGAffineTransform(scaleX: 0.75, y: 0.75)
+        newsList.refreshControl = refreshContol
+        newsList.refreshControl?.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
     }
     
     @objc func handleRefreshControl() {
@@ -355,12 +319,11 @@ extension NewsViewController {
         SoundManager.shared.playSound(soundFileName: SoundManager.shared.randomRefreshJedySound)
         internetService?.newsArray.removeAll()
         reload()
-        newsList.refreshControl?.endRefreshing()
         animateLoading()
         Task {
-            try await internetService?.getData(completion: {
+            try await internetService?.getData(completion: { [weak self] in
                 DispatchQueue.main.async {
-                    self.stopAnimatingAndHide()
+                    self?.stopAnimatingAndHide()
                 }
             }, with: nil)
         }
@@ -375,7 +338,7 @@ extension NewsViewController: PowerOffShowable {
                 self?.showPowerOffImage(insideView: currentView)
             }
             SoundManager.shared.playSound(soundFileName: SoundName.error.rawValue)
-            self?.responseErrorNotificationLabel.text = error
+            self?.responseErrorLabel.text = error
             self?.setErrorResponseLabelHeightConstraint(to: 100, from: 0)
             UIView.animate(withDuration: 2.0,
                            delay: 0,
@@ -393,12 +356,12 @@ extension NewsViewController: PowerOffShowable {
     }
     
     func setErrorResponseLabelHeightConstraint(to oneValue: CGFloat, from anotherValue: CGFloat) {
-        responseErrorNotificationLabel.constraints.forEach {
+        responseErrorLabel.constraints.forEach {
             if $0.constant == anotherValue {
-                responseErrorNotificationLabel.removeConstraint($0)
+                responseErrorLabel.removeConstraint($0)
             }
         }
-        responseErrorNotificationLabel.heightAnchor.constraint(equalToConstant: oneValue).isActive = true
+        responseErrorLabel.heightAnchor.constraint(equalToConstant: oneValue).isActive = true
     }
     
     func animateChanges() {
@@ -421,26 +384,14 @@ extension NewsViewController: UISearchBarDelegate {
         reload()
         animateLoading()
         Task {
-            try await internetService?.getData(completion: {
+            try await internetService?.getData(completion: { [weak self] in
                 DispatchQueue.main.async {
-                    self.stopAnimatingAndHide()
+                    self?.stopAnimatingAndHide()
                     searchBar.text?.removeAll()
-                    self.view.endEditing(true)
+                    self?.view.endEditing(true)
                 }
             }, with: searchBar.text)
         }
-    }
-    
-    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-        guard let text = searchBar.text else { return false }
-        if text.isEmpty {
-            rightBarButtonItem.isHidden = true
-        }
-        return true
-    }
-    
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        rightBarButtonItem.isHidden.toggle()
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -449,7 +400,6 @@ extension NewsViewController: UISearchBarDelegate {
 }
 
 extension NewsViewController: CellDelegate {
-    
     private func injectCloseButtonTo(vc: UIViewController) {
         let closeButton = UIButton()
         closeButton.translatesAutoresizingMaskIntoConstraints = false
@@ -469,8 +419,7 @@ extension NewsViewController: CellDelegate {
     
     func sendDetailsForPresenting(vc: UIActivityViewController, contentView: UIView) {
         vc.prepairForIPad(withVCView: contentView, withVC: self)
-        // Bad idea, but for some reason close button doesn't work, so i made my own =)
-        // Костыль на закрытие контроллера _Поделиться_ 
+        // For some reason close button doesn't work, so i made my own
         injectCloseButtonTo(vc: vc)
         present(vc, animated: true, completion: nil)
     }
@@ -491,17 +440,17 @@ extension NewsViewController {
                            usingSpringWithDamping: 0.5,
                            initialSpringVelocity: 0.1,
                            options: .curveEaseInOut,
-                           animations: { [weak self] in
-                self?.upButton.alpha = 1.0
-                self?.upButton.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
+                           animations: {
+                self.upButton.alpha = 1.0
+                self.upButton.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
             })
         } else {
             UIView.animate(withDuration: Constants.animationDuration,
                            delay: .zero,
                            options: .curveEaseInOut,
-                           animations: { [weak self] in
-                self?.upButton.alpha = .zero
-                self?.upButton.transform = .identity
+                           animations: {
+                self.upButton.alpha = .zero
+                self.upButton.transform = .identity
             })
         }
     }
