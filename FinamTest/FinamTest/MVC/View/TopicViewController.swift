@@ -1,41 +1,7 @@
 import UIKit
 import WebKit
 
-protocol PowerOffShowable {
-    var powerOffImageId: String { get }
-    func showPowerOffImage(insideView: UIView)
-    func removePowerOffImage(fromView: UIView)
-}
-
-extension PowerOffShowable {
-    var powerOffImageId: String { "powerOffImage" }
-    
-    func showPowerOffImage(insideView: UIView) {
-        let imageView = UIImageView(image: UIImage(systemName: "power.dotted"))
-        imageView.tintColor = Colors.valueForButtonColor
-        imageView.frame.size = CGSize(width: 50, height: 50)
-        imageView.center = insideView.center
-        imageView.alpha = 0
-        imageView.accessibilityIdentifier = powerOffImageId
-        insideView.addSubview(imageView)
-        
-        UIView.animate(withDuration: 1.0,
-                       delay: 0,
-                       usingSpringWithDamping: 0.1,
-                       initialSpringVelocity: 0.1,
-                       options: .curveLinear,
-                       animations: {
-            imageView.alpha = 1
-        })
-    }
-    
-    func removePowerOffImage(fromView: UIView) {
-        let powerOffImage = fromView.subviews.first(where: { $0.accessibilityIdentifier == powerOffImageId })
-        powerOffImage?.removeFromSuperview()
-    }
-}
-
-final class TopicViewController: UIViewController, PowerOffShowable, WKNavigationDelegate {
+final class TopicViewController: UIViewController, WKNavigationDelegate {
     var moreInfo = ""
     
     lazy var newsImage: UIImageView = {
@@ -112,8 +78,8 @@ final class TopicViewController: UIViewController, PowerOffShowable, WKNavigatio
         
         if topicLabel.text == Errors.topicLabelNoInfo.rawValue {
             VibrateManager.shared.vibrate(.warning)
-            self.imageSkeleton.alpha = .zero
-            showPowerOffImage(insideView: newsImage)
+            imageSkeleton.layer.removeAllAnimations()
+            imageSkeleton.alpha = 1
         }
         
         view.layoutIfNeeded()

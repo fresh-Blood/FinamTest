@@ -241,8 +241,6 @@ final class NewsViewController: UIViewController, NewsView {
                 SoundManager.shared.playSound(soundFileName: SoundName.loaded.rawValue)
                 isInitialLoading.toggle()
             }
-            
-            removePowerOffImage(fromView: view)
         }
     }
     
@@ -300,7 +298,6 @@ extension NewsViewController {
     }
     
     @objc func handleRefreshControl() {
-        removePowerOffImage(fromView: view)
         SoundManager.shared.playSound(soundFileName: SoundManager.shared.randomRefreshJedySound)
         internetService?.newsArray.removeAll()
         reload()
@@ -316,25 +313,23 @@ extension NewsViewController {
 }
 
 // MARK: Animate errors
-extension NewsViewController: PowerOffShowable {
+extension NewsViewController {
     func animateResponseError(with error: String) {
         DispatchQueue.main.async { [weak self] in
-            if let currentView = self?.view {
-                self?.showPowerOffImage(insideView: currentView)
-            }
+            guard let self else { return }
             SoundManager.shared.playSound(soundFileName: SoundName.error.rawValue)
-            self?.responseErrorLabel.text = error
-            self?.setErrorResponseLabelHeightConstraint(to: 100, from: 0)
+            responseErrorLabel.text = error
+            setErrorResponseLabelHeightConstraint(to: 100, from: 0)
             UIView.animate(withDuration: 2.0,
                            delay: 0,
                            usingSpringWithDamping: 0.1,
                            initialSpringVelocity: 0.1,
                            options: .curveEaseIn,
                            animations: {
-                self?.view.layoutIfNeeded()
+                self.view.layoutIfNeeded()
                 VibrateManager.shared.vibrate(.error)
-                self?.navigationController?.navigationBar.layer.shadowColor = UIColor.clear.cgColor
-            }, completion: { finished in
+                self.navigationController?.navigationBar.layer.shadowColor = UIColor.clear.cgColor
+            }, completion: { [weak self] finished in
                 self?.animateChanges()
             })
         }
