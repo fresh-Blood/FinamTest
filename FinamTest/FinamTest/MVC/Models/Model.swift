@@ -22,9 +22,22 @@ struct Source : Decodable {
     var name : String?
 }
 
-enum URLs: String {
-    case topHeadLinesTechnology = "https://newsapi.org/v2/top-headlines?country=us&category=technology&pageSize=100&apiKey=8f825354e7354c71829cfb4cb15c4893"
-    case everythingQWithParameters = "https://newsapi.org/v2/everything?q=apple&pageSize=100&language=ru&apiKey=8f825354e7354c71829cfb4cb15c4893"
+enum Categories: String, CaseIterable {
+    static var title: String {
+        "Please choose new theme"
+    }
+    
+    static var key: String {
+        String(describing: self)
+    }
+    
+    case business
+    case entertainment
+    case general
+    case health
+    case science
+    case sports
+    case technology
 }
 
 enum Errors: String {
@@ -60,7 +73,7 @@ enum GifName: String {
 
 enum SettingsKeys: String {
     case soundSettings = "Sounds"
-    case newsTheme = "Theme"
+    case newsTheme = "News theme"
     case appVerstion = "Version"
     case settings = "Settings"
 }

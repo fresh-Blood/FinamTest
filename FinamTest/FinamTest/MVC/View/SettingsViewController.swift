@@ -3,7 +3,7 @@ import UIKit
 class SettingsViewController: UIViewController {
     private lazy var settings = [
         SettingsModel(name: SettingsKeys.soundSettings.rawValue),
-        SettingsModel(name: SettingsKeys.newsTheme.rawValue, rightTitle: "test")
+        SettingsModel(name: SettingsKeys.newsTheme.rawValue, rightTitle: StorageService.shared.selectedCategory)
     ]
     
     struct Layout {
@@ -73,7 +73,7 @@ class SettingsViewController: UIViewController {
         let width: CGFloat = view.frame.width / 3
         
         NSLayoutConstraint.activate([
-            settingsList.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            settingsList.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
             settingsList.leftAnchor.constraint(equalTo: view.leftAnchor, constant: layout.contentInsets.left),
             settingsList.rightAnchor.constraint(equalTo: view.rightAnchor, constant: layout.contentInsets.right),
             
@@ -168,7 +168,22 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
             case 1:
-                print("1")
+                let chooseThemeVc = UIAlertController(title: Categories.title,
+                                                      message: nil,
+                                                      preferredStyle: .actionSheet)
+                
+                Categories.allCases.forEach { category in
+                    chooseThemeVc.addAction(UIAlertAction(title: category.rawValue,
+                                                          style: .default,
+                                                          handler: { [weak self] action in
+                        guard let self else { return }
+                        StorageService.shared.save(category.rawValue, forKey: Categories.key)
+                        navigationController?.popToRootViewController(animated: true)
+                    }))
+                }
+                
+                present(chooseThemeVc, animated: true)
+                
             default:
                 break 
         }

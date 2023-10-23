@@ -122,14 +122,16 @@ final class NewsViewController: UIViewController {
                     DispatchQueue.main.async {
                         self?.stopAnimatingAndHide()
                     }
-                }, with: nil)
+                },
+                                                   with: nil,
+                                                   category: StorageService.shared.selectedCategory)
             }
         }
     }
     
     // MARK: OnBoarding
     private func showOnBoardingMessageIfNeeded() {
-        guard StorageService.shared.getAppVersion(AppVersion.current) != nil else {
+        guard StorageService.shared.get(AppVersion.current) != nil else {
             let alertVC = UIAlertController(title: Updates.title.rawValue,
                                             message: Updates.whatsNew.rawValue,
                                             preferredStyle: .actionSheet)
@@ -139,7 +141,7 @@ final class NewsViewController: UIViewController {
                 alertVC.dismiss(animated: true, completion: nil)
             }))
             present(alertVC, animated: true, completion: {
-                StorageService.shared.saveAppVersion(AppVersion.current)
+                StorageService.shared.save(AppVersion.current, forKey: AppVersion.current)
             })
             return
         }
@@ -282,7 +284,9 @@ extension NewsViewController {
                 DispatchQueue.main.async {
                     self?.stopAnimatingAndHide()
                 }
-            }, with: nil)
+            }, 
+                                               with: nil,
+                                               category: StorageService.shared.selectedCategory)
         }
     }
 }
@@ -358,7 +362,9 @@ extension NewsViewController: UISearchBarDelegate {
                     self?.stopAnimatingAndHide()
                     self?.view.endEditing(true)
                 }
-            }, with: searchBar.text)
+            },
+                                               with: searchBar.text,
+                                               category: StorageService.shared.selectedCategory)
         }
     }
     

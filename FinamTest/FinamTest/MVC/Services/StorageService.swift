@@ -1,21 +1,27 @@
 import Foundation
 
+
 struct StorageService {
+    
     static let shared = StorageService()
     
-    func getData(for key: String) -> Bool? {
+    var selectedCategory: Categories.RawValue {
+        StorageService.shared.get(Categories.key) ?? Categories.technology.rawValue
+    }
+    
+    func getBool(for key: String) -> Bool? {
         UserDefaults.standard.value(forKey: key) as? Bool
     }
     
-    func saveData(with value: Bool, for key: String) {
-        UserDefaults.standard.set(value, forKey: key)
+    func save(_ bool: Bool, forKey: String) {
+        UserDefaults.standard.set(bool, forKey: forKey)
     }
     
-    func saveAppVersion(_ currentVersion: String) {
-        UserDefaults.standard.set(currentVersion, forKey: currentVersion)
+    func save(_ string: String, forKey: String) {
+        UserDefaults.standard.set(string, forKey: forKey)
     }
     
-    func getAppVersion(_ currentVersion: String) -> String? {
-        UserDefaults.standard.value(forKey: currentVersion) as? String
+    func get(_ string: String) -> String? {
+        UserDefaults.standard.value(forKey: string) as? String
     }
 }

@@ -44,7 +44,7 @@ final class SettingsCell: UITableViewCell {
     
     @objc private func tapped(sender: UISwitch) {
         switcher.setOn(sender.isOn, animated: true)
-        StorageService.shared.saveData(with: sender.isOn, for: model?.name ?? "Error")
+        StorageService.shared.save(sender.isOn, forKey: model?.name ?? "Error")
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -97,7 +97,7 @@ final class SettingsCell: UITableViewCell {
     }
     
     private func setupUserSoundSettings() {
-        guard let switcherIsOn = StorageService.shared.getData(for: SettingsKeys.soundSettings.rawValue) else { return }
+        guard let switcherIsOn = StorageService.shared.getBool(for: SettingsKeys.soundSettings.rawValue) else { return }
         switcher.setOn(switcherIsOn, animated: false)
     }
 }

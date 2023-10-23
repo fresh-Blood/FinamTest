@@ -10,7 +10,7 @@ struct SoundManager {
     }
     
     mutating func playSound(soundFileName: String) {
-        guard let soundOn = StorageService.shared.getData(for: SettingsKeys.soundSettings.rawValue) else { return }
+        guard let soundOn = StorageService.shared.getBool(for: SettingsKeys.soundSettings.rawValue) else { return }
         guard soundOn else { return }
         guard let urlPath = Bundle
                 .main
