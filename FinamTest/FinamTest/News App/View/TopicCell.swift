@@ -75,7 +75,7 @@ final class TopicCell: UITableViewCell {
     @objc private func share(with gesture: UILongPressGestureRecognizer) {
         if gesture.state == .began {
             animateContentViewLayer(with: .start)
-            VibrateManager.shared.makeLoadingResultVibration()
+            VibrateManager.shared.impactOccured(.light)
             let newsTopicInfo = "🔥 \(titleLabel.text ?? "") 🤖 \n\(DeveloperInfo.shareInfo.rawValue)"
             let activityVC = UIActivityViewController(activityItems: [newsTopicInfo], applicationActivities: nil)
             cellDelegate?.sendDetailsForPresenting(vc: activityVC, contentView: contentView)

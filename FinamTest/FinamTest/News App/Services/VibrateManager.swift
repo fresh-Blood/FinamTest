@@ -4,23 +4,13 @@ import UIKit
 struct VibrateManager {
     static let shared = VibrateManager()
     
-    func makeLoadingResultVibration() {
+    func impactOccured(_ style: UIImpactFeedbackGenerator.FeedbackStyle) {
         UIImpactFeedbackGenerator().prepare()
-        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        UIImpactFeedbackGenerator(style: style).impactOccurred()
     }
     
-    func makeErrorVibration() {
+    func vibrate(_ feedBackType: UINotificationFeedbackGenerator.FeedbackType) {
         UINotificationFeedbackGenerator().prepare()
-        UINotificationFeedbackGenerator().notificationOccurred(.error)
-    }
-    
-    func makeWarningVibration() {
-        UINotificationFeedbackGenerator().prepare()
-        UINotificationFeedbackGenerator().notificationOccurred(.warning)
-    }
-    
-    func makeSoftResultVibration() {
-        UIImpactFeedbackGenerator().prepare()
-        UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+        UINotificationFeedbackGenerator().notificationOccurred(feedBackType)
     }
 }

@@ -29,17 +29,16 @@ extension UIView {
     }
 }
 
-// MARK: images are loading when we see them not on main queue, if the image is huge and loading takes much time - UI doesn't freeze: we can go back and choose another topic
-
 extension UIImageView {
     func downLoadImage(from: String, completion: @escaping () -> Void) {
         if let cachedImage = Cashe.imageCache.object(forKey: from as AnyObject) {
             DispatchQueue.main.async {
                 completion()
             }
-            self.image = cachedImage
+            image = cachedImage
             return
         }
+        
         if let url = URL(string: from) {
             URLSession.shared.dataTask(with: url, completionHandler: { data,response,error in
                 if let data = data {
@@ -57,7 +56,6 @@ extension UIImageView {
 }
 
 extension UIView {
-    
     enum ShadowState {
         case set
         case removed
@@ -67,23 +65,25 @@ extension UIView {
                          configureBorder: Bool,
                          withAlpha: CGFloat? = 1) {
         guard shadowState == .set else {
-            self.layer.shadowOffset = .zero
-            self.layer.shadowOpacity = .zero
-            self.layer.shadowColor = .none
-            self.layer.shadowRadius = .zero
-            self.layer.borderColor = UIColor.clear.cgColor
-            self.layer.borderWidth = .zero
+            layer.shadowOffset = .zero
+            layer.shadowOpacity = .zero
+            layer.shadowColor = .none
+            layer.shadowRadius = .zero
+            layer.borderColor = UIColor.clear.cgColor
+            layer.borderWidth = .zero
             return
         }
+        
         if configureBorder {
-            self.layer.borderColor = Colors.valueForButtonColor.cgColor
-            self.layer.borderWidth = 3
+            layer.borderColor = Colors.valueForButtonColor.cgColor
+            layer.borderWidth = 3
         }
-        self.layer.cornerRadius = 16
-        self.layer.shadowOffset = CGSize(width: 2, height: 3)
-        self.layer.shadowOpacity = 1.0
-        self.layer.shadowColor = Colors.valueForButtonColor.withAlphaComponent(withAlpha ?? 1.0).cgColor
-        self.layer.shadowRadius = 7
+        
+        layer.cornerRadius = 16
+        layer.shadowOffset = CGSize(width: 2, height: 3)
+        layer.shadowOpacity = 1.0
+        layer.shadowColor = Colors.valueForButtonColor.withAlphaComponent(withAlpha ?? 1.0).cgColor
+        layer.shadowRadius = 7
     }
     
     func animateGradient() {
@@ -107,7 +107,7 @@ extension UIView {
                                      y: bounds.origin.y,
                                      width: bounds.size.width * 4,
                                      height: bounds.size.height)
-        self.layer.mask = gradientLayer
+        layer.mask = gradientLayer
     }
 }
 
@@ -131,29 +131,22 @@ extension String {
 
 extension UIViewController {
     func prepairForIPad(withVCView: UIView?, withVC: UIViewController?) {
-        self.popoverPresentationController?.sourceView = withVCView
-        self.popoverPresentationController?.sourceRect = CGRect(origin: withVCView?.center ?? .zero, size: .zero)
-        self.popoverPresentationController?.barButtonItem = withVC?.navigationItem.backBarButtonItem
+        popoverPresentationController?.sourceView = withVCView
+        popoverPresentationController?.sourceRect = CGRect(origin: withVCView?.center ?? .zero, size: .zero)
+        popoverPresentationController?.barButtonItem = withVC?.navigationItem.backBarButtonItem
     }
 }
 
 extension UIImage {
     public class func gifImageWithData(_ data: Data) -> UIImage? {
-        guard let source = CGImageSourceCreateWithData(data as CFData, nil) else {
-            return nil
-        }
+        guard let source = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
         return UIImage.animatedImageWithSource(source)
     }
     
     public class func gifImageWithName(_ name: String) -> UIImage? {
-        guard let bundleURL = Bundle.main
-                .url(forResource: name, withExtension: "gif") else {
-                    return nil
-                }
-        guard let imageData = try? Data(contentsOf: bundleURL) else {
-            return nil
-        }
-        
+        guard let bundleURL = Bundle.main.url(forResource: name, withExtension: "gif"),
+              let imageData = try? Data(contentsOf: bundleURL)
+        else { return nil }
         return gifImageWithData(imageData)
     }
     
@@ -162,17 +155,20 @@ extension UIImage {
         
         let cfProperties = CGImageSourceCopyPropertiesAtIndex(source, index, nil)
         let gifProperties: CFDictionary = unsafeBitCast(
-            CFDictionaryGetValue(cfProperties,
-                                 Unmanaged.passUnretained(kCGImagePropertyGIFDictionary).toOpaque()),
-            to: CFDictionary.self)
+            CFDictionaryGetValue(cfProperties, Unmanaged.passUnretained(kCGImagePropertyGIFDictionary).toOpaque()),
+            to: CFDictionary.self
+        )
         
         var delayObject: AnyObject = unsafeBitCast(
-            CFDictionaryGetValue(gifProperties,
-                                 Unmanaged.passUnretained(kCGImagePropertyGIFUnclampedDelayTime).toOpaque()),
-            to: AnyObject.self)
+            CFDictionaryGetValue(gifProperties, Unmanaged.passUnretained(kCGImagePropertyGIFUnclampedDelayTime).toOpaque()),
+            to: AnyObject.self
+        )
+        
         if delayObject.doubleValue == 0 {
-            delayObject = unsafeBitCast(CFDictionaryGetValue(gifProperties,
-                                                             Unmanaged.passUnretained(kCGImagePropertyGIFDelayTime).toOpaque()), to: AnyObject.self)
+            delayObject = unsafeBitCast(
+                CFDictionaryGetValue(gifProperties, Unmanaged.passUnretained(kCGImagePropertyGIFDelayTime).toOpaque()),
+                to: AnyObject.self
+            )
         }
         
         delay = delayObject as! Double
@@ -187,6 +183,7 @@ extension UIImage {
     class func gcdForPair(_ a: Int?, _ b: Int?) -> Int {
         var a = a
         var b = b
+        
         if b == nil || a == nil {
             if b != nil {
                 return b!
@@ -204,6 +201,7 @@ extension UIImage {
         }
         
         var rest: Int
+        
         while true {
             rest = a! % b!
             
@@ -242,7 +240,7 @@ extension UIImage {
             
             let delaySeconds = UIImage.delayForImageAtIndex(Int(i),
                                                             source: source)
-            delays.append(Int(delaySeconds * 1000.0)) // Seconds to ms
+            delays.append(Int(delaySeconds * 1000.0))
         }
         
         let duration: Int = {
@@ -260,6 +258,7 @@ extension UIImage {
         
         var frame: UIImage
         var frameCount: Int
+        
         for i in 0..<count {
             frame = UIImage(cgImage: images[Int(i)])
             frameCount = Int(delays[Int(i)] / gcd)
@@ -269,8 +268,7 @@ extension UIImage {
             }
         }
         
-        let animation = UIImage.animatedImage(with: frames,
-                                              duration: Double(duration) / 1000.0)
+        let animation = UIImage.animatedImage(with: frames, duration: Double(duration) / 1000.0)
         
         return animation
     }

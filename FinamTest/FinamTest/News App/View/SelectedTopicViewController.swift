@@ -110,7 +110,7 @@ final class SelectedTopicViewController: UIViewController, PowerOffShowable {
         }
         
         if topicLabel.text == Errors.topicLabelNoInfo.rawValue {
-            VibrateManager.shared.makeWarningVibration()
+            VibrateManager.shared.vibrate(.warning)
             UIView.animate(withDuration: 1.0,
                            delay: 0,
                            usingSpringWithDamping: 0.1,
@@ -154,7 +154,7 @@ final class SelectedTopicViewController: UIViewController, PowerOffShowable {
             } else { // zoom out
                 scrollImageView.zoom(to: zoomRectForScale(scale: scrollImageView.maximumZoomScale, center: gesture.location(in: newsImage)), animated: true)
             }
-            VibrateManager.shared.makeLoadingResultVibration()
+            VibrateManager.shared.impactOccured(.light)
         }
     }
     

@@ -12,7 +12,6 @@ protocol UserView {
 
 final class NewsViewController: UIViewController, UserView {
     private lazy var isInitialLoading = true
-    private lazy var isSettingsVCPresenting = false
     
     struct Layout {
         let contentInsets: UIEdgeInsets
@@ -186,7 +185,7 @@ final class NewsViewController: UIViewController, UserView {
     
     @objc private func searchAction(gesture: UILongPressGestureRecognizer) {
         if gesture.state == .began {
-            VibrateManager.shared.makeLoadingResultVibration()
+            VibrateManager.shared.impactOccured(.rigid)
             UIView.animate(withDuration: 0.5,
                            delay: 0,
                            usingSpringWithDamping: 0.5,
@@ -212,16 +211,11 @@ final class NewsViewController: UIViewController, UserView {
         navigationController?.navigationBar.tintColor = Colors.valueForColor
     }
     
-    @objc private func showSettings() {
-        // Тк дефолтные кнопки нав бара не нажимались по какой то причине, я сделал костыли в виде прозрачных кнопок, у которых есть обработка нажатий. И теперь тут чтобы 2 раза не открывался vc настроек, сделал костыльный флаг. (Непонятно почему отрабатывает дважды нажатие тут, как и непонятно почему при нажатии _поделиться_ открывается контроллер на котором в верхнем правом углу есть кнопка _закрыть_ и она тоже не нажимается( , поэтому пришлось сделать костыль по инжекту кнопки прозрачной с закрытием его ниже)
-        isSettingsVCPresenting.toggle()
-        if isSettingsVCPresenting {
-            let settingsVC = SettingsViewController()
-            settingsVC.closeCompletion = { [weak self] in
-                self?.isSettingsVCPresenting.toggle()
-            }
-            VibrateManager.shared.makeLoadingResultVibration()
-            navigationController?.pushViewController(settingsVC, animated: true)
+    @objc private func showSettings(gesture: UILongPressGestureRecognizer) {
+        if gesture.state == .began {
+            VibrateManager.shared.impactOccured(.rigid)
+        } else if gesture.state == .ended {
+            navigationController?.pushViewController(SettingsViewController(), animated: true)
         }
     }
     
@@ -390,7 +384,7 @@ extension NewsViewController: PowerOffShowable {
                            options: .curveEaseIn,
                            animations: {
                 self?.view.layoutIfNeeded()
-                VibrateManager.shared.makeErrorVibration()
+                VibrateManager.shared.vibrate(.error)
                 self?.navigationController?.navigationBar.layer.shadowColor = UIColor.clear.cgColor
             }, completion: { finished in
                 self?.animateChanges()
@@ -517,7 +511,7 @@ extension NewsViewController {
         newsList.scrollToRow(at: IndexPath(row: .zero, section: .zero),
                              at: .top,
                              animated: true)
-        VibrateManager.shared.makeSoftResultVibration()
+        VibrateManager.shared.impactOccured(.rigid)
     }
 }
 

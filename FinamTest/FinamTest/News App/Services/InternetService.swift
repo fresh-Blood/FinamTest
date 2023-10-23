@@ -44,25 +44,25 @@ final class InternetService: UserInternetService {
         
         DispatchQueue.main.async { [weak self] in
             self?.view?.reload()
-            VibrateManager.shared.makeLoadingResultVibration()
+            VibrateManager.shared.impactOccured(.light)
             completion()
         }
     }
     
     private func handleResponse(httpResponseStatusCode: Int) {
         switch httpResponseStatusCode {
-        case 429:
-            view?.animateResponseError(with: Errors.tooManyRequests.rawValue)
-        case 500:
-            view?.animateResponseError(with: Errors.serverError.rawValue)
-        case 401:
-            view?.animateResponseError(with: Errors.unauthorized.rawValue)
-        case 400:
-            view?.animateResponseError(with: Errors.badRequest.rawValue)
-        case 200:
-            view?.animateGoodConnection()
-        default:
-            break
+            case 429:
+                view?.animateResponseError(with: Errors.tooManyRequests.rawValue)
+            case 500:
+                view?.animateResponseError(with: Errors.serverError.rawValue)
+            case 401:
+                view?.animateResponseError(with: Errors.unauthorized.rawValue)
+            case 400:
+                view?.animateResponseError(with: Errors.badRequest.rawValue)
+            case 200:
+                view?.animateGoodConnection()
+            default:
+                break
         }
     }
 }
