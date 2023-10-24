@@ -3,7 +3,7 @@ import UIKit
 class SettingsViewController: UIViewController {
     private lazy var settings = [
         SettingsModel(name: SettingsKeys.soundSettings.rawValue),
-        SettingsModel(name: SettingsKeys.newsTheme.rawValue, rightTitle: StorageService.shared.selectedCategory)
+        SettingsModel(name: SettingsKeys.newsCategory.rawValue, rightTitle: StorageService.shared.selectedCategory)
     ]
     
     struct Layout {

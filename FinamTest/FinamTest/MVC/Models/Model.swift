@@ -24,7 +24,7 @@ struct Source : Decodable {
 
 enum Categories: String, CaseIterable {
     static var title: String {
-        "Please choose new theme"
+        "Please choose news category"
     }
     
     static var key: String {
@@ -73,7 +73,7 @@ enum GifName: String {
 
 enum SettingsKeys: String {
     case soundSettings = "Sounds"
-    case newsTheme = "Theme"
+    case newsCategory = "Category"
     case appVerstion = "Version"
     case settings = "Settings"
 }
