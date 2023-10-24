@@ -144,14 +144,11 @@ extension String {
     
     func toReadableDate() -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        dateFormatter.dateFormat = "MMM d, h:mm a"
+        dateFormatter.locale = Locale(identifier: "en_En")
+        
         let date = dateFormatter.date(from: self)
-        dateFormatter.dateStyle = .long
-        dateFormatter.locale = Locale(identifier: "ru_Ru")
-        let dayYearInfo = dateFormatter.string(from: date ?? Date())
-        dateFormatter.dateFormat = "yyyy-MM-dd в HH:mm"
-        let timeInfo = dateFormatter.string(from: date ?? Date()).drop(while: { $0 != " "})
-        return dayYearInfo + timeInfo
+        return dateFormatter.string(from: date ?? Date())
     }
 }
 
