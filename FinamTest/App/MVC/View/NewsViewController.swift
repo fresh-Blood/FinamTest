@@ -414,9 +414,8 @@ extension NewsViewController: CellDelegate {
     }
     
     @objc private func close() {
-        if let presentingVC = UIApplication.shared.keyWindow?.rootViewController?.presentedViewController {
-            presentingVC.dismiss(animated: true)
-        }
+        guard let presentedViewController else { return }
+        presentedViewController.dismiss(animated: true)
     }
 }
 

@@ -7,35 +7,34 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		842204C5291FFBF80053DF54 /* kitten.gif in Resources */ = {isa = PBXBuildFile; fileRef = 842204C4291FFBF80053DF54 /* kitten.gif */; };
-		8446A223281DA20700A95290 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8446A222281DA20700A95290 /* Colors.swift */; };
-		8446A225281DA24C00A95290 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8446A224281DA24C00A95290 /* Extensions.swift */; };
-		844F98732878EDC200859AEB /* error.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 844F98722878EDC200859AEB /* error.mp3 */; };
-		844F987B2878F80C00859AEB /* loaded.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 844F987A2878F80C00859AEB /* loaded.mp3 */; };
-		844F987D2878F89100859AEB /* jedy1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 844F987C2878F89100859AEB /* jedy1.mp3 */; };
-		844F987F2878F99000859AEB /* jedy2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 844F987E2878F99000859AEB /* jedy2.mp3 */; };
-		8455A6CE2878E45400B3D575 /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8455A6CD2878E45400B3D575 /* SoundManager.swift */; };
-		8455A6D02878E62A00B3D575 /* VibrateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8455A6CF2878E62A00B3D575 /* VibrateManager.swift */; };
-		846FC68A2879748D0045FCB2 /* StorageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846FC6892879748D0045FCB2 /* StorageService.swift */; };
-		846FC68C287987B50045FCB2 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846FC68B287987B50045FCB2 /* SettingsViewController.swift */; };
-		849674B32774BD4700504D9D /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849674B22774BD4700504D9D /* Model.swift */; };
-		849674B62774BE2700504D9D /* InternetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849674B52774BE2700504D9D /* InternetService.swift */; };
-		849674B82774C8F100504D9D /* Assemblyer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849674B72774C8F100504D9D /* Assemblyer.swift */; };
-		84BF945F281DAF3A008B9F57 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84BF945D281DAF3A008B9F57 /* LaunchScreen.storyboard */; };
-		84FA0F7826C6350900FB1C34 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FA0F7726C6350900FB1C34 /* AppDelegate.swift */; };
-		84FA0F7A26C6350900FB1C34 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FA0F7926C6350900FB1C34 /* SceneDelegate.swift */; };
-		84FA0F7C26C6350900FB1C34 /* NewsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FA0F7B26C6350900FB1C34 /* NewsViewController.swift */; };
-		84FA0F8426C6350D00FB1C34 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84FA0F8326C6350D00FB1C34 /* Assets.xcassets */; };
-		84FA0F8F26C6362600FB1C34 /* TopicCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FA0F8E26C6362600FB1C34 /* TopicCell.swift */; };
-		84FA0FA326C642C000FB1C34 /* TopicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FA0FA226C642C000FB1C34 /* TopicViewController.swift */; };
-		C411227829D9A9CC0089F601 /* SettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C411227729D9A9CC0089F601 /* SettingsCell.swift */; };
-		C411227A29D9AA460089F601 /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C411227929D9AA460089F601 /* SettingsModel.swift */; };
 		C457B52B2AE91A6D005C6B59 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C457B52A2AE91A6D005C6B59 /* WidgetKit.framework */; };
 		C457B52D2AE91A6D005C6B59 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C457B52C2AE91A6D005C6B59 /* SwiftUI.framework */; };
 		C457B5302AE91A6D005C6B59 /* NewsWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C457B52F2AE91A6D005C6B59 /* NewsWidgetBundle.swift */; };
 		C457B5322AE91A6D005C6B59 /* NewsWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C457B5312AE91A6D005C6B59 /* NewsWidget.swift */; };
 		C457B5342AE91A6F005C6B59 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C457B5332AE91A6F005C6B59 /* Assets.xcassets */; };
 		C457B5382AE91A6F005C6B59 /* NewsWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C457B5292AE91A6D005C6B59 /* NewsWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C457B53E2AE91E43005C6B59 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FA0F7726C6350900FB1C34 /* AppDelegate.swift */; };
+		C457B53F2AE91E43005C6B59 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FA0F7926C6350900FB1C34 /* SceneDelegate.swift */; };
+		C457B5402AE91E43005C6B59 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8446A224281DA24C00A95290 /* Extensions.swift */; };
+		C457B5412AE91E43005C6B59 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8446A222281DA20700A95290 /* Colors.swift */; };
+		C457B5422AE91E4A005C6B59 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849674B22774BD4700504D9D /* Model.swift */; };
+		C457B5432AE91E4A005C6B59 /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C411227929D9AA460089F601 /* SettingsModel.swift */; };
+		C457B5442AE91E4F005C6B59 /* NewsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FA0F7B26C6350900FB1C34 /* NewsViewController.swift */; };
+		C457B5452AE91E4F005C6B59 /* TopicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FA0FA226C642C000FB1C34 /* TopicViewController.swift */; };
+		C457B5462AE91E4F005C6B59 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846FC68B287987B50045FCB2 /* SettingsViewController.swift */; };
+		C457B5472AE91E4F005C6B59 /* SettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C411227729D9A9CC0089F601 /* SettingsCell.swift */; };
+		C457B5482AE91E4F005C6B59 /* TopicCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FA0F8E26C6362600FB1C34 /* TopicCell.swift */; };
+		C457B54A2AE91E55005C6B59 /* InternetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849674B52774BE2700504D9D /* InternetService.swift */; };
+		C457B54B2AE91E55005C6B59 /* StorageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846FC6892879748D0045FCB2 /* StorageService.swift */; };
+		C457B54C2AE91E55005C6B59 /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8455A6CD2878E45400B3D575 /* SoundManager.swift */; };
+		C457B54D2AE91E55005C6B59 /* VibrateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8455A6CF2878E62A00B3D575 /* VibrateManager.swift */; };
+		C457B54E2AE91E55005C6B59 /* Assemblyer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849674B72774C8F100504D9D /* Assemblyer.swift */; };
+		C457B54F2AE91E96005C6B59 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84FA0F8326C6350D00FB1C34 /* Assets.xcassets */; };
+		C457B5502AE91E99005C6B59 /* kitten.gif in Resources */ = {isa = PBXBuildFile; fileRef = 842204C4291FFBF80053DF54 /* kitten.gif */; };
+		C457B5512AE91E9D005C6B59 /* loaded.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 844F987A2878F80C00859AEB /* loaded.mp3 */; };
+		C457B5522AE91E9D005C6B59 /* error.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 844F98722878EDC200859AEB /* error.mp3 */; };
+		C457B5532AE91E9D005C6B59 /* jedy1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 844F987C2878F89100859AEB /* jedy1.mp3 */; };
+		C457B5542AE91E9D005C6B59 /* jedy2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 844F987E2878F99000859AEB /* jedy2.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -339,13 +338,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				844F987D2878F89100859AEB /* jedy1.mp3 in Resources */,
-				84BF945F281DAF3A008B9F57 /* LaunchScreen.storyboard in Resources */,
-				84FA0F8426C6350D00FB1C34 /* Assets.xcassets in Resources */,
-				844F987F2878F99000859AEB /* jedy2.mp3 in Resources */,
-				842204C5291FFBF80053DF54 /* kitten.gif in Resources */,
-				844F987B2878F80C00859AEB /* loaded.mp3 in Resources */,
-				844F98732878EDC200859AEB /* error.mp3 in Resources */,
+				C457B5512AE91E9D005C6B59 /* loaded.mp3 in Resources */,
+				C457B5522AE91E9D005C6B59 /* error.mp3 in Resources */,
+				C457B5532AE91E9D005C6B59 /* jedy1.mp3 in Resources */,
+				C457B5542AE91E9D005C6B59 /* jedy2.mp3 in Resources */,
+				C457B5502AE91E99005C6B59 /* kitten.gif in Resources */,
+				C457B54F2AE91E96005C6B59 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -364,22 +362,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				849674B32774BD4700504D9D /* Model.swift in Sources */,
-				8446A223281DA20700A95290 /* Colors.swift in Sources */,
-				C411227A29D9AA460089F601 /* SettingsModel.swift in Sources */,
-				8455A6D02878E62A00B3D575 /* VibrateManager.swift in Sources */,
-				84FA0FA326C642C000FB1C34 /* TopicViewController.swift in Sources */,
-				84FA0F7C26C6350900FB1C34 /* NewsViewController.swift in Sources */,
-				84FA0F7826C6350900FB1C34 /* AppDelegate.swift in Sources */,
-				84FA0F8F26C6362600FB1C34 /* TopicCell.swift in Sources */,
-				846FC68C287987B50045FCB2 /* SettingsViewController.swift in Sources */,
-				8455A6CE2878E45400B3D575 /* SoundManager.swift in Sources */,
-				846FC68A2879748D0045FCB2 /* StorageService.swift in Sources */,
-				84FA0F7A26C6350900FB1C34 /* SceneDelegate.swift in Sources */,
-				849674B82774C8F100504D9D /* Assemblyer.swift in Sources */,
-				8446A225281DA24C00A95290 /* Extensions.swift in Sources */,
-				C411227829D9A9CC0089F601 /* SettingsCell.swift in Sources */,
-				849674B62774BE2700504D9D /* InternetService.swift in Sources */,
+				C457B54A2AE91E55005C6B59 /* InternetService.swift in Sources */,
+				C457B54B2AE91E55005C6B59 /* StorageService.swift in Sources */,
+				C457B54C2AE91E55005C6B59 /* SoundManager.swift in Sources */,
+				C457B54D2AE91E55005C6B59 /* VibrateManager.swift in Sources */,
+				C457B54E2AE91E55005C6B59 /* Assemblyer.swift in Sources */,
+				C457B5442AE91E4F005C6B59 /* NewsViewController.swift in Sources */,
+				C457B5452AE91E4F005C6B59 /* TopicViewController.swift in Sources */,
+				C457B5462AE91E4F005C6B59 /* SettingsViewController.swift in Sources */,
+				C457B5472AE91E4F005C6B59 /* SettingsCell.swift in Sources */,
+				C457B5482AE91E4F005C6B59 /* TopicCell.swift in Sources */,
+				C457B5422AE91E4A005C6B59 /* Model.swift in Sources */,
+				C457B5432AE91E4A005C6B59 /* SettingsModel.swift in Sources */,
+				C457B53E2AE91E43005C6B59 /* AppDelegate.swift in Sources */,
+				C457B53F2AE91E43005C6B59 /* SceneDelegate.swift in Sources */,
+				C457B5402AE91E43005C6B59 /* Extensions.swift in Sources */,
+				C457B5412AE91E43005C6B59 /* Colors.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -540,7 +538,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2.0;
 				DEVELOPMENT_TEAM = 62XGY8QWW9;
-				INFOPLIST_FILE = FinamTest/Info.plist;
+				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = News;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.news";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -566,7 +564,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2.0;
 				DEVELOPMENT_TEAM = 62XGY8QWW9;
-				INFOPLIST_FILE = FinamTest/Info.plist;
+				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = News;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.news";
 				LD_RUNPATH_SEARCH_PATHS = (
