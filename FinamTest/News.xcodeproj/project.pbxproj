@@ -36,8 +36,6 @@
 		C457B5542AE91E9D005C6B59 /* jedy2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 844F987E2878F99000859AEB /* jedy2.mp3 */; };
 		C457B55E2AE96ECB005C6B59 /* kitten.gif in Resources */ = {isa = PBXBuildFile; fileRef = C457B55D2AE96ECB005C6B59 /* kitten.gif */; };
 		C457B55F2AE96ECB005C6B59 /* kitten.gif in Resources */ = {isa = PBXBuildFile; fileRef = C457B55D2AE96ECB005C6B59 /* kitten.gif */; };
-		C457B5642AE98349005C6B59 /* blured.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C457B5632AE98349005C6B59 /* blured.jpg */; };
-		C457B5652AE98349005C6B59 /* blured.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C457B5632AE98349005C6B59 /* blured.jpg */; };
 		C457B5672AE98629005C6B59 /* News.app in Resources */ = {isa = PBXBuildFile; fileRef = 84FA0F7426C6350900FB1C34 /* News.app */; };
 /* End PBXBuildFile section */
 
@@ -108,7 +106,6 @@
 		C457B5332AE91A6F005C6B59 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C457B5352AE91A6F005C6B59 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C457B55D2AE96ECB005C6B59 /* kitten.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = kitten.gif; sourceTree = "<group>"; };
-		C457B5632AE98349005C6B59 /* blured.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = blured.jpg; path = ../../../../Downloads/blured.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -251,7 +248,6 @@
 			children = (
 				C457B52F2AE91A6D005C6B59 /* NewsWidgetBundle.swift */,
 				C457B5312AE91A6D005C6B59 /* NewsWidget.swift */,
-				C457B5632AE98349005C6B59 /* blured.jpg */,
 				C457B5332AE91A6F005C6B59 /* Assets.xcassets */,
 				C457B5352AE91A6F005C6B59 /* Info.plist */,
 			);
@@ -351,7 +347,6 @@
 				C457B5542AE91E9D005C6B59 /* jedy2.mp3 in Resources */,
 				C457B55E2AE96ECB005C6B59 /* kitten.gif in Resources */,
 				C457B54F2AE91E96005C6B59 /* Assets.xcassets in Resources */,
-				C457B5642AE98349005C6B59 /* blured.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -361,7 +356,6 @@
 			files = (
 				C457B5342AE91A6F005C6B59 /* Assets.xcassets in Resources */,
 				C457B55F2AE96ECB005C6B59 /* kitten.gif in Resources */,
-				C457B5652AE98349005C6B59 /* blured.jpg in Resources */,
 				C457B5672AE98629005C6B59 /* News.app in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
