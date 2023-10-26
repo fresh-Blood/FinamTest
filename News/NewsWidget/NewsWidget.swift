@@ -17,6 +17,15 @@ extension String {
     }
 }
 
+extension Date {
+    func getTime() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_En")
+        dateFormatter.dateFormat = "h:mm a"
+        return dateFormatter.string(from: self)
+    }
+}
+
 enum Categories: String, CaseIterable {
     static var random: String {
         Categories.allCases.randomElement()?.rawValue ?? ""
@@ -91,26 +100,89 @@ struct Provider: TimelineProvider {
     }
 }
 
-struct NewsWidgetEntryView : View {
+struct SmallView: View {
+    let entry: Provider.Entry
+
+    var body: some View {
+        Text("Category:")
+            .fontDesign(.monospaced)
+            .font(.headline)
+        
+        Text(entry.category)
+            .fontDesign(.monospaced)
+            .font(.callout)
+        
+        Text("Posted:")
+            .padding(.top, 6)
+            .fontDesign(.monospaced)
+            .font(.headline)
+        
+        Text(entry.date, style: .time)
+            .fontDesign(.monospaced)
+            .font(.title3)
+    }
+}
+
+struct AccessoryCircularView: View {
     let entry: Provider.Entry
     
     var body: some View {
+        Text(entry.category)
+            .fontDesign(.monospaced)
+            .font(.system(size: 15))
+            .lineLimit(1)
+        
+        Text(entry.date, style: .time)
+            .fontDesign(.monospaced)
+            .font(.system(size: 15))
+            .padding(-3)
+    }
+}
+
+struct AccessoryInlineView: View {
+    let entry: Provider.Entry
+    
+    var body: some View {
+        Text(entry.category + " " +  entry.date.getTime())
+            .fontDesign(.monospaced)
+            .lineLimit(1)
+    }
+}
+
+struct AccessoryRectangularView: View {
+    let entry: Provider.Entry
+    
+    var body: some View {
+        Text(entry.category)
+            .fontDesign(.monospaced)
+            .font(.system(size: 25))
+            .lineLimit(1)
+        
+        Text(entry.date.getTime())
+            .fontDesign(.monospaced)
+            .font(.system(size: 25))
+            .lineLimit(1)
+    }
+}
+
+struct NewsWidgetEntryView : View {
+    @Environment(\.widgetFamily) var family
+    
+    let entry: Provider.Entry
+    
+    @ViewBuilder
+    var body: some View {
         VStack {
-            Text("Category:")
-                .fontDesign(.monospaced)
-                .font(.headline)
-            
-            Text(entry.category)
-                .fontDesign(.monospaced)
-            
-            Text("Posted:")
-                .padding(.top, 6)
-                .fontDesign(.monospaced)
-                .font(.headline)
-            
-            Text(entry.date, style: .time)
-                .fontDesign(.monospaced)
-                .font(.title3)
+            switch family {
+                case .systemSmall: SmallView(entry: entry)
+                case .accessoryCircular: AccessoryCircularView(entry: entry)
+                case .accessoryInline: AccessoryInlineView(entry: entry)
+                case .accessoryRectangular: AccessoryRectangularView(entry: entry)
+                default:
+                    Text("Need configure")
+                        .fontDesign(.monospaced)
+                        .font(.headline)
+            }
         }
         .transition(.push(from: .bottom))
     }
@@ -133,10 +205,16 @@ struct NewsWidget: Widget {
         }
         .configurationDisplayName("News widget")
         .description("Stay in touch")
+        .supportedFamilies([
+            .systemSmall,
+            .accessoryCircular,
+            .accessoryInline,
+            .accessoryRectangular,
+        ])
     }
 }
 
-#Preview(as: .systemSmall) {
+#Preview(as: .systemMedium) {
     NewsWidget()
 } timeline: {
     Entry(date: .now, category: Categories.random)
