@@ -17,6 +17,8 @@ final class NewsViewController: UIViewController {
         }
     }
     
+    private lazy var refreshContol = UIRefreshControl()
+    
     private lazy var layout: Layout = .default
     private lazy var isInitialLoading = true
     private lazy var skeletonsStackView = makeStackView()
@@ -272,7 +274,6 @@ extension NewsViewController : UITableViewDelegate, UITableViewDataSource {
 // MARK: Refresh control settings
 extension NewsViewController {
     func configureRefreshControl () {
-        let refreshContol = UIRefreshControl()
         refreshContol.transform = CGAffineTransform(scaleX: 0.75, y: 0.75)
         newsList.refreshControl = refreshContol
         newsList.refreshControl?.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
@@ -280,7 +281,27 @@ extension NewsViewController {
     
     @objc func handleRefreshControl() {
         SoundManager.shared.playSound(soundFileName: SoundManager.shared.randomRefreshJedySound)
-        loadNews()
+        UIView.animate(withDuration: 0.2,
+                       delay: 0,
+                       usingSpringWithDamping: 1,
+                       initialSpringVelocity: 1,
+                       options: [.curveEaseInOut],
+                       animations: {
+            self.refreshContol.transform = CGAffineTransform(scaleX: 1, y: 1)
+        }, completion: { [weak self] finished in
+            guard let self else { return }
+            
+            UIView.animate(withDuration: 0.2,
+                           delay: 0,
+                           usingSpringWithDamping: 1,
+                           initialSpringVelocity: 1,
+                           options: [.curveEaseInOut],
+                           animations: {
+                self.refreshContol.transform = CGAffineTransform(scaleX: 0.75, y: 0.75)
+            }, completion: { [weak self] _ in
+                self?.loadNews()
+            })
+        })
     }
     
     private func loadNews() {
