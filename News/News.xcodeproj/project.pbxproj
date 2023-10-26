@@ -36,6 +36,7 @@
 		C457B59D2AE98F8D005C6B59 /* NewsWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C457B59C2AE98F8D005C6B59 /* NewsWidget.swift */; };
 		C457B59F2AE98F8E005C6B59 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C457B59E2AE98F8E005C6B59 /* Assets.xcassets */; };
 		C457B5A32AE98F8E005C6B59 /* NewsWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C457B5962AE98F8C005C6B59 /* NewsWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C49F1E432AEAA3EB0086FBBE /* notification.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C49F1E422AEAA3EB0086FBBE /* notification.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,6 +106,7 @@
 		C457B59C2AE98F8D005C6B59 /* NewsWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsWidget.swift; sourceTree = "<group>"; };
 		C457B59E2AE98F8E005C6B59 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C457B5A02AE98F8E005C6B59 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C49F1E422AEAA3EB0086FBBE /* notification.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = notification.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,6 +163,7 @@
 				844F98722878EDC200859AEB /* error.mp3 */,
 				844F987C2878F89100859AEB /* jedy1.mp3 */,
 				844F987E2878F99000859AEB /* jedy2.mp3 */,
+				C49F1E422AEAA3EB0086FBBE /* notification.mp3 */,
 			);
 			path = Sounds;
 			sourceTree = "<group>";
@@ -345,6 +348,7 @@
 				C457B5532AE91E9D005C6B59 /* jedy1.mp3 in Resources */,
 				C457B5542AE91E9D005C6B59 /* jedy2.mp3 in Resources */,
 				C457B55E2AE96ECB005C6B59 /* kitten.gif in Resources */,
+				C49F1E432AEAA3EB0086FBBE /* notification.mp3 in Resources */,
 				C457B54F2AE91E96005C6B59 /* Assets.xcassets in Resources */,
 				C41CF9ED2AE99C6B005C288B /* Launch Screen.storyboard in Resources */,
 			);
