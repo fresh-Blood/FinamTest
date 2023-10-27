@@ -127,15 +127,26 @@ struct AccessoryCircularView: View {
     let entry: Provider.Entry
     
     var body: some View {
-        Text(entry.category)
-            .fontDesign(.monospaced)
-            .font(.system(size: 15))
-            .lineLimit(1)
-        
-        Text(entry.date, style: .time)
-            .fontDesign(.monospaced)
-            .font(.system(size: 15))
-            .padding(-3)
+        ZStack {
+            Color.black.clipShape(.circle)
+            VStack {
+                Text(entry.category)
+                    .fontDesign(.monospaced)
+                    .font(.system(size: 11))
+                    .padding(EdgeInsets(top: .zero,
+                                        leading: 7,
+                                        bottom: .zero,
+                                        trailing: 7))
+                    .lineLimit(1)
+                Text(entry.date, style: .time)
+                    .fontDesign(.monospaced)
+                    .font(.system(size: 13))
+                    .padding(EdgeInsets(top: -3,
+                                        leading: 7,
+                                        bottom: .zero,
+                                        trailing: 7))
+            }
+        }
     }
 }
 
