@@ -44,7 +44,11 @@ extension AppDelegate {
                                                 content: content,
                                                 trigger: trigger)
             
-            notificationCenter.add(request)
+            notificationCenter.getPendingNotificationRequests { requests in
+                if !requests.contains(where: { $0.identifier == uuid }) {
+                    notificationCenter.add(request)
+                }
+            }
         }
     }
 }
