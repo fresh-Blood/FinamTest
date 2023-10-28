@@ -29,7 +29,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func windowScene(_ windowScene: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
         shortActionTapped(shortcutItem: shortcutItem)
     }
-    
+}
+
+extension SceneDelegate {
     private func configureSearchController(in rootViewController: UIViewController) {
         let searchVC = UISearchController()
         rootViewController.navigationItem.searchController = searchVC
@@ -71,7 +73,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         initialViewController.navigationItem.searchController?.searchBar.becomeFirstResponder()
     }
 }
-
 
 private enum ShortcutItemTypes: String {
     case settings = "OpenSettingsAction"
