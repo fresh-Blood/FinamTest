@@ -104,22 +104,26 @@ struct SmallView: View {
     let entry: Provider.Entry
 
     var body: some View {
-        Text("Category:")
-            .fontDesign(.monospaced)
-            .font(.headline)
-        
-        Text(entry.category)
-            .fontDesign(.monospaced)
-            .font(.callout)
-        
-        Text("Posted:")
-            .padding(.top, 6)
-            .fontDesign(.monospaced)
-            .font(.headline)
-        
-        Text(entry.date, style: .time)
-            .fontDesign(.monospaced)
-            .font(.title3)
+        ZStack {
+            Image("blur")
+                .resizable()
+                .frame(width: 200, height: 170)
+            VStack {
+                Text(entry.category)
+                    .fontDesign(.monospaced)
+                    .font(.subheadline)
+                    .foregroundStyle(.gray)
+                
+                Text(entry.date, style: .time)
+                    .fontDesign(.monospaced)
+                    .font(.title)
+                    .foregroundStyle(.gray)
+            }
+            .padding(EdgeInsets(top: -70,
+                                leading: 40,
+                                bottom: 0,
+                                trailing: 20))
+        }
     }
 }
 
@@ -225,7 +229,7 @@ struct NewsWidget: Widget {
     }
 }
 
-#Preview(as: .systemMedium) {
+#Preview(as: .systemSmall) {
     NewsWidget()
 } timeline: {
     Entry(date: .now, category: Categories.random)
