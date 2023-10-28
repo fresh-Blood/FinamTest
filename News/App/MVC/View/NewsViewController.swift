@@ -410,33 +410,11 @@ extension NewsViewController: UISearchBarDelegate {
 
 // MARK: - CellDelegate
 extension NewsViewController: CellDelegate {
-    private func injectCloseButtonTo(vc: UIViewController) {
-        let closeButton = UIButton()
-        closeButton.translatesAutoresizingMaskIntoConstraints = false
-        closeButton.addTarget(self, action: #selector(close),
-                              for: .touchUpInside)
-        closeButton.backgroundColor = .clear
-        let closeButtonSize: CGFloat = 50
-        
-        vc.view.addSubview(closeButton)
-        NSLayoutConstraint.activate([
-            closeButton.topAnchor.constraint(equalTo: vc.view.topAnchor, constant: .zero),
-            closeButton.rightAnchor.constraint(equalTo: vc.view.rightAnchor, constant: .zero),
-            closeButton.widthAnchor.constraint(equalToConstant: closeButtonSize),
-            closeButton.heightAnchor.constraint(equalToConstant: closeButtonSize)
-        ])
-    }
-    
     func sendDetailsForPresenting(vc: UIActivityViewController, contentView: UIView) {
         vc.prepairForIPad(withVCView: contentView, withVC: self)
         // For some reason close button doesn't work, so i made my own
-        injectCloseButtonTo(vc: vc)
+        vc.injectCloseButton()
         present(vc, animated: true, completion: nil)
-    }
-    
-    @objc private func close() {
-        guard let presentedViewController else { return }
-        presentedViewController.dismiss(animated: true)
     }
 }
 

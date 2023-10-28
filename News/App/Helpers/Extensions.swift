@@ -297,5 +297,28 @@ extension UIImage {
         
         return animation
     }
+}
+
+extension UIViewController {
+    func injectCloseButton() {
+        let closeButton = UIButton()
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+        closeButton.addTarget(self, action: #selector(close),
+                              for: .touchUpInside)
+        closeButton.backgroundColor = .clear
+        let closeButtonSize: CGFloat = 50
+        
+        view.addSubview(closeButton)
+        NSLayoutConstraint.activate([
+            closeButton.topAnchor.constraint(equalTo: view.topAnchor, constant: .zero),
+            closeButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: .zero),
+            closeButton.widthAnchor.constraint(equalToConstant: closeButtonSize),
+            closeButton.heightAnchor.constraint(equalToConstant: closeButtonSize)
+        ])
+    }
     
+    @objc func close() {
+        guard let presentedViewController else { return }
+        presentedViewController.dismiss(animated: true)
+    }
 }
