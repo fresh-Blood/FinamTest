@@ -7,9 +7,15 @@
 ![277106661-ece8e44a-e27b-4cee-a699-b2573deccf42](https://github.com/11010001101001/News/assets/88098218/1fc3c36b-771f-41dc-abd1-3538950ef50f)
 
 ## Update 🎉 
-- Code cleaning done, UI, behavior udpated, news theme selection added
+- Code cleaning done
+- UI boosted
+- News theme selection added
+- Shortcuts added
+- Widgets added
+- Lock screen widgets added
+- Notifications added
 
-![MyCollages](https://github.com/11010001101001/News/assets/88098218/bd31dbe7-3a96-4c2c-95b4-e41e285bcc30)
+![MyCollages](https://github.com/11010001101001/News/assets/88098218/edde6e30-44f1-4fce-9721-dcb52b2d1182)
 
 ## ☕️🙈
 - **TON**: UQCQclFDQnQkHI4bJETisvn4QAZevjMWx5mjC3AErZaXvhlU
