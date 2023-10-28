@@ -120,7 +120,7 @@ struct SmallView: View {
                     .foregroundStyle(.gray)
             }
             .padding(EdgeInsets(top: -70,
-                                leading: 40,
+                                leading: 70,
                                 bottom: 0,
                                 trailing: 20))
         }
