@@ -1,9 +1,9 @@
 import UIKit
 import AVKit
+import SwiftUI
 
 protocol NewsView {
     var internetService: UserInternetService? { get set }
-    func reload()
     func handleResponseFailure(with error: String)
     func handleResponseSuccess()
 }
@@ -25,6 +25,7 @@ final class NewsViewController: UIViewController {
     
     var internetService: UserInternetService?
     var isSearchViewControllerFirstResponder = false
+    var hostingViewController: UIHostingController<ErrorView>?
     
     private var cachedCategory: String?
     
@@ -70,20 +71,6 @@ final class NewsViewController: UIViewController {
         return list
     }()
     
-    var responseErrorLabel: UILabel = {
-        let responseErrorView = UILabel()
-        responseErrorView.backgroundColor = .systemRed
-        responseErrorView.layer.cornerRadius = 16
-        responseErrorView.translatesAutoresizingMaskIntoConstraints = false
-        responseErrorView.textAlignment = .center
-        responseErrorView.numberOfLines = 0
-        responseErrorView.font = .systemFont(ofSize: 20, weight: .heavy)
-        responseErrorView.layer.masksToBounds = true
-        responseErrorView.adjustsFontSizeToFitWidth = true
-        responseErrorView.textColor = .white
-        return responseErrorView
-    }()
-    
     private func makeSkeleton() -> UIView {
         let name = UIView()
         name.backgroundColor = Colors.valueForGradientAnimation
@@ -120,7 +107,8 @@ final class NewsViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         showOnBoardingMessageIfNeeded()
-        if needLoadNews { 
+        
+        if needLoadNews {
             loadNews()
             cachedCategory = StorageService.shared.selectedCategory
         }
@@ -201,7 +189,7 @@ final class NewsViewController: UIViewController {
         newsList.addSubview(skeletonsStackView)
         
         view.addSubview(newsList)
-        view.addSubview(responseErrorLabel)
+//        view.addSubview(errorView)
         
         let frame = CGRect(origin: CGPoint(x: newsList.bounds.minX,
                                            y: newsList.bounds.minY + 7),
@@ -209,12 +197,7 @@ final class NewsViewController: UIViewController {
         skeletonsStackView.frame = frame
         skeletonsBackgroundViewsStackView.frame = skeletonsStackView.frame
         
-        NSLayoutConstraint.activate([
-            responseErrorLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10),
-            responseErrorLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10),
-            responseErrorLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
-            responseErrorLabel.heightAnchor.constraint(equalToConstant: 0)
-        ])
+//        errorView.center
         
         view.addSubview(upButton)
         
@@ -263,8 +246,8 @@ extension NewsViewController : UITableViewDelegate, UITableViewDataSource {
         let topicVC = TopicViewController()
         topicVC.title = topic?.title
         topicVC.topicLabel.text = topic?.description ?? Errors.topicLabelNoInfo.rawValue
-        topicVC.newsImage.downLoadImage(from: topic?.urlToImage ?? Errors.error.rawValue)
-        topicVC.moreInfo = topic?.url ?? Errors.error.rawValue
+        topicVC.newsImage.downLoadImage(from: topic?.urlToImage ?? Errors.timeout.rawValue)
+        topicVC.moreInfo = topic?.url ?? Errors.timeout.rawValue
         navigationController?.pushViewController(topicVC, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -303,30 +286,44 @@ extension NewsViewController {
         })
     }
     
-    private func loadNews() {
+    // MARK: - Loading
+    private func loadNews(searching keyword: String? = nil) {
+        removeError()
         internetService?.newsArray.removeAll()
-        reload()
+        newsList.reloadData()
         animateLoading()
-        
-        Task {
-            try await internetService?.getData(
-                completion: { [weak self] in
-                    DispatchQueue.main.async {
-                        self?.stopAnimatingAndHide()
-                    }
-                },
-                with: nil,
-                category: StorageService.shared.selectedCategory)
+        internetService?.getData(with: keyword, category: StorageService.shared.selectedCategory)
+    }
+    
+    private func stopLoading() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            stopAnimatingAndHide()
+            newsList.reloadData()
+            view.endEditing(true)
         }
+    }
+    
+    private func showError(title: String) {
+        let hostingController = UIHostingController(rootView: ErrorView(title: title, action: {
+            [weak self] in self?.loadNews()
+        }))
+        addChild(hostingController)
+        hostingController.view.frame = newsList.bounds
+        guard let errorView = hostingController.view else { return }
+        newsList.addSubview(errorView)
+        hostingController.didMove(toParent: self)
+        self.hostingViewController = hostingController
+    }
+    
+    private func removeError() {
+        guard let hostingViewController else { return }
+        hostingViewController.removeFromParent()
     }
 }
 
 // MARK: NewsView
 extension NewsViewController: NewsView {
-    func reload() {
-        newsList.reloadData()
-    }
-    
     func handleResponseSuccess() {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
@@ -335,67 +332,28 @@ extension NewsViewController: NewsView {
                 SoundManager.shared.playSound(soundFileName: SoundName.loaded.rawValue)
                 isInitialLoading.toggle()
             }
+            
+            stopLoading()
         }
     }
     
     func handleResponseFailure(with error: String) {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
+            
             SoundManager.shared.playSound(soundFileName: SoundName.error.rawValue)
-            responseErrorLabel.text = error
-            setErrorResponseLabelHeightConstraint(to: 100, from: 0)
-            UIView.animate(withDuration: 2.0,
-                           delay: 0,
-                           usingSpringWithDamping: 0.1,
-                           initialSpringVelocity: 0.1,
-                           options: .curveEaseIn,
-                           animations: {
-                self.view.layoutIfNeeded()
-                VibrateManager.shared.vibrate(.error)
-            }, completion: { [weak self] finished in
-                self?.animateChanges()
-            })
+            VibrateManager.shared.vibrate(.error)
+            
+            stopLoading()
+            showError(title: error)
         }
-    }
-    
-    func setErrorResponseLabelHeightConstraint(to oneValue: CGFloat, from anotherValue: CGFloat) {
-        responseErrorLabel.constraints.forEach {
-            if $0.constant == anotherValue {
-                responseErrorLabel.removeConstraint($0)
-            }
-        }
-        responseErrorLabel.heightAnchor.constraint(equalToConstant: oneValue).isActive = true
-    }
-    
-    func animateChanges() {
-        setErrorResponseLabelHeightConstraint(to: 0, from: 100)
-        UIView.animate(withDuration: 2.0,
-                       delay: 5.0,
-                       usingSpringWithDamping: 0.1,
-                       initialSpringVelocity: 0.1,
-                       options: .curveLinear,
-                       animations: {
-            self.view.layoutIfNeeded()
-        })
     }
 }
 
 // MARK: Search bar delegate settings
 extension NewsViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        internetService?.newsArray.removeAll()
-        reload()
-        animateLoading()
-        Task {
-            try await internetService?.getData(completion: { [weak self] in
-                DispatchQueue.main.async {
-                    self?.stopAnimatingAndHide()
-                    self?.view.endEditing(true)
-                }
-            },
-                                               with: searchBar.text,
-                                               category: StorageService.shared.selectedCategory)
-        }
+        loadNews(searching: searchBar.text)
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {

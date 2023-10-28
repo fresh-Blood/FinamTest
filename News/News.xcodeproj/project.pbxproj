@@ -8,11 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		C41CF9ED2AE99C6B005C288B /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C41CF9EC2AE99C6B005C288B /* Launch Screen.storyboard */; };
+		C434FF422AED5663008388ED /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C434FF412AED5663008388ED /* ErrorView.swift */; };
 		C457B53E2AE91E43005C6B59 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FA0F7726C6350900FB1C34 /* AppDelegate.swift */; };
 		C457B53F2AE91E43005C6B59 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FA0F7926C6350900FB1C34 /* SceneDelegate.swift */; };
 		C457B5402AE91E43005C6B59 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8446A224281DA24C00A95290 /* Extensions.swift */; };
 		C457B5412AE91E43005C6B59 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8446A222281DA20700A95290 /* Colors.swift */; };
-		C457B5422AE91E4A005C6B59 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849674B22774BD4700504D9D /* Model.swift */; };
+		C457B5422AE91E4A005C6B59 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849674B22774BD4700504D9D /* Models.swift */; };
 		C457B5432AE91E4A005C6B59 /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C411227929D9AA460089F601 /* SettingsModel.swift */; };
 		C457B5442AE91E4F005C6B59 /* NewsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FA0F7B26C6350900FB1C34 /* NewsViewController.swift */; };
 		C457B5452AE91E4F005C6B59 /* TopicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FA0FA226C642C000FB1C34 /* TopicViewController.swift */; };
@@ -84,7 +85,7 @@
 		8455A6CF2878E62A00B3D575 /* VibrateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VibrateManager.swift; sourceTree = "<group>"; };
 		846FC6892879748D0045FCB2 /* StorageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageService.swift; sourceTree = "<group>"; };
 		846FC68B287987B50045FCB2 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
-		849674B22774BD4700504D9D /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		849674B22774BD4700504D9D /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		849674B52774BE2700504D9D /* InternetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetService.swift; sourceTree = "<group>"; };
 		849674B72774C8F100504D9D /* Assemblyer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assemblyer.swift; sourceTree = "<group>"; };
 		84FA0F7426C6350900FB1C34 /* News.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = News.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -98,6 +99,7 @@
 		C411227729D9A9CC0089F601 /* SettingsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCell.swift; sourceTree = "<group>"; };
 		C411227929D9AA460089F601 /* SettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
 		C41CF9EC2AE99C6B005C288B /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		C434FF412AED5663008388ED /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		C457B52A2AE91A6D005C6B59 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		C457B52C2AE91A6D005C6B59 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		C457B55D2AE96ECB005C6B59 /* kitten.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = kitten.gif; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 				846FC68B287987B50045FCB2 /* SettingsViewController.swift */,
 				C411227729D9A9CC0089F601 /* SettingsCell.swift */,
 				84FA0F8E26C6362600FB1C34 /* TopicCell.swift */,
+				C434FF412AED5663008388ED /* ErrorView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -239,7 +242,7 @@
 		C411227B29D9AA630089F601 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				849674B22774BD4700504D9D /* Model.swift */,
+				849674B22774BD4700504D9D /* Models.swift */,
 				C411227929D9AA460089F601 /* SettingsModel.swift */,
 			);
 			path = Models;
@@ -373,13 +376,14 @@
 				C457B54B2AE91E55005C6B59 /* StorageService.swift in Sources */,
 				C457B54C2AE91E55005C6B59 /* SoundManager.swift in Sources */,
 				C457B54D2AE91E55005C6B59 /* VibrateManager.swift in Sources */,
+				C434FF422AED5663008388ED /* ErrorView.swift in Sources */,
 				C457B54E2AE91E55005C6B59 /* Assemblyer.swift in Sources */,
 				C457B5442AE91E4F005C6B59 /* NewsViewController.swift in Sources */,
 				C457B5452AE91E4F005C6B59 /* TopicViewController.swift in Sources */,
 				C457B5462AE91E4F005C6B59 /* SettingsViewController.swift in Sources */,
 				C457B5472AE91E4F005C6B59 /* SettingsCell.swift in Sources */,
 				C457B5482AE91E4F005C6B59 /* TopicCell.swift in Sources */,
-				C457B5422AE91E4A005C6B59 /* Model.swift in Sources */,
+				C457B5422AE91E4A005C6B59 /* Models.swift in Sources */,
 				C457B5432AE91E4A005C6B59 /* SettingsModel.swift in Sources */,
 				C457B53E2AE91E43005C6B59 /* AppDelegate.swift in Sources */,
 				C457B53F2AE91E43005C6B59 /* SceneDelegate.swift in Sources */,
@@ -537,6 +541,7 @@
 				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = News;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.news";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -563,6 +568,7 @@
 				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = News;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.news";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
