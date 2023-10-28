@@ -69,7 +69,8 @@ extension SceneDelegate {
     }
     
     private func search() {
-        guard let initialViewController else { return }
+        guard let initialViewController = initialViewController as? NewsViewController else { return }
+        initialViewController.isSearchViewControllerFirstResponder = true
         initialViewController.navigationItem.searchController?.searchBar.becomeFirstResponder()
     }
 }

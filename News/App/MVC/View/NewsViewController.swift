@@ -18,13 +18,13 @@ final class NewsViewController: UIViewController {
     }
     
     private lazy var refreshContol = UIRefreshControl()
-    
     private lazy var layout: Layout = .default
     private lazy var isInitialLoading = true
     private lazy var skeletonsStackView = makeStackView()
     private lazy var skeletonsBackgroundViewsStackView = makeStackView()
     
     var internetService: UserInternetService?
+    var isSearchViewControllerFirstResponder = false
     
     private var cachedCategory: String?
     
@@ -123,6 +123,11 @@ final class NewsViewController: UIViewController {
         if needLoadNews { 
             loadNews()
             cachedCategory = StorageService.shared.selectedCategory
+        }
+        
+        if isSearchViewControllerFirstResponder {
+            navigationItem.searchController?.searchBar.becomeFirstResponder()
+            isSearchViewControllerFirstResponder.toggle()
         }
     }
     
