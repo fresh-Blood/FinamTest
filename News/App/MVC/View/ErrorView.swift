@@ -37,6 +37,7 @@ struct ErrorView: View {
     
     private var button: some View {
         Button(action: {
+            VibrateManager.shared.impactOccured(.rigid)
             action?()
         }, label: {
             Text("Reload")
