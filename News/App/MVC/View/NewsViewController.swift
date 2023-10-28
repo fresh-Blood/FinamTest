@@ -23,16 +23,17 @@ final class NewsViewController: UIViewController {
     private lazy var skeletonsStackView = makeStackView()
     private lazy var skeletonsBackgroundViewsStackView = makeStackView()
     
-    var internetService: UserInternetService?
-    var isSearchViewControllerFirstResponder = false
-    var hostingViewController: UIHostingController<ErrorView>?
-    
+    private var hostingViewController: UIHostingController<ErrorView>?
+    private var errorView: UIView?
     private var cachedCategory: String?
     
     private var needLoadNews: Bool {
         let currentCategory = StorageService.shared.selectedCategory
         return cachedCategory != currentCategory || internetService?.newsArray.isEmpty ?? false
     }
+    
+    var internetService: UserInternetService?
+    var isSearchViewControllerFirstResponder = false
     
     private lazy var settingsButton: UIView = {
         let view = UIView()
@@ -305,20 +306,24 @@ extension NewsViewController {
     }
     
     private func showError(title: String) {
-        let hostingController = UIHostingController(rootView: ErrorView(title: title, action: {
-            [weak self] in self?.loadNews()
+        let hostingController = UIHostingController(rootView: ErrorView(title: title,
+                                                                        action: { [weak self] in
+            self?.loadNews()
         }))
         addChild(hostingController)
         hostingController.view.frame = newsList.bounds
         guard let errorView = hostingController.view else { return }
+        errorView.accessibilityIdentifier = "errorView"
         newsList.addSubview(errorView)
         hostingController.didMove(toParent: self)
         self.hostingViewController = hostingController
+        self.errorView = errorView
     }
     
     private func removeError() {
-        guard let hostingViewController else { return }
+        guard let hostingViewController, let errorView else { return }
         hostingViewController.removeFromParent()
+        errorView.removeFromSuperview()
     }
 }
 
