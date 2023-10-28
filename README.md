@@ -16,6 +16,7 @@
 - Notifications added
 
 ![MyCollages](https://github.com/11010001101001/News/assets/88098218/edde6e30-44f1-4fce-9721-dcb52b2d1182)
+![MyCollages](https://github.com/11010001101001/News/assets/88098218/a2cef452-c1bc-42d7-9796-0800085109ef)
 
 ## ☕️🙈
 - **TON**: UQCQclFDQnQkHI4bJETisvn4QAZevjMWx5mjC3AErZaXvhlU
