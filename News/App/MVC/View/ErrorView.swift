@@ -12,6 +12,9 @@ struct ErrorView: View {
     var title: String
     var action: Action?
     
+    @State private var animating = false
+    @State private var scale = 0
+    
     private var titleLabel: some View {
         VStack {
             Label(title, systemImage: "bolt.fill")
@@ -52,6 +55,12 @@ struct ErrorView: View {
                 button
             }
         }
+        .opacity(animating ? 1 : 0)
+        .scaleEffect(animating ? 1 : 0)
+        .animation(.bouncy(duration: 0.3,
+                           extraBounce: 0.2),
+                   value: animating)
+        .onAppear { animating = true }
     }
 }
 
