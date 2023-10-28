@@ -2,50 +2,73 @@ import UIKit
 
 @available(iOS 15.0, *)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
+    
     var window: UIWindow?
-
+    var initialViewController: UIViewController?
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        guard let windowScene = (scene as? UIWindowScene) else { return }
-        
         let userAssemblyer = UserAssemblyer.start()
-        let initialVC = userAssemblyer.entry
+        
+        guard let windowScene = (scene as? UIWindowScene),
+              let initialViewController = userAssemblyer.entry
+        else { return }
         
         let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = UINavigationController(rootViewController: initialVC!)
+        window.rootViewController = UINavigationController(rootViewController: initialViewController)
+        configureSearchController(in: initialViewController)
+        
         self.window = window
+        self.initialViewController = initialViewController
+        
         window.makeKeyAndVisible()
         
-        guard let shortcutItem = connectionOptions.shortcutItem,
-              let rootViewController = windowScene.keyWindow?.rootViewController else { return }
-        shortActionTapped(shortcutItem: shortcutItem, rootViewController: rootViewController)
+        guard let shortcutItem = connectionOptions.shortcutItem else { return }
+        shortActionTapped(shortcutItem: shortcutItem)
     }
     
     func windowScene(_ windowScene: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
-        guard let rootViewController = windowScene.keyWindow?.rootViewController else { return }
-        shortActionTapped(shortcutItem: shortcutItem, rootViewController: rootViewController)
+        shortActionTapped(shortcutItem: shortcutItem)
     }
     
-    private func shortActionTapped(shortcutItem: UIApplicationShortcutItem, rootViewController: UIViewController) {
+    private func configureSearchController(in rootViewController: UIViewController) {
+        let searchVC = UISearchController()
+        rootViewController.navigationItem.searchController = searchVC
+        searchVC.searchBar.keyboardType = .asciiCapable
+        searchVC.searchBar.delegate = rootViewController as? UISearchBarDelegate
+        searchVC.searchBar.placeholder = "Enter the keyword"
+    }
+    
+    private func shortActionTapped(shortcutItem: UIApplicationShortcutItem) {
         switch shortcutItem.type {
             case ShortcutItemTypes.share.rawValue:
-                shareApp(rootViewController: rootViewController)
+                shareApp()
             case ShortcutItemTypes.settings.rawValue:
-                print("settings")
+                openSettings()
             case ShortcutItemTypes.search.rawValue:
-                print("search")
+                search()
             default:
                 break
         }
     }
     
-    private func shareApp(rootViewController: UIViewController) {
+    private func shareApp() {
+        guard let initialViewController else { return }
         let shareInfo = DeveloperInfo.shareInfo.rawValue
         let activityVC = UIActivityViewController(activityItems: [shareInfo], applicationActivities: nil)
-        activityVC.prepairForIPad(withVCView: rootViewController.view, withVC: rootViewController)
+        activityVC.prepairForIPad(withVCView: initialViewController.view, withVC: initialViewController)
         // For some reason close button doesn't work, so i made my own
-        rootViewController.injectCloseButton()
-        rootViewController.present(activityVC, animated: true)
+        initialViewController.injectCloseButton()
+        initialViewController.present(activityVC, animated: true)
+    }
+    
+    private func openSettings() {
+        guard let navigationController = initialViewController?.navigationController else { return }
+        navigationController.pushViewController(SettingsViewController(), animated: true)
+    }
+    
+    private func search() {
+        guard let initialViewController else { return }
+        initialViewController.navigationItem.searchController?.searchBar.becomeFirstResponder()
     }
 }
 

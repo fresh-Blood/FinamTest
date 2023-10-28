@@ -11,8 +11,6 @@
         <string>UIApplicationShortcutIconTypeSearch</string>
         <key>UIApplicationShortcutItemTitle</key>
         <string>Search</string>
-        <key>UIApplicationShortcutItemSubtitle</key>
-        <string>Search with keyword</string>
     </dict>
     <dict>
         <key>UIApplicationShortcutItemType</key>

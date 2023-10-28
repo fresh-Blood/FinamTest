@@ -162,12 +162,6 @@ final class NewsViewController: UIViewController {
                                                            action: nil)
         navigationController?.navigationBar.addSubview(settingsButton)
         settingsButton.frame = CGRect(origin: .zero, size: CGSize(width: 46, height: 36))
-        
-        let searchVC = UISearchController()
-        navigationItem.searchController = searchVC
-        searchVC.searchBar.keyboardType = .asciiCapable
-        searchVC.searchBar.delegate = self
-        searchVC.searchBar.placeholder = "Please type search query"
         navigationItem.hidesSearchBarWhenScrolling = true
     }
     
