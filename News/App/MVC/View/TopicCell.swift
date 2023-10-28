@@ -32,6 +32,7 @@ final class TopicCell: UITableViewCell {
         lbl.numberOfLines = 0
         lbl.font = .systemFont(ofSize: 17, weight: .light)
         lbl.translatesAutoresizingMaskIntoConstraints = false
+        lbl.textColor = .systemGray
         return lbl
     }()
     
@@ -41,6 +42,7 @@ final class TopicCell: UITableViewCell {
         lbl.textAlignment = .center
         lbl.font = .systemFont(ofSize: 17, weight: .light)
         lbl.translatesAutoresizingMaskIntoConstraints = false
+        lbl.textColor = .systemGray
         return lbl
     }()
     
