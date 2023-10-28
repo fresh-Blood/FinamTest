@@ -31,7 +31,7 @@ extension UIView {
 
 extension UIImageView {
     func downLoadImage(from: String, completion: Action? = nil) {
-        if let cachedImage = Cashe.imageCache.object(forKey: from as AnyObject) {
+        if let cachedImage = Cache.imageCache.object(forKey: from as AnyObject) {
             DispatchQueue.main.async {
                 completion?()
             }
@@ -45,7 +45,7 @@ extension UIImageView {
                     DispatchQueue.main.async {
                         guard
                             let unwrappedImage = UIImage(data: data) else { return }
-                        Cashe.imageCache.setObject(unwrappedImage, forKey: from as AnyObject)
+                        Cache.imageCache.setObject(unwrappedImage, forKey: from as AnyObject)
                         self.image = unwrappedImage
                         completion?()
                     }

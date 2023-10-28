@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		C41CF9ED2AE99C6B005C288B /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C41CF9EC2AE99C6B005C288B /* Launch Screen.storyboard */; };
 		C434FF422AED5663008388ED /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C434FF412AED5663008388ED /* ErrorView.swift */; };
+		C434FF442AED7DB3008388ED /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = C434FF432AED7DB3008388ED /* Cache.swift */; };
 		C457B53E2AE91E43005C6B59 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FA0F7726C6350900FB1C34 /* AppDelegate.swift */; };
 		C457B53F2AE91E43005C6B59 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FA0F7926C6350900FB1C34 /* SceneDelegate.swift */; };
 		C457B5402AE91E43005C6B59 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8446A224281DA24C00A95290 /* Extensions.swift */; };
@@ -100,6 +101,7 @@
 		C411227929D9AA460089F601 /* SettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
 		C41CF9EC2AE99C6B005C288B /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		C434FF412AED5663008388ED /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
+		C434FF432AED7DB3008388ED /* Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
 		C457B52A2AE91A6D005C6B59 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		C457B52C2AE91A6D005C6B59 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		C457B55D2AE96ECB005C6B59 /* kitten.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = kitten.gif; sourceTree = "<group>"; };
@@ -178,6 +180,7 @@
 				846FC6892879748D0045FCB2 /* StorageService.swift */,
 				8455A6CD2878E45400B3D575 /* SoundManager.swift */,
 				8455A6CF2878E62A00B3D575 /* VibrateManager.swift */,
+				C434FF432AED7DB3008388ED /* Cache.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -382,6 +385,7 @@
 				C457B5452AE91E4F005C6B59 /* TopicViewController.swift in Sources */,
 				C457B5462AE91E4F005C6B59 /* SettingsViewController.swift in Sources */,
 				C457B5472AE91E4F005C6B59 /* SettingsCell.swift in Sources */,
+				C434FF442AED7DB3008388ED /* Cache.swift in Sources */,
 				C457B5482AE91E4F005C6B59 /* TopicCell.swift in Sources */,
 				C457B5422AE91E4A005C6B59 /* Models.swift in Sources */,
 				C457B5432AE91E4A005C6B59 /* SettingsModel.swift in Sources */,

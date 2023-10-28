@@ -87,7 +87,3 @@ final class InternetService: UserInternetService {
     }
 }
 
-final class Cashe {
-    static let imageCache = NSCache<AnyObject, UIImage>()
-}
-
