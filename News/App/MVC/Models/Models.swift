@@ -57,7 +57,7 @@ enum DeveloperInfo: String {
 
 enum Updates: String {
     case title = "What's new:"
-    case whatsNew = "- New appearance\n- Bugs fixed\n- Settings screen redone\n- Kitten now lives here"
+    case whatsNew = "- Interface boosted\n- Bugs fixed\n- Settings screen redone\n- Category setting added\n- Shortcuts added\n- Widgets added\n- Lock screen widgets added\n- Notifications added\n- Kitten now lives inside"
     case ok = "OK"
 }
 
