@@ -39,7 +39,7 @@ class SettingsViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .center
         label.text = SettingsKeys.appVerstion.rawValue + " " + AppVersion.current
-        label.textColor = Colors.valueForColor
+        label.textColor = .systemGray
         label.numberOfLines = .zero
         label.font = .preferredFont(forTextStyle: .caption1)
         label.adjustsFontSizeToFitWidth = true
