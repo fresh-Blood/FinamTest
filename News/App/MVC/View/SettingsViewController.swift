@@ -1,4 +1,5 @@
 import UIKit
+import SwiftUI
 
 class SettingsViewController: UIViewController {
     private lazy var settings = [
@@ -17,6 +18,9 @@ class SettingsViewController: UIViewController {
     private var currentUserInterfaceStyle: UIUserInterfaceStyle {
         UIScreen.main.traitCollection.userInterfaceStyle
     }
+    
+    private var hostingViewController: UIHostingController<CategoryView>?
+    private var categoryView: UIView?
     
     lazy var layout = Layout.default
     
@@ -168,27 +172,9 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
             case 1:
-                let chooseThemeVc = UIAlertController(title: Categories.title,
-                                                      message: nil,
-                                                      preferredStyle: .actionSheet)
-                
-                chooseThemeVc.prepairForIPad(withVCView: view, withVC: self)
-                chooseThemeVc.view.tintColor = .systemGray
-                
-                Categories.allCases.forEach { category in
-                    chooseThemeVc.addAction(UIAlertAction(title: category.rawValue,
-                                                          style: .default,
-                                                          handler: { [weak self] action in
-                        guard let self else { return }
-                        StorageService.shared.save(category.rawValue, forKey: Categories.key)
-                        navigationController?.popToRootViewController(animated: true)
-                    }))
-                }
-                
-                present(chooseThemeVc, animated: true)
-                
-            default:
-                break 
+                showCategories()
+            default: 
+                break
         }
     }
 }
@@ -199,4 +185,36 @@ private enum Constants {
     static let kittenSize: CGSize = CGSize(width: 190, height: 140)
     static let kittenLeftInsetValue: CGFloat = -70
     static let navBarHeight: CGFloat = 96
+}
+
+// MARK: Swift UI integration
+extension SettingsViewController {
+    private func showCategories() {
+        VibrateManager.shared.impactOccured(.rigid)
+        
+        let hostingController = UIHostingController(rootView: CategoryView(action: { [weak self] category in
+            guard let self else { return }
+            StorageService.shared.save(category, forKey: Categories.key)
+            removeCategoryView()
+            navigationController?.popViewController(animated: true)
+        }))
+        
+        addChild(hostingController)
+        hostingController.view.frame = view.bounds
+        
+        guard let categoryView = hostingController.view else { return }
+        
+        categoryView.accessibilityIdentifier = "categoryView"
+        view.addSubview(categoryView)
+        hostingController.didMove(toParent: self)
+        
+        self.hostingViewController = hostingController
+        self.categoryView = categoryView
+    }
+    
+    private func removeCategoryView() {
+        guard let hostingViewController, let categoryView else { return }
+        hostingViewController.removeFromParent()
+        categoryView.removeFromSuperview()
+    }
 }

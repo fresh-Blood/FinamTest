@@ -229,8 +229,10 @@ struct NewsWidget: Widget {
     }
 }
 
+#if DEBUG
 #Preview(as: .systemSmall) {
     NewsWidget()
 } timeline: {
     Entry(date: .now, category: Categories.random)
 }
+#endif

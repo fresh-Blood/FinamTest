@@ -65,9 +65,11 @@ struct ErrorView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     ErrorView(title: "Time - out\nerror\n\nServer problem or internet connection broken",
               action: {
         print("Button pressed")
     })
 }
+#endif

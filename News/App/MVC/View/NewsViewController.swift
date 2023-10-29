@@ -190,15 +190,12 @@ final class NewsViewController: UIViewController {
         newsList.addSubview(skeletonsStackView)
         
         view.addSubview(newsList)
-//        view.addSubview(errorView)
         
         let frame = CGRect(origin: CGPoint(x: newsList.bounds.minX,
                                            y: newsList.bounds.minY + 7),
                            size: newsList.frame.size)
         skeletonsStackView.frame = frame
         skeletonsBackgroundViewsStackView.frame = skeletonsStackView.frame
-        
-//        errorView.center
         
         view.addSubview(upButton)
         
@@ -302,27 +299,6 @@ extension NewsViewController {
         newsList.reloadData()
         view.endEditing(true)
     }
-    
-    private func showError(title: String) {
-        let hostingController = UIHostingController(rootView: ErrorView(title: title,
-                                                                        action: { [weak self] in
-            self?.loadNews()
-        }))
-        addChild(hostingController)
-        hostingController.view.frame = newsList.bounds
-        guard let errorView = hostingController.view else { return }
-        errorView.accessibilityIdentifier = "errorView"
-        newsList.addSubview(errorView)
-        hostingController.didMove(toParent: self)
-        self.hostingViewController = hostingController
-        self.errorView = errorView
-    }
-    
-    private func removeError() {
-        guard let hostingViewController, let errorView else { return }
-        hostingViewController.removeFromParent()
-        errorView.removeFromSuperview()
-    }
 }
 
 // MARK: NewsView
@@ -409,6 +385,34 @@ extension NewsViewController {
                              at: .top,
                              animated: true)
         VibrateManager.shared.impactOccured(.rigid)
+    }
+}
+
+// MARK: Swift UI integration
+extension NewsViewController {
+    private func showError(title: String) {
+        let hostingController = UIHostingController(rootView: ErrorView(title: title,
+                                                                        action: { [weak self] in
+            self?.loadNews()
+        }))
+        
+        addChild(hostingController)
+        hostingController.view.frame = newsList.bounds
+        
+        guard let errorView = hostingController.view else { return }
+        
+        errorView.accessibilityIdentifier = "errorView"
+        newsList.addSubview(errorView)
+        hostingController.didMove(toParent: self)
+        
+        self.hostingViewController = hostingController
+        self.errorView = errorView
+    }
+    
+    private func removeError() {
+        guard let hostingViewController, let errorView else { return }
+        hostingViewController.removeFromParent()
+        errorView.removeFromSuperview()
     }
 }
 
