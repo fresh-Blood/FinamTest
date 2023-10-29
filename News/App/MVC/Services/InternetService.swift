@@ -30,7 +30,13 @@ final class InternetService: UserInternetService {
             
             let (data,response) = try await URLSession.shared.data(from: url)
             
-            guard let newsArray = try JSONDecoder().decode(CommonInfo.self, from: data).articles else { return }
+            guard let mappedNewsArray = try JSONDecoder().decode(CommonInfo.self, from: data).articles else { return }
+
+            let newsArray = mappedNewsArray.map {
+                var topic = $0
+                topic.viewed = topic.title == nil ? false : StorageService.shared.checkIfViewed(with: $0.title ?? "")
+                return topic
+            }
             
             self.newsArray = newsArray
             
@@ -43,7 +49,7 @@ final class InternetService: UserInternetService {
     }
     
     private func launchTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 7,
+        timer = Timer.scheduledTimer(withTimeInterval: 30,
                                      repeats: false,
                                      block: { [weak self] _ in
             guard let self else { return }
@@ -78,13 +84,17 @@ final class InternetService: UserInternetService {
         }
     }
     
+    //https://newsapi.org/v2/top-headlines?country=us&category=technology&pageSize=100&apiKey=8f825354e7354c71829cfb4cb15c4893
     private func getLinkWith(_ mode: Mode) -> String {
         switch mode {
             case .keyword(let keyword):
-                return "https://newsapi.org/v2/everything?q=\(keyword)&pageSize=100&language=ru&apiKey=\(DeveloperInfo.apiKey.rawValue)"
+                return "https://newsapi.org/v2/everything?q=\(keyword)&pageSize=\(Constants.newsCount)&language=ru&apiKey=\(DeveloperInfo.apiKey.rawValue)"
             case .category(let category):
-                return "https://newsapi.org/v2/top-headlines?country=us&category=\(category)&pageSize=100&apiKey=\(DeveloperInfo.apiKey.rawValue)"
+                return "https://newsapi.org/v2/top-headlines?country=us&category=\(category)&pageSize=\(Constants.newsCount)&apiKey=\(DeveloperInfo.apiKey.rawValue)"
         }
     }
 }
 
+private enum Constants {
+    static let newsCount = "100"
+}
