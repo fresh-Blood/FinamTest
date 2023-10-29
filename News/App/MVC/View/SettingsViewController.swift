@@ -190,6 +190,7 @@ private enum Constants {
 // MARK: Swift UI integration
 extension SettingsViewController {
     private func showCategories() {
+        title = SettingsKeys.newsCategory.rawValue
         VibrateManager.shared.impactOccured(.rigid)
         
         let hostingController = UIHostingController(rootView: CategoryView(action: { [weak self] category in
