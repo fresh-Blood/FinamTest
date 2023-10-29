@@ -60,6 +60,7 @@ final class InternetService: UserInternetService {
     
     private func handleResponse(_ response: HTTPURLResponse) {
         VibrateManager.shared.impactOccured(.rigid)
+        invalidateTimer()
         
         switch response.statusCode {
             case HttpStatusCodes.tooManyRequests.rawValue:

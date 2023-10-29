@@ -297,12 +297,9 @@ extension NewsViewController {
     }
     
     private func stopLoading() {
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            stopAnimatingAndHide()
-            newsList.reloadData()
-            view.endEditing(true)
-        }
+        stopAnimatingAndHide()
+        newsList.reloadData()
+        view.endEditing(true)
     }
     
     private func showError(title: String) {
