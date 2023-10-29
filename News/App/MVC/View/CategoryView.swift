@@ -27,12 +27,6 @@ struct CategoryView: View {
                             action?(category.rawValue.lowercased())
                         }
                 }
-            } header: {
-                Text("Category")
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .fontDesign(.rounded)
-                    .multilineTextAlignment(.leading)
             }
         }
         .backgroundStyle(.background)
@@ -52,9 +46,9 @@ struct CategoryCell: View {
     var image: String {
         switch category {
             case Categories.technology.rawValue.capitalized:
-                return "figure.outdoor.cycle"
+                return "iphone.gen1.radiowaves.left.and.right"
             case Categories.sports.rawValue.capitalized:
-                return "figure.cooldown"
+                return "figure.outdoor.cycle"
             case Categories.science.rawValue.capitalized:
                 return "atom"
             case Categories.health.rawValue.capitalized:
