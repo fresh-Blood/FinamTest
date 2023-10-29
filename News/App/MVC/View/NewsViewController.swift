@@ -229,7 +229,7 @@ final class NewsViewController: UIViewController {
 // MARK: TableView delegate & dataSource methods
 extension NewsViewController : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return internetService?.newsArray.count ?? 0
+        internetService?.newsArray.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -239,6 +239,7 @@ extension NewsViewController : UITableViewDelegate, UITableViewDataSource {
         cell.newsDate.text = model?.publishedAt?.toReadableDate()
         cell.newsSource.text = model?.source?.name
         cell.cellDelegate = self
+        cell.contentView.alpha = (model?.viewed ?? false) ? 0.5 : 1 
         return cell
     }
     
