@@ -16,7 +16,7 @@
 - Notifications added
 - "Viewed" behavior added
 
-![MyCollages](https://github.com/11010001101001/News/assets/88098218/12ad043c-6d25-4c72-9110-cfdcf3c2efee)
+![MyCollages](https://github.com/11010001101001/News/assets/88098218/97b79519-6352-43db-9251-33b9a0056623)
 ![MyCollages](https://github.com/11010001101001/News/assets/88098218/a2cef452-c1bc-42d7-9796-0800085109ef)
 
 ## ☕️🙈
