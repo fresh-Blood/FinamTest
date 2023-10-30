@@ -26,10 +26,10 @@ struct CategoryView: View {
                             VibrateManager.shared.impactOccured(.rigid)
                             action?(category.rawValue.lowercased())
                         }
+                        .listRowBackground(Color(.systemGray4.withAlphaComponent(0.5)))
                 }
             }
         }
-        .backgroundStyle(.background)
         .listStyle(.sidebar)
         .scrollDisabled(true)
         .opacity(animating ? 1 : 0)
@@ -37,6 +37,8 @@ struct CategoryView: View {
         .animation(.bouncy(duration: 0.2, extraBounce: 0),
                    value: animating)
         .onAppear { animating = true }
+        .background(Color(.systemBackground))
+        .scrollContentBackground(.hidden)
     }
 }
 

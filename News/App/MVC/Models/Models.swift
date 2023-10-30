@@ -38,7 +38,7 @@ enum Categories: String, CaseIterable, Identifiable {
 }
 
 enum Errors: String {
-    case topicLabelNoInfo = "Should be description here, but none. It's not an error, please use button below to read more"
+    case topicLabelNoInfo = "No description. It's not an error, press button below for more"
     case badRequest = "Error 400\n\nBad request, please try again later"
     case unauthorized = "Error 401\n\nRequest autorization failed, please try again later"
     case tooManyRequests = "Error 429\n\nRequests number per day exceeded, see you tommorow"

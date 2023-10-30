@@ -21,7 +21,7 @@ final class SettingsCell: UITableViewCell {
         title.translatesAutoresizingMaskIntoConstraints = false
         title.textAlignment = .natural
         title.numberOfLines = .zero
-        title.font = .systemFont(ofSize: 17, weight: .medium)
+        title.font = .systemFont(ofSize: 18, weight: .regular)
         return title
     }()
     
@@ -30,7 +30,7 @@ final class SettingsCell: UITableViewCell {
         title.textAlignment = .right
         title.textColor = .gray
         title.numberOfLines = .zero
-        title.font = .systemFont(ofSize: 17, weight: .medium)
+        title.font = .systemFont(ofSize: 18, weight: .light)
         title.translatesAutoresizingMaskIntoConstraints = false
         return title
     }()
