@@ -30,15 +30,17 @@ final class InternetService: UserInternetService {
             
             let (data,response) = try await URLSession.shared.data(from: url)
             
-            guard let mappedNewsArray = try JSONDecoder().decode(CommonInfo.self, from: data).articles else { return }
+            guard let mappedNews = try JSONDecoder().decode(CommonInfo.self, from: data).articles else { return }
 
-            let newsArray = mappedNewsArray.map {
+            let news = mappedNews.map {
                 var topic = $0
                 topic.viewed = topic.title == nil ? false : StorageService.shared.checkIfViewed(with: $0.title ?? "")
                 return topic
             }
             
-            self.newsArray = newsArray
+            let sortedNews = news.sorted { !($0.viewed ?? false) && ($1.viewed ?? false) }
+            
+            self.newsArray = sortedNews
             
             guard let response = response as? HTTPURLResponse else { return }
             
