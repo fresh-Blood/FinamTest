@@ -187,7 +187,7 @@ private enum Constants {
     static let navBarHeight: CGFloat = 96
 }
 
-// MARK: Swift UI integration
+// MARK: SwiftUI integration
 extension SettingsViewController {
     private func showCategories() {
         title = SettingsKeys.newsCategory.rawValue

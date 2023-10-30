@@ -3,6 +3,11 @@ import WebKit
 
 final class TopicViewController: UIViewController, WKNavigationDelegate {
     var moreInfo = ""
+    var imageLoaded = false {
+        didSet {
+            applyAverageColorShadow()
+        }
+    }
     
     lazy var newsImage: UIImageView = {
         let imageView = UIImageView()
@@ -76,8 +81,7 @@ final class TopicViewController: UIViewController, WKNavigationDelegate {
         super.viewDidAppear(animated)
         if topicLabel.text == Errors.topicLabelNoInfo.rawValue {
             VibrateManager.shared.vibrate(.warning)
-            imageSkeleton.layer.removeAllAnimations()
-            imageSkeleton.alpha = 1
+            stopSkeletonAnimation()
         }
     }
     
@@ -88,6 +92,11 @@ final class TopicViewController: UIViewController, WKNavigationDelegate {
                        animations: {
             self.imageSkeleton.alpha = 0
         })
+    }
+    
+    private func stopSkeletonAnimation() {
+        imageSkeleton.layer.removeAllAnimations()
+        imageSkeleton.alpha = 1
     }
     
     // MARK: SetupUI
@@ -125,4 +134,12 @@ final class TopicViewController: UIViewController, WKNavigationDelegate {
 // MARK: ScrollView Delegate
 extension TopicViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? { newsImage }
+}
+
+extension TopicViewController {
+    private func applyAverageColorShadow() {
+        guard let averageColor = newsImage.image?.averageColor else { return }
+        stopSkeletonAnimation()
+        imageSkeleton.configureShadow(configureBorder: true, shadowColor: averageColor)
+    }
 }

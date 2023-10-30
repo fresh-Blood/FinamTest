@@ -245,7 +245,9 @@ extension NewsViewController : UITableViewDelegate, UITableViewDataSource {
         let topicVC = TopicViewController()
         topicVC.title = topic?.title
         topicVC.topicLabel.text = topic?.description ?? Errors.topicLabelNoInfo.rawValue
-        topicVC.newsImage.downLoadImage(from: topic?.urlToImage ?? Errors.timeout.rawValue)
+        topicVC.newsImage.downLoadImage(from: topic?.urlToImage ?? Errors.timeout.rawValue) {
+            topicVC.imageLoaded.toggle()
+        }
         topicVC.moreInfo = topic?.url ?? Errors.timeout.rawValue
         navigationController?.pushViewController(topicVC, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
@@ -388,7 +390,7 @@ extension NewsViewController {
     }
 }
 
-// MARK: Swift UI integration
+// MARK: SwiftUI integration
 extension NewsViewController {
     private func showError(title: String) {
         let hostingController = UIHostingController(rootView: ErrorView(title: title,
