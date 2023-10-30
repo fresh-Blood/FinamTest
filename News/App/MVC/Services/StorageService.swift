@@ -38,7 +38,7 @@ struct StorageService {
             } else {
                 
                 if viewedNews?.count == Constants.dataStorageSize {
-                    viewedNews?.removeLast()
+                    viewedNews?.removeFirst()
                 }
                 
                 viewedNews?.append(id)
