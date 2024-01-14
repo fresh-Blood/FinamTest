@@ -45,7 +45,7 @@ extension AppDelegate {
                                                 trigger: trigger)
             
             notificationCenter.getPendingNotificationRequests { requests in
-                if !requests.contains(where: { $0.identifier == uuid }) {
+                if requests.isEmpty {
                     notificationCenter.add(request)
                 }
             }
