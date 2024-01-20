@@ -220,6 +220,7 @@ final class NewsViewController: UIViewController {
         newsList.refreshControl?.endRefreshing()
         skeletonsStackView.isHidden = true
         skeletonsBackgroundViewsStackView.isHidden = true
+        newsList.pulsate()
     }
 }
 
