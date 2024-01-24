@@ -82,6 +82,7 @@ final class TopicViewController: UIViewController, WKNavigationDelegate {
         if topicLabel.text == Errors.topicLabelNoInfo.rawValue {
             VibrateManager.shared.vibrate(.warning)
             stopSkeletonAnimation()
+            showErrorCat()
         }
     }
     
@@ -141,5 +142,20 @@ extension TopicViewController {
         guard let averageColor = newsImage.image?.averageColor else { return }
         stopSkeletonAnimation()
         imageSkeleton.configureShadow(configureBorder: true, shadowColor: averageColor)
+    }
+    
+    private func showErrorCat() {
+        guard let cat = UIImage(named: "errorCat") else { return }
+        let view = UIImageView(image: cat)
+        view.contentMode = .scaleAspectFit
+        view.translatesAutoresizingMaskIntoConstraints = false
+        imageSkeleton.backgroundColor = .clear
+        imageSkeleton.addSubview(view)
+        NSLayoutConstraint.activate([
+            view.centerXAnchor.constraint(equalTo: imageSkeleton.centerXAnchor),
+            view.centerYAnchor.constraint(equalTo: imageSkeleton.centerYAnchor),
+            view.widthAnchor.constraint(equalToConstant: 90),
+            view.heightAnchor.constraint(equalToConstant: 100)
+        ])
     }
 }

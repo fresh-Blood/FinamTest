@@ -20,12 +20,24 @@ extension UIStackView {
 
 extension UIView {
     func pulsate() {
-        let animation = CASpringAnimation(keyPath: "transform.scale")
-        animation.fromValue = 0.98
-        animation.toValue = 1
-        animation.damping = 1.0
-        animation.duration = 0.2
-        layer.add(animation, forKey: nil)
+        UIView.animate(withDuration: 0.1,
+                       delay: .zero,
+                       usingSpringWithDamping: 0.7,
+                       initialSpringVelocity: 0.1,
+                       options: .curveEaseIn,
+                       animations: {
+            self.transform = CGAffineTransform(scaleX: 1.03, y: 1.03)
+        },
+                       completion: { [weak self] _ in
+            UIView.animate(withDuration: 0.2,
+                           delay: .zero,
+                           usingSpringWithDamping: 0.5,
+                           initialSpringVelocity: 0.5,
+                           options: .curveEaseOut,
+                           animations: {
+                self?.transform = .identity
+            })
+        })
     }
 }
 
@@ -63,6 +75,7 @@ extension UIView {
     
     func animatePressing(gesture: UILongPressGestureRecognizer, completion: Action?) {
         if gesture.state == .began {
+            VibrateManager.shared.impactOccured(.rigid)
             UIView.animate(withDuration: 1,
                            delay: .zero,
                            usingSpringWithDamping: 1,
@@ -74,6 +87,7 @@ extension UIView {
             })
             
         } else if gesture.state == .ended {
+            VibrateManager.shared.impactOccured(.rigid)
             UIView.animate(withDuration: 0.5,
                            delay: .zero,
                            animations: {
@@ -82,7 +96,6 @@ extension UIView {
                 
             }, completion: { _ in
                 completion?()
-                VibrateManager.shared.impactOccured(.rigid)
             })
         }
     }
